@@ -37,3 +37,12 @@ build/
 .env
 *.env
 .env.local
+
+
+### Logs ###
+**.log
+logs/
+/logs/
+*.log.*
+/log/
+log/

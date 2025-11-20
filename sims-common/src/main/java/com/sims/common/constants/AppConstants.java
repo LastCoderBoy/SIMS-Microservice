@@ -14,9 +14,6 @@ public final class AppConstants {
         throw new UnsupportedOperationException("AppConstants is a utility class and cannot be instantiated");
     }
 
-    // ========== Base URLs ==========
-    public static final String BASE_URL = "http://localhost:8080";
-
     // ========== API Versioning ==========
     public static final String API_VERSION_V1 = "/api/v1";
 

@@ -38,7 +38,7 @@ public class ApiGatewayApplication {
         System.out.println("""
             
             ╔═══════════════════════════════════════════════════════════════════╗
-            ║                 🚀 API GATEWAY STARTED                            ║
+            ║                    API GATEWAY STARTED                            ║
             ╠═══════════════════════════════════════════════════════════════════╣
             ║  Gateway URL:       http://localhost:8080                         ║
             ║  Eureka Dashboard:  http://localhost:8761                         ║
