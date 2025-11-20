@@ -2,6 +2,8 @@ package com.sims.apigateway.security.filter;
 
 import com.sims.apigateway.security.JwtTokenProvider;
 import com.sims.common.utils.TokenUtils;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -11,10 +13,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.PathMatcher;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * JWT Authentication Filter for API Gateway
@@ -29,9 +36,6 @@ import java.util.List;
 @Slf4j
 public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAuthenticationFilter.Config> {
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-
     // List of public endpoints (no auth required)
     private static final List<String> PUBLIC_PATHS = List.of(
             "/api/v1/auth/login",
@@ -42,8 +46,13 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
             "/actuator/info"
     );
 
-    public JwtAuthenticationFilter() {
+    private final PathMatcher pathMatcher;
+    private final JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
         super(Config.class);
+        this.pathMatcher = new AntPathMatcher();
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -55,7 +64,7 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
             log.debug("[JWT-FILTER] Processing request: {} {}", request.getMethod(), path);
 
             // Skip authentication for public paths
-            if (isPublicPath(path)) {
+            if (isPublicPath(path, config)) {
                 log.debug("[JWT-FILTER] Public path, skipping authentication: {}", path);
                 return chain.filter(exchange);
             }
@@ -101,8 +110,17 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
     /**
      * Check if path is public (no authentication required)
      */
-    private boolean isPublicPath(String path) {
-        return PUBLIC_PATHS.stream().anyMatch(path::contains);
+    private boolean isPublicPath(String path, Config config) {
+        // Check global public paths
+        boolean isGlobalPublic = PUBLIC_PATHS.stream()
+                .anyMatch(pattern -> pathMatcher.match(pattern, path));
+
+        // Check route-specific public paths
+        boolean isRoutePublic = config.getPublicPaths() != null &&
+                config.getPublicPaths().stream()
+                        .anyMatch(pattern -> pathMatcher.match(pattern, path));
+
+        return isGlobalPublic || isRoutePublic;
     }
 
     /**
@@ -122,9 +140,42 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
     }
 
     /**
-     * Configuration class for the filter
+     * Configuration class for per-route filter customization
      */
+    @Getter
+    @Setter
     public static class Config {
-        // Add configuration properties if needed
+
+        /**
+         * Enable/disable JWT authentication for this route
+         */
+        private boolean enabled = true;
+
+        /**
+         * Additional public paths for this specific route (supports wildcards)
+         * Example: ["/api/v1/products/catalog/**", "/api/v1/products/search"]
+         */
+        private List<String> publicPaths = new ArrayList<>();
+
+        /**
+         * Required roles for accessing this route
+         * If empty, any authenticated user can access
+         */
+        private List<String> requiredRoles = new ArrayList<>();
+
+        /**
+         * Custom headers to add to downstream requests
+         */
+        private Map<String, String> customHeaders = new HashMap<>();
+
+        /**
+         * Custom unauthorized message
+         */
+        private String unauthorizedMessage = "Unauthorized access";
+
+        /**
+         * Custom forbidden message
+         */
+        private String forbiddenMessage = "Insufficient permissions";
     }
 }

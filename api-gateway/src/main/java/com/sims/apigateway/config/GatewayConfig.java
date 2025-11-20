@@ -11,8 +11,6 @@ import org.springframework.context.annotation.Configuration;
  * Gateway Configuration
  * Applies custom JWT filter to protected routes
  *
- * This OVERRIDES routes defined in application.properties
- *
  * @author LastCoderBoy
  * @since 2025-01-17
  */
