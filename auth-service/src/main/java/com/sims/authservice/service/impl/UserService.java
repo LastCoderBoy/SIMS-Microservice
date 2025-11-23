@@ -2,6 +2,7 @@ package com.sims.authservice.service.impl;
 
 import com.sims.authservice.dto.LoginRequest;
 import com.sims.authservice.dto.TokenResponse;
+import com.sims.authservice.dto.UpdateUserRequest;
 import com.sims.authservice.entity.BlacklistedToken;
 import com.sims.authservice.entity.RefreshToken;
 import com.sims.authservice.entity.Users;
@@ -238,10 +239,11 @@ public class UserService {
     }
 
     /**
-     * Update User - Update user profile
+     * Update User - Update newUserInfo profile
+     * If password is updated, access token is blacklisted (re-login required)
      */
     @Transactional
-    public void updateUser(Users user, String currentAccessToken) {
+    public void updateUser(UpdateUserRequest userRequest, String currentAccessToken) {
         if (currentAccessToken == null || currentAccessToken.isEmpty()) {
             throw new InvalidTokenException("Invalid token provided");
         }
@@ -255,7 +257,7 @@ public class UserService {
             Users currentUser = userRepository.findByUsernameOrEmail(username)
                     .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-            updateUserFields(currentUser, user, currentAccessToken);
+            updateUserFields(currentUser, userRequest, currentAccessToken);
             userRepository.save(currentUser);
 
             log.info("[USER-SERVICE] User '{}' updated successfully", username);
@@ -267,12 +269,9 @@ public class UserService {
         }
     }
 
-    /**
-     * Update user fields
-     */
-    private void updateUserFields(Users currentUser, Users newUserInfo, String currentAccessToken) {
-        if (newUserInfo.getPassword() != null) {
-            String newPassword = newUserInfo.getPassword();
+    private void updateUserFields(Users currentUser, UpdateUserRequest userRequest, String currentAccessToken) {
+        if (userRequest.getPassword() != null) {
+            String newPassword = userRequest.getPassword();
 
             if (!isValidPassword(newPassword)) {
                 log.warn("[USER-SERVICE] Invalid password format");
@@ -288,12 +287,12 @@ public class UserService {
             log.info("[USER-SERVICE] User '{}' password updated. Token invalidated.", currentUser.getUsername());
         }
 
-        if (newUserInfo.getFirstName() != null) {
-            currentUser.setFirstName(newUserInfo.getFirstName());
+        if (userRequest.getFirstName() != null) {
+            currentUser.setFirstName(userRequest.getFirstName());
         }
 
-        if (newUserInfo.getLastName() != null) {
-            currentUser.setLastName(newUserInfo.getLastName());
+        if (userRequest.getLastName() != null) {
+            currentUser.setLastName(userRequest.getLastName());
         }
     }
 

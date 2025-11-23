@@ -1,6 +1,7 @@
 package com.sims.authservice.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sims.authservice.security.JWTFilter;
 import com.sims.authservice.service.impl.UserDetailsServiceImpl;
 import com.sims.common.models.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
@@ -50,7 +51,7 @@ public class SecurityConfig {
                         // Actuator endpoints
                         .requestMatchers("/actuator/**").permitAll()
 
-                        // All other endpoints require authentication
+                        // All other endpoints for the AUTH-SERVICE require authentication
                         .anyRequest().authenticated())
 
                 .exceptionHandling(exception -> exception

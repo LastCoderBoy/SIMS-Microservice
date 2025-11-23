@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -33,7 +34,7 @@ public class JWTService {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.access.expiration}") // 1 hour in milliseconds
+    @Value("${jwt.access.expiration}") // 15 min in milliseconds
     private Long accessTokenDurationMs;
 
     private final BlackListTokenRepository blackListTokenRepository;
@@ -41,7 +42,7 @@ public class JWTService {
 
     public String generateAccessToken(String username, String role) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", role);
+        claims.put("roles", List.of(role));
         claims.put("type", "ACCESS");
 
         return Jwts.builder()

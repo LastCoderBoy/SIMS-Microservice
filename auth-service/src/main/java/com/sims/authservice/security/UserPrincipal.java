@@ -9,6 +9,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
+
+/**
+ * User Principal - Spring Security UserDetails implementation
+ * Wraps Users entity for authentication
+ *
+ * @author LastCoderBoy
+ * @since 2025-01-22
+ */
 public class UserPrincipal implements UserDetails {
 
     private final Users user;

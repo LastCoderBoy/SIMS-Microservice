@@ -136,7 +136,6 @@ public class JwtTokenProvider {
                     .getPayload();
 
             return claims.get("roles", List.class);
-
         } catch (Exception e) {
             log.error("[JWT-PROVIDER] Failed to extract roles from token: {}", e.getMessage());
             return List.of(); // Return empty list if roles not found
