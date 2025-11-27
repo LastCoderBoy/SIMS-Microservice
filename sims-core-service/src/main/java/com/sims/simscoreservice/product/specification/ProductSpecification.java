@@ -1,4 +1,4 @@
-package com.sims.simscoreservice.product.services.searchLogic.specification;
+package com.sims.simscoreservice.product.specification;
 
 import com.sims.simscoreservice.product.entity.Product;
 import com.sims.simscoreservice.product.enums.ProductCategories;

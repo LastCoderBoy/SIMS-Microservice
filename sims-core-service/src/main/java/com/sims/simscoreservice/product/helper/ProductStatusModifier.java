@@ -1,4 +1,4 @@
-package com.sims.simscoreservice.product.services.helper;
+package com.sims.simscoreservice.product.helper;
 
 import com.sims.simscoreservice.product.entity.Product;
 import com.sims.simscoreservice.product.enums.ProductStatus;

@@ -11,10 +11,10 @@ import com.sims.simscoreservice.product.entity.Product;
 import com.sims.simscoreservice.product.enums.ProductStatus;
 import com.sims.simscoreservice.product.mapper.ProductMapper;
 import com.sims.simscoreservice.product.repository.ProductRepository;
-import com.sims.simscoreservice.product.services.helper.ProductHelper;
+import com.sims.simscoreservice.product.helper.ProductHelper;
 import com.sims.simscoreservice.product.services.impl.ProductServiceImpl;
 import com.sims.simscoreservice.product.services.queryService.ProductQueryService;
-import com.sims.simscoreservice.product.services.searchLogic.ProductSearchService;
+import com.sims.simscoreservice.product.services.searchService.ProductSearchService;
 import com.sims.simscoreservice.product.util.ProductTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -98,9 +98,8 @@ public class ProductServiceImplTest {
         expectedResponse.setContent(productContent);
         expectedResponse.setTotalPages(1);
         expectedResponse.setTotalElements(products.size());
-        expectedResponse.setLast(true);
-        expectedResponse.setFirst(true);
-        expectedResponse.setEmpty(false);
+        expectedResponse.setCurrentPage(PAGE_NUMBER);
+        expectedResponse.setPageSize(PAGE_SIZE);
 
         // Stubbing
         when(productQueryService.getAllProducts(anyString(), anyString(), anyInt(), anyInt()))
@@ -254,9 +253,8 @@ public class ProductServiceImplTest {
         expectedResponse.setContent(List.of(ProductTestUtils.createProductResponse(productB)));
         expectedResponse.setTotalPages(1);
         expectedResponse.setTotalElements(products.size());
-        expectedResponse.setLast(true);
-        expectedResponse.setFirst(true);
-        expectedResponse.setEmpty(false);
+        expectedResponse.setCurrentPage(PAGE_NUMBER);
+        expectedResponse.setPageSize(PAGE_SIZE);
 
         // Stubbing
         when(productSearchService

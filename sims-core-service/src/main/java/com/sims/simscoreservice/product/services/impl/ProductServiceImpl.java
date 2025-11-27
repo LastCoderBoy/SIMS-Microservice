@@ -6,6 +6,11 @@ import com.sims.common.exceptions.ServiceException;
 import com.sims.common.exceptions.ValidationException;
 import com.sims.common.models.ApiResponse;
 import com.sims.common.models.PaginatedResponse;
+import com.sims.simscoreservice.inventory.entity.Inventory;
+import com.sims.simscoreservice.inventory.enums.InventoryStatus;
+import com.sims.simscoreservice.inventory.service.InventoryService;
+import com.sims.simscoreservice.inventory.service.queryService.InventoryQueryService;
+import com.sims.simscoreservice.orderManagement.salesOrder.service.queryService.SalesOrderQueryService;
 import com.sims.simscoreservice.product.dto.BatchProductRequest;
 import com.sims.simscoreservice.product.dto.BatchProductResponse;
 import com.sims.simscoreservice.product.dto.ProductRequest;
@@ -15,9 +20,9 @@ import com.sims.simscoreservice.product.enums.ProductStatus;
 import com.sims.simscoreservice.product.mapper.ProductMapper;
 import com.sims.simscoreservice.product.repository.ProductRepository;
 import com.sims.simscoreservice.product.services.ProductService;
-import com.sims.simscoreservice.product.services.helper.ProductHelper;
+import com.sims.simscoreservice.product.helper.ProductHelper;
 import com.sims.simscoreservice.product.services.queryService.ProductQueryService;
-import com.sims.simscoreservice.product.services.searchLogic.ProductSearchService;
+import com.sims.simscoreservice.product.services.searchService.ProductSearchService;
 import com.sims.simscoreservice.shared.util.GlobalServiceHelper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Product Service Implementation
@@ -43,16 +49,19 @@ import java.util.List;
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
-    private final ProductRepository productRepository;
+    // ========== Components ==========
     private final ProductMapper productMapper;
     private final ProductHelper productHelper;
+
+    // ========== Services ==========
     private final ProductQueryService productQueryService;
     private final ProductSearchService productSearchService;
+    private final InventoryQueryService inventoryQueryService;
+    private final InventoryService inventoryService;
+    private final SalesOrderQueryService salesOrderQueryService;
 
-    // TODO: Inject when implementing
-    // private final InventoryQueryService inventoryQueryService;
-    // private final InventoryService inventoryService;
-    // private final SalesOrderQueryService salesOrderQueryService;
+    // ========== Repositories ==========
+    private final ProductRepository productRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -79,7 +88,7 @@ public class ProductServiceImpl implements ProductService {
 
             // Add to inventory if status is not PLANNING
             if (!request.getStatus().equals(ProductStatus.PLANNING)) {
-                // TODO: inventoryService.addProduct(savedProduct);
+                inventoryService.addProduct(savedProduct, false);
                 log.info("[PRODUCT-SERVICE] Product {} added to inventory", savedProduct.getProductId());
             }
 
@@ -118,7 +127,7 @@ public class ProductServiceImpl implements ProductService {
 
                 // Add to inventory if needed
                 if (!productRequest.getStatus().equals(ProductStatus.PLANNING)) {
-                    // TODO: inventoryService.addProduct(savedProduct);
+                    inventoryService.addProduct(savedProduct, false);
                 }
 
                 successfulIds.add(savedProduct.getProductId());
@@ -189,8 +198,8 @@ public class ProductServiceImpl implements ProductService {
         ProductStatus currentStatus = currentProduct.getStatus();
         if (newStatus != null && !newStatus.equals(currentStatus)) {
 
-            //TODO: Optional<InventoryControlData> productInIcOpt =
-                    // inventoryQueryService.getInventoryProductByProductId(productId);
+            Optional<Inventory> productInInventory =
+                    inventoryQueryService.getInventoryByProductId(productId);
 
             if (productHelper.validateStatusBeforeAdding(currentStatus, newStatus)) {
                 currentProduct.setStatus(newStatus);
@@ -200,7 +209,7 @@ public class ProductServiceImpl implements ProductService {
 
                 // If changing to invalid status, mark inventory as invalid
                 if (GlobalServiceHelper.amongInvalidStatus(newStatus)) {
-                    // TODO: inventoryService.updateInventoryStatus(productInInventory, InventoryStatus.INVALID);
+                    inventoryService.updateInventoryStatus(productInInventory, InventoryStatus.INVALID);
                     log.info("[PRODUCT-SERVICE] Product {} inventory marked as INVALID due to status {}",
                             productId, newStatus);
                 }
@@ -211,34 +220,34 @@ public class ProductServiceImpl implements ProductService {
     private void handleStatusChange(Product currentProduct, ProductStatus newStatus,
                                     ProductStatus previousStatus, String productId) {
 
-        // TODO: Uncomment when InventoryService is implemented
-        // Optional<Inventory> productInInventory = inventoryQueryService.getInventoryProductByProductId(productId);
+
+        Optional<Inventory> productInInventory = inventoryQueryService.getInventoryByProductId(productId);
 
         if (newStatus == ProductStatus.ACTIVE || newStatus == ProductStatus.ON_ORDER) {
             if (previousStatus == ProductStatus. ARCHIVED) {
                 // Status: ARCHIVED → ACTIVE/ON_ORDER
                 // Only add to inventory if not already present
-                // TODO: Uncomment when InventoryService is implemented
-                // if (productInInventory.isEmpty()) {
-                //     inventoryService.addProduct(currentProduct, false);
-                //     log.info("[PRODUCT-SERVICE] Product {} added to inventory (was ARCHIVED)", productId);
-                // } else {
-                //     log.info("[PRODUCT-SERVICE] Product {} already in inventory, skipping addition", productId);
-                // }
+
+                 if (productInInventory.isEmpty()) {
+                     inventoryService.addProduct(currentProduct, false);
+                     log.info("[PRODUCT-SERVICE] Product {} added to inventory (was ARCHIVED)", productId);
+                 } else {
+                     log.info("[PRODUCT-SERVICE] Product {} already in inventory, skipping addition", productId);
+                 }
 
                 log.info("[PRODUCT-SERVICE] Status change: ARCHIVED → {} for product {}", newStatus, productId);
 
             } else {
                 // Status: PLANNING → ACTIVE/ON_ORDER
                 // Always add to inventory
-                // TODO: inventoryService.addProduct(currentProduct, false);
+                inventoryService.addProduct(currentProduct, false);
                 log.info("[PRODUCT-SERVICE] Product {} added to inventory due to status change: {} → {}",
                         productId, previousStatus, newStatus);
             }
         } else {
             // Status: Any → INVALID status (RESTRICTED, ARCHIVED, DISCONTINUED)
             // Mark inventory as invalid (don't delete, just mark)
-            // TODO: inventoryService.updateInventoryStatus(productInInventory, InventoryStatus.INVALID);
+            inventoryService.updateInventoryStatus(productInInventory, InventoryStatus.INVALID);
             log. info("[PRODUCT-SERVICE] Product {} inventory marked as INVALID", productId);
         }
     }
@@ -250,16 +259,16 @@ public class ProductServiceImpl implements ProductService {
             Product product = productQueryService.findById(productId);
 
             // Check if product is used in active orders
-            // TODO: Uncomment when SalesOrderQueryService is implemented
-            // long activeOrdersCount = salesOrderQueryService.countActiveOrdersForProduct(productId);
-            // if (activeOrdersCount > 0) {
-            //     throw new ValidationException(
-            //         "Cannot delete product with " + activeOrdersCount + " active orders. Cancel orders first."
-            //     );
-            // }
+
+             long activeOrdersCount = salesOrderQueryService.countActiveOrdersForProduct(productId);
+             if (activeOrdersCount > 0) {
+                 throw new ValidationException(
+                     "Cannot delete product with " + activeOrdersCount + " active orders. Cancel orders first."
+                 );
+             }
 
             // Delete from inventory first
-            // TODO: inventoryService.deleteByProductId(productId);
+            inventoryService.deleteByProductId(productId);
 
             // Delete product
             productRepository.delete(product);

@@ -1,4 +1,4 @@
-package com.sims.simscoreservice.product.services.helper;
+package com.sims.simscoreservice.product.helper;
 
 import com.sims.common.exceptions.ValidationException;
 import com.sims.common.models.PaginatedResponse;
@@ -100,9 +100,8 @@ public class ProductHelper {
                 .content(content)
                 .totalPages(productPage.getTotalPages())
                 .totalElements(productPage.getTotalElements())
-                .last(productPage.isLast())
-                .first(productPage.isFirst())
-                .empty(productPage.isEmpty())
+                .currentPage(productPage.getNumber())
+                .pageSize(productPage.getSize())
                 .build();
     }
 

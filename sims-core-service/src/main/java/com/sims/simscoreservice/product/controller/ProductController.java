@@ -161,12 +161,13 @@ public class ProductController {
      * Filter products
      */
     @GetMapping("/filter")
-    public ResponseEntity<PaginatedResponse<ProductResponse>> filterProducts(@RequestParam(required = false) String filter,
-                                                                             @RequestParam(defaultValue = "productId") String sortBy,
-                                                                             @RequestParam(defaultValue = DEFAULT_SORT_DIRECTION) String direction,
-                                                                             @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
-                                                                             @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size,
-                                                                             @RequestHeader(USER_ID_HEADER) String userId) {
+    public ResponseEntity<PaginatedResponse<ProductResponse>> filterProducts(
+            @RequestParam(required = false) String filter,
+            @RequestParam(defaultValue = "productId") String sortBy,
+            @RequestParam(defaultValue = DEFAULT_SORT_DIRECTION) String direction,
+            @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size,
+            @RequestHeader(USER_ID_HEADER) String userId) {
 
         log.info("[PRODUCT-CONTROLLER] Filter products with '{}' by user: {}", filter, userId);
 

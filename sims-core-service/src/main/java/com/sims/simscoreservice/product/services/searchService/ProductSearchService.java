@@ -1,4 +1,4 @@
-package com.sims.simscoreservice.product.services.searchLogic;
+package com.sims.simscoreservice.product.services.searchService;
 
 
 import com.sims.common.exceptions.DatabaseException;
@@ -9,7 +9,7 @@ import com.sims.simscoreservice.product.enums.ProductCategories;
 import com.sims.simscoreservice.product.enums.ProductStatus;
 import com.sims.simscoreservice.product.repository.ProductRepository;
 import com.sims.simscoreservice.product.services.queryService.ProductQueryService;
-import com.sims.simscoreservice.product.services.searchLogic.specification.ProductSpecification;
+import com.sims.simscoreservice.product.specification.ProductSpecification;
 import com.sims.simscoreservice.shared.util.GlobalServiceHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
