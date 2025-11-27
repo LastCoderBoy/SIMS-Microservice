@@ -1,0 +1,182 @@
+package com.sims.simscoreservice.exceptions.handler;
+
+import com.sims.common.exceptions.DatabaseException;
+import com.sims.common.exceptions.ResourceNotFoundException;
+import com.sims.common.exceptions.ServiceException;
+import com.sims.common.exceptions.ValidationException;
+import com.sims.common.models.ApiResponse;
+import com.sims.simscoreservice.exceptions.ForbiddenException;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ *  Global Exception Handler for SIMS Core Service
+ *
+ * @author LastCoderBoy
+ * @since 2025-01-23
+ */
+@RestControllerAdvice
+@Slf4j
+public class CoreExceptionHandler {
+
+    /**
+     * Handle validation errors (@Valid)
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<Map<String, String>>> handleValidation(
+            MethodArgumentNotValidException ex) {
+
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach(error -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+
+        log.warn("[CORE-EX-HANDLER] Validation error: {}", errors);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error("Validation failed", errors));
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ApiResponse<Void>> handleForbiddenException(ForbiddenException ex) {
+        log.warn("[CORE-EX-HANDLER] Access denied: {}", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(ApiResponse.error("Access Denied"));
+    }
+
+    /**
+     * Handle resource not found
+     */
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        log.warn("[CORE-EX-HANDLER] Resource not found: {}", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.error(ex.getMessage()));
+    }
+
+    /**
+     * Handle validation exception
+     */
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleValidationException(ValidationException ex) {
+        log.warn("[CORE-EX-HANDLER] Validation exception: {}", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(ex.getMessage()));
+    }
+
+    /**
+     * Handle bad request
+     */
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiResponse<Void>> handleBadRequest(BadRequestException ex) {
+        log.warn("[CORE-EX-HANDLER] Bad request: {}", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(ex.getMessage()));
+    }
+
+    /**
+     * Handle database exception
+     */
+    @ExceptionHandler(DatabaseException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDatabaseException(DatabaseException ex) {
+        log.error("[CORE-EX-HANDLER] Database exception: {}", ex.getMessage(), ex);
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponse.error("Database error occurred"));
+    }
+
+    /**
+     * Handle service exception
+     */
+    @ExceptionHandler(ServiceException.class)
+    public ResponseEntity<ApiResponse<Void>> handleServiceException(ServiceException ex) {
+        log.error("[CORE-EX-HANDLER] Service exception: {}", ex.getMessage(), ex);
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponse.error("An error occurred while processing your request"));
+    }
+
+    // AWS S3 Exceptions
+
+//    @ExceptionHandler(NoSuchKeyException.class)
+//    public ResponseEntity<ErrorObject> handleNoSuchKeyException(NoSuchKeyException ex) {
+//
+//        log.warn("[CORE-EX-HANDLER] Key not found in AWS: {}", ex.getMessage());
+//
+//        return ResponseEntity
+//                .status(HttpStatus.NOT_FOUND)
+//                .body(ApiResponse.error(ex.getMessage()));
+//    }
+//
+//    @ExceptionHandler(NoSuchBucketException.class)
+//    public ResponseEntity<ErrorObject> handleNoSuchBucketException(NoSuchBucketException ex) {
+//        log.warn("[CORE-EX-HANDLER] Bucket not found in AWS: {}", ex.getMessage());
+//
+//        return ResponseEntity
+//                .status(HttpStatus.NOT_FOUND)
+//                .body(ApiResponse.error(ex.getMessage()));
+//    }
+
+    /**
+     * Handle all other exceptions
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception ex) {
+        log.error("[CORE-SERVICE] Unexpected error: {}", ex.getMessage(), ex);
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponse.error("An unexpected error occurred"));
+    }
+
+    /**
+     * Handle enum conversion failures
+     * Triggered when @RequestParam enum conversion fails
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiResponse<Map<String, String>>> handleTypeMismatch(
+            MethodArgumentTypeMismatchException ex) {
+
+        log.error("[CORE-EX-HANDLER] Type mismatch error: {}", ex.getMessage());
+
+        String error = String.format("Invalid value '%s' for parameter '%s'",
+                ex.getValue(),
+                ex.getName());
+
+        // If it's an enum, show valid values
+        if (ex.getRequiredType() != null && ex.getRequiredType().isEnum()) {
+            Object[] enumConstants = ex.getRequiredType().getEnumConstants();
+            error += ". Valid values: " + java.util.Arrays.toString(enumConstants);
+        }
+
+        Map<String, String> errors = new HashMap<>();
+        errors.put(ex.getName(), error);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error("Invalid request parameter", errors));
+    }
+}

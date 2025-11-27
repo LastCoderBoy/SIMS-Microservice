@@ -48,11 +48,11 @@ public class SimsCoreServiceApplication {
             ║  API Docs:   /api/v1/**                                    ║
             ╠════════════════════════════════════════════════════════════╣
             ║  Modules:                                                  ║
-            ║  ✅ Products Management                                    ║
-            ║  ✅ Inventory Management                                   ║
-            ║  ✅ Purchase Orders                                        ║
-            ║  ✅ Sales Orders                                           ║
-            ║  ✅ Email Notifications                                    ║
+            ║     Products Management                                    ║
+            ║     Inventory Management                                   ║
+            ║     Purchase Orders                                        ║
+            ║     Sales Orders                                           ║
+            ║     Email Notifications                                    ║
             ╚════════════════════════════════════════════════════════════╝
             
             """);

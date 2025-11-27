@@ -22,11 +22,7 @@ public final class TokenUtils {
     }
 
     /**
-     * Extracts JWT token from Authorization header
-     *
-     * Expected format: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-     * Returns: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-     *
+     * Extracts JWT token from the Authorization header
      * @param authorizationHeader Authorization header value
      * @return JWT token without "Bearer " prefix
      * @throws InvalidTokenException if header is null, empty, or has invalid format

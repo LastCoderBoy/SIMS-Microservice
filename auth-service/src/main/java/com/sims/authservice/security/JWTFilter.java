@@ -51,7 +51,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 try {
                     token = TokenUtils.extractToken(authHeader);
 
-                    // Check if token is blacklisted
+                    // if Token is blacklisted throw exception
                     if (jwtService.isTokenBlacklisted(token)) {
                         throw new JwtAuthenticationException("Token has been blacklisted");
                     }

@@ -1,11 +1,14 @@
 package com.sims.apigateway.config;
 
 import com.sims.apigateway.security.filter.JwtAuthenticationFilter;
+import com.sims.common.constants.AppConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import static com.sims.common.constants.AppConstants.*;
 
 /**
  * Gateway Configuration
@@ -28,45 +31,47 @@ public class GatewayConfig {
                 // AUTH SERVICE - PUBLIC (No JWT required)
                 // ==========================================
                 .route("auth-public", r -> r
-                        .path("/api/v1/auth/login", "/api/v1/auth/register", "/api/v1/auth/refresh")
-                        .uri("lb://auth-service"))
+                        .path(AppConstants.PUBLIC_PATHS.toArray(new String[0]))
+                        .uri("lb://" + AUTH_SERVICE))
 
                 // ==========================================
                 // AUTH SERVICE - PROTECTED (JWT required)
                 // ==========================================
                 .route("auth-protected", r -> r
-                        .path("/api/v1/auth/**")
+                        .path(BASE_AUTH_PATH + "/**")
                         .filters(f -> f
                                 .filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
-                        .uri("lb://auth-service"))
+                        .uri("lb://" + AUTH_SERVICE))
 
                 // ==========================================
                 // SIMS CORE - ALL PROTECTED (JWT required)
                 // ==========================================
                 .route("products-service", r -> r
-                        .path("/api/v1/products/**")
+                        .path(BASE_PRODUCTS_PATH + "/**")
                         .filters(f -> f
                                 .filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
-                        .uri("lb://sims-core-service"))
+                        .uri("lb://" + SIMS_CORE_SERVICE))
 
                 .route("inventory-service", r -> r
-                        .path("/api/v1/inventory/**")
+                        .path(BASE_INVENTORY_PATH + "/**")
                         .filters(f -> f
                                 .filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
-                        .uri("lb://sims-core-service"))
+                        .uri("lb://" + SIMS_CORE_SERVICE))
 
                 .route("orders-service", r -> r
-                        .path("/api/v1/orders/**", "/api/v1/purchase-orders/**", "/api/v1/sales-orders/**")
+                        .path( BASE_ORDERS_PATH +"/**",
+                                BASE_PURCHASE_ORDERS_PATH + "/**",
+                                BASE_SALES_ORDERS_PATH + "/**")
                         .filters(f -> f
                                 .filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
-                        .uri("lb://sims-core-service"))
+                        .uri("lb://" + SIMS_CORE_SERVICE))
 
                 // ==========================================
                 // SIMS CORE - PUBLIC EMAIL (no JWT required)
                 // ==========================================
                 .route("email-service", r -> r
-                        .path("/api/v1/email/**")
-                        .uri("lb://sims-core-service"))
+                        .path(BASE_EMAIL_PATH + "/**")
+                        .uri("lb://" + SIMS_CORE_SERVICE))
 
                 .build();
     }

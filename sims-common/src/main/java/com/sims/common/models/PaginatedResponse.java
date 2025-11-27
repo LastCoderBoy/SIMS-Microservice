@@ -1,6 +1,7 @@
 package com.sims.common.models;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import java.util.List;
  * @since 2025-01-17
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaginatedResponse<T> implements Serializable {
@@ -26,10 +28,8 @@ public class PaginatedResponse<T> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private List<T> content;
-    private int page;
-    private int size;
-    private long totalElements;
     private int totalPages;
+    private long totalElements;
     private boolean last;
     private boolean first;
     private boolean empty;
@@ -41,9 +41,7 @@ public class PaginatedResponse<T> implements Serializable {
      */
     public PaginatedResponse(List<T> content) {
         this.content = content;
-        this.page = 0;
-        this.size = content != null ? content.size() : 0;
-        this.totalElements = this.size;
+        this.totalElements = content != null ? content.size() : 0;
         this.totalPages = content != null && !content.isEmpty() ? 1 : 0;
         this.last = true;
         this.first = true;
@@ -60,10 +58,8 @@ public class PaginatedResponse<T> implements Serializable {
     public static <T> PaginatedResponse<T> from(Page<T> page) {
         return new PaginatedResponse<>(
                 page.getContent(),
-                page.getNumber(),
-                page.getSize(),
-                page.getTotalElements(),
                 page.getTotalPages(),
+                page.getTotalElements(),
                 page.isLast(),
                 page.isFirst(),
                 page.isEmpty()

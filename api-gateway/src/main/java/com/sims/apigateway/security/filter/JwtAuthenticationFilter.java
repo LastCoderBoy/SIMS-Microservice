@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.sims.common.constants.AppConstants.USER_ID_HEADER;
+import static com.sims.common.constants.AppConstants.USER_ROLES_HEADER;
+
 /**
  * JWT Authentication Filter for API Gateway
  * Validates JWT tokens before forwarding requests to backend services
@@ -92,8 +95,8 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
 
                 // Add user info to request headers for downstream services
                 ServerHttpRequest modifiedRequest = request.mutate()
-                        .header("X-User-Id", username)
-                        .header("X-User-Roles", String.join(",", roles))
+                        .header(USER_ID_HEADER, username)
+                        .header(USER_ROLES_HEADER, String.join(",", roles))
                         .build();
 
                 // Forward to backend service
