@@ -150,7 +150,7 @@ public class StockManagementService {
     }
 
     /**
-     * Update stock levels (used by Purchase Order receipt)
+     * Update stock levels
      *
      * @param inventory Inventory to update
      * @param newCurrentStock New current stock (optional)
@@ -160,7 +160,7 @@ public class StockManagementService {
     public void updateStockLevels(Inventory inventory, Integer newCurrentStock, Integer newMinLevel) {
         // Update current stock if provided
         if (newCurrentStock != null) {
-            inventory. setCurrentStock(newCurrentStock);
+            inventory.setCurrentStock(newCurrentStock);
         }
 
         // Update min level if provided

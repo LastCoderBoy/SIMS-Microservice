@@ -6,10 +6,8 @@ import com.sims.common.exceptions.ResourceNotFoundException;
 import com.sims.common.exceptions.ValidationException;
 import com.sims.common.utils.TokenUtils;
 import com.sims.simscoreservice.product.enums.ProductStatus;
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,7 +16,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -141,5 +138,23 @@ public class GlobalServiceHelper {
      */
     public static String generateToken() {
         return UUID.randomUUID().toString();
+    }
+
+    /**
+     * Create header style for Excel Reports
+     */
+    public static CellStyle createHeaderStyle(Workbook workbook) {
+        CellStyle style = workbook. createCellStyle();
+        Font font = workbook.createFont();
+        font.setBold(true);
+        font.setFontHeightInPoints((short) 12);
+        style.setFont(font);
+        style.setFillForegroundColor(IndexedColors. GREY_25_PERCENT.getIndex());
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        style. setBorderBottom(BorderStyle. THIN);
+        style.setBorderTop(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle. THIN);
+        return style;
     }
 }

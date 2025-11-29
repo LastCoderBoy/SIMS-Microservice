@@ -7,6 +7,7 @@ import com.sims.simscoreservice.product.dto.ProductResponse;
 import com.sims.simscoreservice.product.entity.Product;
 import com.sims.simscoreservice.product.enums.ProductStatus;
 import com.sims.simscoreservice.product.mapper.ProductMapper;
+import com.sims.simscoreservice.shared.util.GlobalServiceHelper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -115,7 +116,7 @@ public class ProductHelper {
             Sheet sheet = workbook.createSheet("Products");
 
             // Create header style
-            CellStyle headerStyle = createHeaderStyle(workbook);
+            CellStyle headerStyle = GlobalServiceHelper.createHeaderStyle(workbook);
 
             // Create header row
             Row headerRow = sheet.createRow(0);
@@ -153,23 +154,5 @@ public class ProductHelper {
             log.error("[PRODUCT-HELPER] Failed to generate Excel report: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to generate Excel report", e);
         }
-    }
-
-    /**
-     * Create header style for Excel
-     */
-    private CellStyle createHeaderStyle(Workbook workbook) {
-        CellStyle style = workbook. createCellStyle();
-        Font font = workbook.createFont();
-        font.setBold(true);
-        font.setFontHeightInPoints((short) 12);
-        style.setFont(font);
-        style.setFillForegroundColor(IndexedColors. GREY_25_PERCENT.getIndex());
-        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        style. setBorderBottom(BorderStyle. THIN);
-        style.setBorderTop(BorderStyle.THIN);
-        style.setBorderLeft(BorderStyle.THIN);
-        style.setBorderRight(BorderStyle. THIN);
-        return style;
     }
 }

@@ -10,11 +10,16 @@ import com.sims.simscoreservice.inventory.enums.InventoryStatus;
 import com.sims.simscoreservice.inventory.mapper.InventoryMapper;
 import com.sims.simscoreservice.product.entity.Product;
 import com.sims.simscoreservice.product.enums.ProductCategories;
+import com.sims.simscoreservice.shared.util.GlobalServiceHelper;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -153,6 +158,63 @@ public class InventoryHelper {
                 .orderDate(orderDate)
                 .estimatedDate(estimatedDeliveryDate)
                 .build();
+    }
+
+    /**
+     * Generate Excel report for inventory products
+     */
+    public void generateExcelReport(List<Inventory> inventoryProducts, HttpServletResponse response) {
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("All Inventory Products");
+
+            // Create header style
+            CellStyle headerStyle = GlobalServiceHelper.createHeaderStyle(workbook);
+
+            // Create header row
+            Row headerRow = sheet. createRow(0);
+            String[] headers = {
+                    "SKU", "Product ID", "Product Name", "Category", "Location",
+                    "Current Stock", "Min Level", "Reserved Stock", "Available Stock",
+                    "Price", "Status", "Last Update"
+            };
+
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerStyle);
+            }
+
+            // Populate data rows
+            int rowNum = 1;
+            for (Inventory inventory : inventoryProducts) {
+                Row row = sheet.createRow(rowNum++);
+
+                row.createCell(0). setCellValue(inventory.getSku());
+                row.createCell(1).setCellValue(inventory. getProduct().getProductId());
+                row.createCell(2).setCellValue(inventory.getProduct().getName());
+                row.createCell(3).setCellValue(inventory. getProduct().getCategory(). name());
+                row.createCell(4).setCellValue(inventory. getLocation());
+                row.createCell(5).setCellValue(inventory. getCurrentStock());
+                row.createCell(6).setCellValue(inventory.getMinLevel());
+                row.createCell(7).setCellValue(inventory.getReservedStock());
+                row.createCell(8).setCellValue(inventory.getAvailableStock());
+                row.createCell(9).setCellValue(inventory.getProduct().getPrice(). doubleValue());
+                row.createCell(10).setCellValue(inventory.getStatus().name());
+                row.createCell(11). setCellValue(inventory.getLastUpdate() != null ? inventory.getLastUpdate().toString() : "");
+            }
+
+            // Auto-size columns
+            for (int i = 0; i < headers.length; i++) {
+                sheet. autoSizeColumn(i);
+            }
+
+            // Write to response
+            workbook.write(response.getOutputStream());
+
+        } catch (IOException e) {
+            log.error("[INVENTORY-HELPER] Failed to generate Excel report: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to generate Excel report", e);
+        }
     }
 
 //
