@@ -152,14 +152,14 @@ public class InventorySearchService {
                 };
             } else {
                 // General filter (status or category name)
-                boolean isStatusType = GlobalServiceHelper.isInEnum(filterBy. trim(). toUpperCase(), InventoryStatus. class);
+                boolean isStatusType = GlobalServiceHelper.isInEnum(filterBy.trim(). toUpperCase(), InventoryStatus.class);
 
                 Specification<Inventory> specification;
                 if (isStatusType) {
                     InventoryStatus statusValue = InventoryStatus.valueOf(filterBy.trim().toUpperCase());
                     specification = Specification.where(InventorySpecification.hasStatus(statusValue));
                 } else {
-                    ProductCategories categoryValue = ProductCategories.valueOf(filterBy.trim(). toUpperCase());
+                    ProductCategories categoryValue = ProductCategories.valueOf(filterBy.trim().toUpperCase());
                     specification = Specification.where(InventorySpecification.hasProductCategory(categoryValue));
                 }
 
@@ -170,7 +170,7 @@ public class InventorySearchService {
 
         } catch (IllegalArgumentException iae) {
             log.error("[INVENTORY-SEARCH] Invalid filter parameter: {}", iae.getMessage());
-            throw new ValidationException("Invalid filter parameter: " + iae. getMessage());
+            throw new ValidationException("Invalid filter parameter: " + iae.getMessage());
         } catch (DataAccessException da) {
             log.error("[INVENTORY-SEARCH] Database error filtering inventory: {}", da.getMessage());
             throw new DatabaseException("Failed to filter inventory", da);

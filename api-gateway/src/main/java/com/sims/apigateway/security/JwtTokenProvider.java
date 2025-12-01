@@ -13,6 +13,8 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.List;
 
+import static com.sims.common.constants.AppConstants.ACCESS_TOKEN_DURATION_MS;
+
 /**
  * JWT Token Provider for API Gateway
  * Validates tokens (does NOT generate them - that's Auth Service's job)
@@ -25,11 +27,9 @@ import java.util.List;
 public class JwtTokenProvider {
 
     private SecretKey secretKey;
+
     @Value("${jwt.secret}")
     private String secret;
-
-    @Value("${jwt.expiration.access-token}")
-    private long accessTokenValidity;
 
     /**
      * Initialize SecretKey after dependency injection
@@ -51,7 +51,7 @@ public class JwtTokenProvider {
 
             log.info("[JWT-PROVIDER] Initialized successfully");
             log.info("[JWT-PROVIDER] Token validity: {} ms ({} minutes)",
-                    accessTokenValidity, accessTokenValidity / 60000);
+                    ACCESS_TOKEN_DURATION_MS, ACCESS_TOKEN_DURATION_MS / 60000);
 
         } catch (IllegalArgumentException e) {
             log.error("[JWT-PROVIDER] Invalid JWT secret: {}", e.getMessage());

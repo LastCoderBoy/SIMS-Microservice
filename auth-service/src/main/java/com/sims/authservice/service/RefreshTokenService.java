@@ -12,14 +12,9 @@ import com.sims.authservice.entity.Users;
 public interface RefreshTokenService {
 
     RefreshToken createRefreshToken(String username, String ipAddress, String userAgent);
-
     RefreshToken verifyExpiration(String token);
-
     void revokeToken(String token);
-
     void revokeAllUserTokens(Users user);
-
     RefreshToken rotateRefreshToken(RefreshToken oldToken, String ipAddress, String userAgent);
-
     RefreshToken findByToken(String token);
 }

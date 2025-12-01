@@ -19,6 +19,8 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.List;
 
+import static com.sims.common.constants.AppConstants.REFRESH_TOKEN_DURATION_MS;
+
 /**
  * Refresh Token Service Implementation
  * Handles refresh token lifecycle (create, validate, rotate, revoke)
@@ -32,9 +34,6 @@ import java.util.List;
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     private static final int MAX_ACTIVE_TOKENS_PER_USER = 5;
-
-    @Value("${jwt.refresh.expiration}") // 7 days in milliseconds
-    private Long refreshTokenDurationMs;
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
@@ -52,7 +51,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         refreshToken.setUser(user);
         refreshToken.setIpAddress(ipAddress);
         refreshToken.setUserAgent(userAgent);
-        refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
+        refreshToken.setExpiryDate(Instant.now().plusMillis(REFRESH_TOKEN_DURATION_MS));
 
         log.info("[REFRESH-TOKEN] Created refresh token for user: {} from IP: {}", user.getUsername(), ipAddress);
         return refreshTokenRepository.save(refreshToken);

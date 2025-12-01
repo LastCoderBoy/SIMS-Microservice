@@ -41,14 +41,14 @@ import java.util.List;
 @Slf4j
 public class TotalItemsServiceImpl implements TotalItemsService {
 
+    // ========== Components ==========
+    private final InventoryHelper inventoryHelper;
+
     // ========== Services ==========
     private final InventoryQueryService inventoryQueryService;
     private final InventorySearchService inventorySearchService;
     private final StockManagementService stockManagementService;
     private final ProductService productService;
-
-    // ========== Components ==========
-    private final InventoryHelper inventoryHelper;
 
     // ========== Repositories ==========
     private final InventoryRepository inventoryRepository;

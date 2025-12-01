@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -30,9 +31,8 @@ public class PaginatedResponse<T> implements Serializable {
     private List<T> content;
     private int totalPages;
     private long totalElements;
-    private boolean last;
-    private boolean first;
-    private boolean empty;
+    private int currentPage;
+    private int pageSize;
 
     /**
      * Constructor for simple list response without pagination metadata
@@ -43,9 +43,8 @@ public class PaginatedResponse<T> implements Serializable {
         this.content = content;
         this.totalElements = content != null ? content.size() : 0;
         this.totalPages = content != null && !content.isEmpty() ? 1 : 0;
-        this.last = true;
-        this.first = true;
-        this.empty = content == null || content.isEmpty();
+        this.currentPage = 0;
+        this.pageSize = 0;
     }
 
     /**
@@ -60,9 +59,8 @@ public class PaginatedResponse<T> implements Serializable {
                 page.getContent(),
                 page.getTotalPages(),
                 page.getTotalElements(),
-                page.isLast(),
-                page.isFirst(),
-                page.isEmpty()
+                page.getNumber(),
+                page.getSize()
         );
     }
 

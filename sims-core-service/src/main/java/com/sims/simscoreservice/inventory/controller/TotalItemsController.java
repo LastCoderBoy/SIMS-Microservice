@@ -67,7 +67,7 @@ public class TotalItemsController {
      * @return ApiResponse<Void>
      */
     @PutMapping("/{sku}/update")
-    public ResponseEntity<ApiResponse<Void>> updateProduct(
+    public ResponseEntity<ApiResponse<Void>> updateProductLevels(
             @PathVariable String sku,
             @Valid @RequestBody InventoryRequest request,
             @RequestHeader(USER_ID_HEADER) String userId,

@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.sims.common.constants.AppConstants.AUTHORIZATION_HEADER;
+
 /**
  * Authentication Controller
  * Handles login, logout, token refresh, and user updates
@@ -90,7 +92,7 @@ public class AuthenticationController {
      */
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<Void>> logout(
-            @RequestHeader("Authorization") String accessToken,
+            @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
             HttpServletResponse response,
             HttpServletRequest request) {
 
@@ -138,7 +140,7 @@ public class AuthenticationController {
     @PutMapping("/update")
     public ResponseEntity<ApiResponse<Void>> updateUser(
             @RequestBody UpdateUserRequest userRequest,
-            @RequestHeader("Authorization") String token) {
+            @RequestHeader(AUTHORIZATION_HEADER) String token) {
 
         String jwtToken = TokenUtils.extractToken(token);
         userService.updateUser(userRequest, jwtToken);

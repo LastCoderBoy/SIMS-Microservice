@@ -54,6 +54,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         // Inventory Enums
         registry.addConverter(new InventoryStatusConverter());
+        registry.addConverter(new LossReasonConverter());
 
         // TODO: Add SO/PO converters when implementing
         // registry.addConverter(new SalesOrderStatusConverter());

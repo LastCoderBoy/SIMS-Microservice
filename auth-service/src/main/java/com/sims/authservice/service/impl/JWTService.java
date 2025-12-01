@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import static com.sims.common.constants.AppConstants.ACCESS_TOKEN_DURATION_MS;
+
 /**
  * JWT Service - Token Generation and Validation
  *
@@ -34,9 +36,6 @@ public class JWTService {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.access.expiration}") // 15 min in milliseconds
-    private Long accessTokenDurationMs;
-
     private final BlackListTokenRepository blackListTokenRepository;
 
 
@@ -50,7 +49,7 @@ public class JWTService {
                 .add(claims)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + accessTokenDurationMs))
+                .expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_DURATION_MS))
                 .and()
                 .signWith(getKey())
                 .compact();
