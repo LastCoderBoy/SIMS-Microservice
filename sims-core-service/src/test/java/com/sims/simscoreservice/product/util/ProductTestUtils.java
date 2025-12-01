@@ -92,7 +92,7 @@ public class ProductTestUtils {
         product.setProductId("PRD005");
         product.setName("Toy Piano");
         product.setLocation("E2-220");
-        product.setCategory(ProductCategories.MUSICAL_TOYS);
+        product.setCategory(ProductCategories.MUSICAL_TOY);
         product.setPrice(new BigDecimal("49.99"));
         product.setStatus(ProductStatus.ARCHIVED);
         product.setCreatedAt(LocalDateTime.now().minusDays(200));

@@ -151,10 +151,17 @@ public class GlobalServiceHelper {
         style.setFont(font);
         style.setFillForegroundColor(IndexedColors. GREY_25_PERCENT.getIndex());
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        style. setBorderBottom(BorderStyle. THIN);
+        style.setBorderBottom(BorderStyle.THIN);
         style.setBorderTop(BorderStyle.THIN);
         style.setBorderLeft(BorderStyle.THIN);
-        style.setBorderRight(BorderStyle. THIN);
+        style.setBorderRight(BorderStyle.THIN);
+        return style;
+    }
+
+    public static CellStyle createDecimalStyle(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
+        DataFormat format = workbook.createDataFormat();
+        style.setDataFormat(format.getFormat("#,##0.00"));
         return style;
     }
 }

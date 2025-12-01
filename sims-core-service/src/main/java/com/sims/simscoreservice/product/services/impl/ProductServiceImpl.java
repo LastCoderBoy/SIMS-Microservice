@@ -85,6 +85,7 @@ public class ProductServiceImpl implements ProductService {
 
             // Save product
             Product savedProduct = productRepository.save(product);
+            productRepository.flush(); // This populates @CreationTimestamp
 
             // Add to inventory if status is not PLANNING
             if (!request.getStatus().equals(ProductStatus.PLANNING)) {

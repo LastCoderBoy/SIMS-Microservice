@@ -46,7 +46,7 @@ public class ProductQueryService {
 
     @Transactional(readOnly = true)
     public List<Product> getAllProducts() {
-        return productRepository.findAll(Sort.by("productID").ascending());
+        return productRepository.findAll(Sort.by("productId").ascending());
     }
 
     @Transactional(readOnly = true)

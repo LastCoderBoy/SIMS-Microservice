@@ -143,6 +143,7 @@ public class InventoryServiceImpl implements InventoryService {
             inventory.setStatus(status);
 
             inventoryRepository.save(inventory);
+            inventoryRepository.flush();
 
             log.info("[INVENTORY-SERVICE] Product added to inventory - SKU: {}, Status: {}", sku, status);
 

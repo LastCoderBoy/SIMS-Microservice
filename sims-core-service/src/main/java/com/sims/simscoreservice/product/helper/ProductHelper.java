@@ -118,6 +118,9 @@ public class ProductHelper {
             // Create header style
             CellStyle headerStyle = GlobalServiceHelper.createHeaderStyle(workbook);
 
+            // Create price style
+            CellStyle priceStyle = GlobalServiceHelper.createDecimalStyle(workbook);
+
             // Create header row
             Row headerRow = sheet.createRow(0);
             String[] headers = {"Product ID", "Name", "Category", "Location", "Price", "Status", "Created At"};
@@ -135,11 +138,13 @@ public class ProductHelper {
 
                 row.createCell(0). setCellValue(product.getProductId());
                 row.createCell(1).setCellValue(product.getName());
-                row.createCell(2).setCellValue(product.getCategory(). name());
+                row.createCell(2).setCellValue(product.getCategory().name());
                 row.createCell(3).setCellValue(product.getLocation());
-                row. createCell(4).setCellValue(product.getPrice(). doubleValue());
-                row. createCell(5).setCellValue(product.getStatus().name());
-                row.createCell(6).setCellValue(product.getCreatedAt(). toString());
+                Cell priceCell = row.createCell(4);
+                priceCell.setCellValue(product.getPrice().doubleValue());
+                priceCell.setCellStyle(priceStyle);
+                row.createCell(5).setCellValue(product.getStatus().name());
+                row.createCell(6).setCellValue(product.getCreatedAt().toString());
             }
 
             // Auto-size columns

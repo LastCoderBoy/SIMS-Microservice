@@ -20,7 +20,7 @@ public class SalesOrderQueryService {
      */
     @Transactional(readOnly = true)
     public long countActiveOrdersForProduct(String productId) {
-        return null;
+        return 0;
 //        return salesOrderRepository.countActiveOrdersForProduct(productId);
     }
 }

@@ -50,7 +50,7 @@ public class ProductSpecification {
         return (root, query, criteriaBuilder) -> {
             if (filter == null || filter.trim().isEmpty()) return null;
 
-            String searchPattern = "%" + filter.toLowerCase() + "%";
+            String searchPattern = filter.toLowerCase();
             return criteriaBuilder.or(
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("location")), searchPattern),
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("category").as(String.class)), searchPattern),
