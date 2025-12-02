@@ -1,4 +1,4 @@
-package com.sims.simscoreservice.inventory.service.stockManagement;
+package com.sims.simscoreservice.inventory.stockManagement;
 
 import com.sims.common.exceptions.*;
 import com.sims.simscoreservice.exceptions.InsufficientStockException;

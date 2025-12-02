@@ -9,7 +9,7 @@ import com.sims.common.models.PaginatedResponse;
 import com.sims.simscoreservice.inventory.entity.Inventory;
 import com.sims.simscoreservice.inventory.enums.InventoryStatus;
 import com.sims.simscoreservice.inventory.service.InventoryService;
-import com.sims.simscoreservice.inventory.service.queryService.InventoryQueryService;
+import com.sims.simscoreservice.inventory.queryService.InventoryQueryService;
 import com.sims.simscoreservice.orderManagement.salesOrder.service.queryService.SalesOrderQueryService;
 import com.sims.simscoreservice.product.dto.BatchProductRequest;
 import com.sims.simscoreservice.product.dto.BatchProductResponse;

@@ -1,4 +1,4 @@
-package com.sims.simscoreservice.inventory.service.searchService;
+package com.sims.simscoreservice.inventory.searchService;
 
 
 import com.sims.common.exceptions.DatabaseException;
@@ -8,7 +8,7 @@ import com.sims.simscoreservice.inventory.entity.Inventory;
 import com.sims.simscoreservice.inventory.enums.InventoryStatus;
 import com.sims.simscoreservice.inventory.helper.InventoryHelper;
 import com.sims.simscoreservice.inventory.repository.InventoryRepository;
-import com.sims.simscoreservice.inventory.service.queryService.InventoryQueryService;
+import com.sims.simscoreservice.inventory.queryService.InventoryQueryService;
 import com.sims.simscoreservice.inventory.specification.InventorySpecification;
 import com.sims.simscoreservice.product.enums.ProductCategories;
 import com.sims.simscoreservice.shared.util.GlobalServiceHelper;

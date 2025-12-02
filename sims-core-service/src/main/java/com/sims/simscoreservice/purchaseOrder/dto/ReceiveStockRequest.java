@@ -1,4 +1,4 @@
-package com.sims.simscoreservice.inventory.dto;
+package com.sims.simscoreservice.purchaseOrder.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -21,8 +21,9 @@ import java.time.LocalDate;
 public class ReceiveStockRequest {
 
     @NotNull(message = "Received quantity is required")
-    @Min(value = 1, message = "Received quantity must be at least 1")
+    @Min(value = 0, message = "Received quantity must be at least 0")
     private Integer receivedQuantity;
 
     private LocalDate actualArrivalDate;
 }
+

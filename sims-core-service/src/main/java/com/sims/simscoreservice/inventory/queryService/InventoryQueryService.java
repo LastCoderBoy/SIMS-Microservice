@@ -1,4 +1,4 @@
-package com.sims.simscoreservice.inventory.service.queryService;
+package com.sims.simscoreservice.inventory.queryService;
 
 import com.sims.common.exceptions.DatabaseException;
 import com.sims.common.exceptions.ResourceNotFoundException;

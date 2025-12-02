@@ -12,7 +12,7 @@ import com.sims.simscoreservice.inventory.enums.InventoryStatus;
 import com.sims.simscoreservice.inventory.helper.InventoryHelper;
 import com.sims.simscoreservice.inventory.repository.InventoryRepository;
 import com.sims.simscoreservice.inventory.service.InventoryService;
-import com.sims.simscoreservice.inventory.service.searchService.InventorySearchService;
+import com.sims.simscoreservice.inventory.searchService.InventorySearchService;
 import com.sims.simscoreservice.product.entity.Product;
 import com.sims.simscoreservice.shared.util.GlobalServiceHelper;
 import lombok.RequiredArgsConstructor;
@@ -109,9 +109,8 @@ public class InventoryServiceImpl implements InventoryService {
             // inventoryHelper.fillWithSalesOrderView(combinedResults, pendingSO.getContent());
             // inventoryHelper.fillWithPurchaseOrderView(combinedResults, pendingPO.getContent());
 
-            return PaginatedResponse.from(
-                    new PageImpl<>(combinedResults, PageRequest.of(page, size),
-                            combinedResults.size())
+            return new PaginatedResponse<>(
+                    new PageImpl<>(combinedResults, PageRequest.of(page, size), combinedResults.size())
             );
 
         } catch (Exception e) {
