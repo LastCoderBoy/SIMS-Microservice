@@ -49,7 +49,7 @@ public class InventorySearchService {
             Optional<String> inputText = Optional.ofNullable(text);
 
             if (inputText.isPresent() && !inputText.get().trim().isEmpty()) {
-                Pageable pageable = globalServiceHelper. preparePageable(page, size, sortBy, sortDirection);
+                Pageable pageable = globalServiceHelper.preparePageable(page, size, sortBy, sortDirection);
                 return inventoryRepository.searchInLowStockProducts(inputText.get(). trim(). toLowerCase(), pageable);
             }
 

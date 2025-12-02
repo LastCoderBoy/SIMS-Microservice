@@ -190,22 +190,22 @@ public class InventoryHelper {
                 Row row = sheet.createRow(rowNum++);
 
                 row.createCell(0). setCellValue(inventory.getSku());
-                row.createCell(1).setCellValue(inventory. getProduct().getProductId());
+                row.createCell(1).setCellValue(inventory.getProduct().getProductId());
                 row.createCell(2).setCellValue(inventory.getProduct().getName());
-                row.createCell(3).setCellValue(inventory. getProduct().getCategory(). name());
-                row.createCell(4).setCellValue(inventory. getLocation());
-                row.createCell(5).setCellValue(inventory. getCurrentStock());
+                row.createCell(3).setCellValue(inventory.getProduct().getCategory().name());
+                row.createCell(4).setCellValue(inventory.getLocation());
+                row.createCell(5).setCellValue(inventory.getCurrentStock());
                 row.createCell(6).setCellValue(inventory.getMinLevel());
                 row.createCell(7).setCellValue(inventory.getReservedStock());
                 row.createCell(8).setCellValue(inventory.getAvailableStock());
-                row.createCell(9).setCellValue(inventory.getProduct().getPrice(). doubleValue());
+                row.createCell(9).setCellValue(inventory.getProduct().getPrice().doubleValue());
                 row.createCell(10).setCellValue(inventory.getStatus().name());
-                row.createCell(11). setCellValue(inventory.getLastUpdate() != null ? inventory.getLastUpdate().toString() : "");
+                row.createCell(11).setCellValue(inventory.getLastUpdate() != null ? inventory.getLastUpdate().toString() : "");
             }
 
             // Auto-size columns
             for (int i = 0; i < headers.length; i++) {
-                sheet. autoSizeColumn(i);
+                sheet.autoSizeColumn(i);
             }
 
             // Write to response

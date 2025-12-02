@@ -52,7 +52,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, String>,
             "LOWER(i.sku) LIKE CONCAT('%', :text, '%') OR " +
             "LOWER(i.location) LIKE CONCAT('%', :text, '%') OR " +
             "LOWER(i.product.productId) LIKE CONCAT('%', :text, '%') OR " +
-            "LOWER(i. product.name) LIKE CONCAT('%', :text, '%') OR " +
+            "LOWER(i.product.name) LIKE CONCAT('%', :text, '%') OR " +
             "LOWER(i.product.category) LIKE CONCAT('%', :text, '%')")
     Page<Inventory> searchProducts(@Param("text") String text, Pageable pageable);
 
@@ -64,8 +64,8 @@ public interface InventoryRepository extends JpaRepository<Inventory, String>,
             "LOWER(i.sku) LIKE CONCAT('%', :text, '%') OR " +
             "LOWER(i.location) LIKE CONCAT('%', :text, '%') OR " +
             "LOWER(i.product.productId) LIKE CONCAT('%', :text, '%') OR " +
-            "LOWER(i.product. name) LIKE CONCAT('%', :text, '%') OR " +
-            "LOWER(i. product.category) LIKE CONCAT('%', :text, '%'))")
+            "LOWER(i.product.name) LIKE CONCAT('%', :text, '%') OR " +
+            "LOWER(i.product.category) LIKE CONCAT('%', :text, '%'))")
     Page<Inventory> searchInLowStockProducts(@Param("text") String text, Pageable pageable);
 
     Page<Inventory> findByStatus(InventoryStatus status, Pageable pageable);
@@ -81,7 +81,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, String>,
     /**
      * Get low stock items (list)
      */
-    @Query("SELECT i FROM Inventory i WHERE i.status != 'INVALID' AND i. currentStock <= i.minLevel")
+    @Query("SELECT i FROM Inventory i WHERE i.status != 'INVALID' AND i.currentStock <= i.minLevel")
     List<Inventory> getLowStockItems(Sort sort);
 
     /**
