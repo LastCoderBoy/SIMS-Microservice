@@ -6,6 +6,8 @@ import com.sims.common.exceptions.ServiceException;
 import com.sims.common.exceptions.ValidationException;
 import com.sims.common.models.ApiResponse;
 import com.sims.simscoreservice.exceptions.ForbiddenException;
+import com.sims.simscoreservice.exceptions.InsufficientStockException;
+import com.sims.simscoreservice.exceptions.InventoryException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
@@ -95,6 +97,17 @@ public class CoreExceptionHandler {
     }
 
     /**
+     * Insufficient stock exception
+     */
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInsufficientStockException(InsufficientStockException ex) {
+        log.error("[CORE-EX-HANDLER] InsufficientStockException: {}", ex.getMessage(), ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error("Insufficient stock. Please try again later."));
+    }
+
+    /**
      * Handle bad request
      */
     @ExceptionHandler(BadRequestException.class)
@@ -116,6 +129,17 @@ public class CoreExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.error("Database error occurred"));
+    }
+
+    /**
+     * Inventory exception
+     */
+    @ExceptionHandler(InventoryException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInventoryException(InventoryException ex) {
+        log.error("[CORE-EX-HANDLER] Inventory exception: {}", ex.getMessage(), ex);
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponse.error("Internal error with Inventory. Please contact support."));
     }
 
     /**
