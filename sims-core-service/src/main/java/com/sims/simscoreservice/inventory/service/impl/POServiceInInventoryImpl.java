@@ -13,7 +13,6 @@ import com.sims.simscoreservice.inventory.service.POServiceInInventory;
 import com.sims.simscoreservice.inventory.stockManagement.StockManagementService;
 import com.sims.simscoreservice.product.enums.ProductCategories;
 import com.sims.simscoreservice.product.helper.ProductStatusModifier;
-import com.sims.simscoreservice.product.services.ProductService;
 import com.sims.simscoreservice.purchaseOrder.dto.ReceiveStockRequest;
 import com.sims.simscoreservice.purchaseOrder.dto.SummaryPurchaseOrderView;
 import com.sims.simscoreservice.purchaseOrder.entity.PurchaseOrder;
@@ -33,7 +32,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.AccessDeniedException;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -59,7 +57,6 @@ public class POServiceInInventoryImpl implements POServiceInInventory {
     private final InventoryQueryService inventoryQueryService;
     private final StockManagementService stockManagementService;
     private final InventoryStatusService inventoryStatusService;
-    private final ProductService productService;
     private final StockMovementService stockMovementService; // log the stock movements
 
     // ========== Repositories ==========
@@ -118,7 +115,7 @@ public class POServiceInInventoryImpl implements POServiceInInventory {
 
     @Override
     @Transactional
-    public ApiResponse<Void> cancelPurchaseOrder(Long orderId, String username) throws BadRequestException, AccessDeniedException {
+    public ApiResponse<Void> cancelPurchaseOrder(Long orderId, String username){
         try {
             // Validate order ID
             if (orderId == null || orderId < 1) {

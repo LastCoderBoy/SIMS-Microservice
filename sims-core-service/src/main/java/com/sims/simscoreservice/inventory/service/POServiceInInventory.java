@@ -33,7 +33,7 @@ public interface POServiceInInventory {
     /**
      * Cancel purchase order
      */
-    ApiResponse<Void> cancelPurchaseOrder(Long orderId, String username) throws BadRequestException, AccessDeniedException;
+    ApiResponse<Void> cancelPurchaseOrder(Long orderId, String username);
 
     /**
      * Search pending purchase orders

@@ -56,8 +56,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addConverter(new InventoryStatusConverter());
         registry.addConverter(new LossReasonConverter());
 
-        // TODO: Add SO/PO converters when implementing
-        // registry.addConverter(new SalesOrderStatusConverter());
-        // registry.addConverter(new PurchaseOrderStatusConverter());
+        // Sales Order & Purchase Order Enums
+        registry.addConverter(new SalesOrderStatusConverter());
+        registry.addConverter(new PurchaseOrderStatusConverter());
     }
 }

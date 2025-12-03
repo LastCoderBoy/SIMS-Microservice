@@ -131,7 +131,6 @@ public class POControllerInInventory {
     public ResponseEntity<ApiResponse<Void>> receivePurchaseOrder(
             @PathVariable Long orderId,
             @Valid @RequestBody ReceiveStockRequest receiveRequest,
-            @RequestHeader("Authorization") String token,
             @RequestHeader(USER_ID_HEADER) String userId,
             @RequestHeader(USER_ROLES_HEADER) String roles) throws BadRequestException {
 
@@ -153,17 +152,13 @@ public class POControllerInInventory {
     @PutMapping("/{orderId}/cancel")
     public ResponseEntity<ApiResponse<Void>> cancelPurchaseOrder(
             @PathVariable Long orderId,
-            @RequestHeader("Authorization") String token,
             @RequestHeader(USER_ID_HEADER) String userId,
-            @RequestHeader(USER_ROLES_HEADER) String roles) throws BadRequestException, AccessDeniedException {
+            @RequestHeader(USER_ROLES_HEADER) String roles){
 
         log.info("[PO-INVENTORY-CONTROLLER] Cancel PO {} by user: {}", orderId, userId);
 
         // Check authorization
         roleValidator.requireAnyRole(roles, "ROLE_ADMIN", "ROLE_MANAGER");
-
-        // Extract username from token
-        String jwtToken = GlobalServiceHelper.validateAndExtractToken(token);
 
         ApiResponse<Void> response = poServiceInInventory.cancelPurchaseOrder(orderId, userId);
 
