@@ -78,8 +78,16 @@ public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Lo
      */
     List<PurchaseOrder> findByProduct_ProductId(String productId);
 
+
     /**
-     * Find by supplier ID
+     * Check if supplier has active POs
      */
-    List<PurchaseOrder> findBySupplier_Id(Long supplierId);
+    @Query("""
+        SELECT CASE WHEN EXISTS (
+            SELECT 1 FROM PurchaseOrder po
+            WHERE po.supplier.id = :supplierId
+            AND po.status IN ('AWAITING_APPROVAL', 'DELIVERY_IN_PROCESS', 'PARTIALLY_RECEIVED')
+        ) THEN true ELSE false END
+    """)
+    boolean existsActivePurchaseOrdersForSupplier(@Param("supplierId") Long supplierId);
 }

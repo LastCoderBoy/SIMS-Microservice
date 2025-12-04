@@ -1,5 +1,6 @@
 package com.sims.simscoreservice.shared.email;
 
+import com.sims.simscoreservice.confirmationToken.entity.ConfirmationToken;
 import com.sims.simscoreservice.purchaseOrder.entity.PurchaseOrder;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

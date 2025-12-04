@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 
 /**
@@ -25,16 +29,27 @@ public class Supplier {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String name; // sample: "Toys Distributors Inc."
+    @Column(name = "name", nullable = false, unique = true, length = 100)
+    private String name;
 
-    private String contactPerson; // e.g., "John Doe"
+    @Column(name = "contact_person", length = 100)
+    private String contactPerson;
 
-    @Column(unique = true)
-    private String email; // e.g., "contact@sims.com"
+    @Column(name = "email", unique = true, length = 100)
+    private String email;
 
-    private String phone; // e.g., "+1234567890"
+    @Column(name = "phone", length = 20)
+    private String phone;
 
-    private String address; // e.g., "123 Main St, Anytown, USA"
+    @Column(name = "address", length = 255)
+    private String address;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }
 

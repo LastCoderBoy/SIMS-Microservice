@@ -21,6 +21,8 @@ import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Purchase Order Query Service
  * Centralized read-only operations for purchase orders
@@ -45,7 +47,7 @@ public class PurchaseOrderQueryService {
             return purchaseOrderRepository.findById(orderId)
                     .orElseThrow(() -> new ResourceNotFoundException("Purchase order not found with ID: " + orderId));
         } catch (DataAccessException e) {
-            log.error("[PO-QUERY] Database error: {}", e.getMessage());
+            log.error("[PO-QUERY] findById() - Database error: {}", e.getMessage());
             throw new DatabaseException("Failed to fetch purchase order", e);
         }
     }
