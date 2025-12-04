@@ -13,7 +13,6 @@ import com.sims.simscoreservice.purchaseOrder.strategy.searchStrategy.PoSearchSt
 import com.sims.simscoreservice.shared.util.GlobalServiceHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -57,7 +56,7 @@ public class PurchaseOrderSearchServiceImpl implements PurchaseOrderSearchServic
         }
 
         // Search pending orders
-        Page<PurchaseOrder> result = icPoSearchStrategy.searchInPos(text, page, size, sortBy, sortDirection);
+        Page<PurchaseOrder> result = icPoSearchStrategy.searchInPo(text, page, size, sortBy, sortDirection);
         return poHelper.toPaginatedSummaryView(result);
     }
 
@@ -86,7 +85,7 @@ public class PurchaseOrderSearchServiceImpl implements PurchaseOrderSearchServic
             return queryService.getAllPurchaseOrders(page, size, sortBy, sortDirection);
         }
 
-        Page<PurchaseOrder> result = omPoSearchStrategy.searchInPos(text, page, size, sortBy, sortDirection);
+        Page<PurchaseOrder> result = omPoSearchStrategy.searchInPo(text, page, size, sortBy, sortDirection);
         return poHelper.toPaginatedSummaryView(result);
     }
 

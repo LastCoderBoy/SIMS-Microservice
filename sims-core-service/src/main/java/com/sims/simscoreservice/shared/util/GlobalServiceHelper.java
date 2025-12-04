@@ -134,6 +134,25 @@ public class GlobalServiceHelper {
     }
 
     /**
+     * Normalize and validate option date parameter
+     */
+    public static String normalizeOptionDate(String optionDate) {
+        if (optionDate == null || optionDate.trim().isEmpty()) {
+            return null;
+        }
+
+        String normalized = optionDate.trim().toLowerCase();
+
+        return switch (normalized) {
+            case "orderdate", "order_date", "order-date" -> "orderdate";
+            case "deliverydate", "delivery_date", "delivery-date" -> "deliverydate";
+            case "estimateddeliverydate", "estimated_delivery_date", "estimated-delivery-date" -> "estimateddeliverydate";
+            default -> throw new IllegalArgumentException("Invalid optionDate value: " + optionDate +
+                    ". Valid values: orderDate, deliveryDate, estimatedDeliveryDate");
+        };
+    }
+
+    /**
      * Generate random UUID token
      */
     public static String generateToken() {

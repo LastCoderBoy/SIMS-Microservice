@@ -9,6 +9,7 @@ import com.sims.simscoreservice.inventory.service.SOServiceInInventory;
 import com.sims.simscoreservice.salesOrder.dto.ProcessSalesOrderRequestDto;
 import com.sims.simscoreservice.salesOrder.dto.SummarySalesOrderView;
 import com.sims.simscoreservice.salesOrder.enums.SalesOrderStatus;
+import com.sims.simscoreservice.shared.util.GlobalServiceHelper;
 import com.sims.simscoreservice.shared.util.RoleValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -168,7 +169,7 @@ public class SOControllerInInventory {
 
         try {
             // Validate and normalize optionDate
-            String optionDateValue = normalizeOptionDate(optionDate);
+            String optionDateValue = GlobalServiceHelper.normalizeOptionDate(optionDate);
 
             PaginatedResponse<SummarySalesOrderView> dtoResponse =
                     soServiceInInventory.filterWaitingSoProducts(status, optionDateValue, startDate, endDate,
@@ -183,24 +184,5 @@ public class SOControllerInInventory {
             log.error("[SO-INVENTORY-CONTROLLER] Error filtering orders: {}", e.getMessage());
             throw new ServiceException("Failed to filter orders", e);
         }
-    }
-
-    /**
-     * Normalize and validate option date parameter
-     */
-    private String normalizeOptionDate(String optionDate) {
-        if (optionDate == null || optionDate.trim().isEmpty()) {
-            return null;
-        }
-
-        String normalized = optionDate.trim().toLowerCase();
-
-        return switch (normalized) {
-            case "orderdate", "order_date", "order-date" -> "orderdate";
-            case "deliverydate", "delivery_date", "delivery-date" -> "deliverydate";
-            case "estimateddeliverydate", "estimated_delivery_date", "estimated-delivery-date" -> "estimateddeliverydate";
-            default -> throw new IllegalArgumentException("Invalid optionDate value: " + optionDate +
-                    ". Valid values: orderDate, deliveryDate, estimatedDeliveryDate");
-        };
     }
 }

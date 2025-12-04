@@ -10,14 +10,23 @@ import com.sims.simscoreservice.inventory.dto.PendingOrderResponse;
 import com.sims.simscoreservice.inventory.entity.Inventory;
 import com.sims.simscoreservice.inventory.enums.InventoryStatus;
 import com.sims.simscoreservice.inventory.helper.InventoryHelper;
+import com.sims.simscoreservice.inventory.queryService.DamageLossQueryService;
 import com.sims.simscoreservice.inventory.repository.InventoryRepository;
 import com.sims.simscoreservice.inventory.service.InventoryService;
 import com.sims.simscoreservice.inventory.searchService.InventorySearchService;
 import com.sims.simscoreservice.product.entity.Product;
+import com.sims.simscoreservice.product.enums.ProductCategories;
+import com.sims.simscoreservice.purchaseOrder.dto.SummaryPurchaseOrderView;
+import com.sims.simscoreservice.purchaseOrder.enums.PurchaseOrderStatus;
+import com.sims.simscoreservice.purchaseOrder.queryService.PurchaseOrderQueryService;
+import com.sims.simscoreservice.salesOrder.dto.SummarySalesOrderView;
+import com.sims.simscoreservice.salesOrder.enums.SalesOrderStatus;
+import com.sims.simscoreservice.salesOrder.queryService.SalesOrderQueryService;
 import com.sims.simscoreservice.shared.util.GlobalServiceHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -41,15 +50,18 @@ import java.util.Optional;
 @Slf4j
 public class InventoryServiceImpl implements InventoryService {
 
-    private final InventoryRepository inventoryRepository;
+    // ========== Components ==========
     private final InventoryHelper inventoryHelper;
     private final GlobalServiceHelper globalServiceHelper;
-    private final InventorySearchService inventorySearchService;
 
-    // TODO: Inject when implementing
-    // private final SalesOrderQueryService salesOrderQueryService;
-    // private final PurchaseOrderQueryService purchaseOrderQueryService;
-    // private final DamageLossQueryService damageLossQueryService;
+    // =========== Services ===========
+    private final InventorySearchService inventorySearchService;
+    private final SalesOrderQueryService salesOrderQueryService;
+    private final PurchaseOrderQueryService purchaseOrderQueryService;
+    private final DamageLossQueryService damageLossQueryService;
+
+    // ========== Repositories ==========
+    private final InventoryRepository inventoryRepository;
 
 
     @Override
@@ -62,10 +74,10 @@ public class InventoryServiceImpl implements InventoryService {
             // Get pending orders (Sales + Purchase)
             PaginatedResponse<PendingOrderResponse> pendingOrders = getAllPendingOrders(page, size);
 
-            // TODO: Get counts from other services when implemented
-            Long incomingStockSize = 0L; // purchaseOrderQueryService.getTotalValidPoSize();
-            Long outgoingStockSize = 0L; // salesOrderQueryService.countOutgoingSalesOrders();
-            Long damageLossSize = 0L;    // damageLossQueryService. countTotalDamagedProducts();
+
+            Long incomingStockSize = purchaseOrderQueryService.getTotalValidPoSize();
+            Long outgoingStockSize = salesOrderQueryService.countOutgoingSalesOrders();
+            Long damageLossSize = damageLossQueryService.countTotalDamagedProducts();
 
             InventoryPageResponse response = InventoryPageResponse.builder()
                     .totalInventorySize(metrics.getTotalCount())
@@ -94,20 +106,21 @@ public class InventoryServiceImpl implements InventoryService {
     @Transactional(readOnly = true)
     public PaginatedResponse<PendingOrderResponse> getAllPendingOrders(int page, int size) {
         try {
-            // TODO: Fetch pending Sales Orders
-            // PaginatedResponse<SummarySalesOrderView> pendingSO =
-            //     salesOrderQueryService.getAllOutgoingSalesOrders(page, size, "orderDate", "desc");
 
-            // TODO: Fetch pending Purchase Orders
-            // PaginatedResponse<SummaryPurchaseOrderView> pendingPO =
-            //     purchaseOrderQueryService.getAllPendingPurchaseOrders(page, size, "product.name", "asc");
+            // Fetch pending Sales Orders
+            PaginatedResponse<SummarySalesOrderView> pendingSO =
+                    salesOrderQueryService.getAllOutgoingSalesOrders(page, size, "orderDate", "desc");
+
+            // Fetch pending Purchase Orders
+            PaginatedResponse<SummaryPurchaseOrderView> pendingPO =
+                    purchaseOrderQueryService.getAllPendingPurchaseOrders(page, size, "product.name", "asc");
 
             // Combine results
             List<PendingOrderResponse> combinedResults = new ArrayList<>();
 
-            // TODO: Add SO and PO to combined list using helper methods
-            // inventoryHelper.fillWithSalesOrderView(combinedResults, pendingSO.getContent());
-            // inventoryHelper.fillWithPurchaseOrderView(combinedResults, pendingPO.getContent());
+            // Add SO and PO to combined list using helper methods
+            inventoryHelper.fillWithSalesOrderView(combinedResults, pendingSO.getContent());
+            inventoryHelper.fillWithPurchaseOrderView(combinedResults, pendingPO.getContent());
 
             return new PaginatedResponse<>(
                     new PageImpl<>(combinedResults, PageRequest.of(page, size), combinedResults.size())
@@ -204,6 +217,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PaginatedResponse<PendingOrderResponse> searchPendingOrders(String text, int page, int size) {
         try {
             globalServiceHelper.validatePaginationParameters(page, size);
@@ -211,8 +225,8 @@ public class InventoryServiceImpl implements InventoryService {
             Optional<String> inputText = Optional.ofNullable(text);
             if (inputText.isPresent() && !inputText.get().trim().isEmpty()) {
                 log. info("[INVENTORY-SERVICE] Searching pending orders with text: '{}'", text);
-                // TODO:
-//                return inventorySearchService.searchInPendingOrders(text, page, size);
+                Page<PendingOrderResponse> searchResultPage = inventorySearchService.searchInPendingOrders(text, page, size);
+                return new PaginatedResponse<>(searchResultPage);
             }
 
             log.info("[INVENTORY-SERVICE] No search text, returning all pending orders");
@@ -229,6 +243,24 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public PaginatedResponse<PendingOrderResponse> filterPendingOrders(String type, String soStatus, String poStatus, String dateOption, LocalDate startDate, LocalDate endDate, String category, String sortBy, String sortDirection, int page, int size) {
-        return null;
+        try {
+            // Parse status enums
+            SalesOrderStatus salesOrderStatus = soStatus != null ? SalesOrderStatus.valueOf(soStatus.toUpperCase()) : null;
+            PurchaseOrderStatus purchaseOrderStatus = poStatus != null ?  PurchaseOrderStatus.valueOf(poStatus.toUpperCase()) : null;
+            ProductCategories productCategory = category != null ? ProductCategories.valueOf(category.toUpperCase()) : null;
+
+            return inventorySearchService.filterPendingOrders(
+                    type, salesOrderStatus, purchaseOrderStatus,
+                    dateOption, startDate, endDate, productCategory,
+                    sortBy, sortDirection, page, size
+            );
+
+        } catch (IllegalArgumentException e) {
+            log.error("[INVENTORY-SERVICE] Invalid filter parameters: {}", e.getMessage());
+            throw new ValidationException("Invalid filter parameters: " + e.getMessage());
+        } catch (Exception e) {
+            log.error("[INVENTORY-SERVICE] Error filtering pending orders: {}", e.getMessage());
+            throw new ServiceException("Failed to filter pending orders", e);
+        }
     }
 }

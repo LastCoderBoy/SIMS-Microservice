@@ -23,5 +23,5 @@ public interface PoSearchStrategy {
      * @param sortDirection asc or desc
      * @return Page of PurchaseOrder
      */
-    Page<PurchaseOrder> searchInPos(String text, int page, int size, String sortBy, String sortDirection);
+    Page<PurchaseOrder> searchInPo(String text, int page, int size, String sortBy, String sortDirection);
 }

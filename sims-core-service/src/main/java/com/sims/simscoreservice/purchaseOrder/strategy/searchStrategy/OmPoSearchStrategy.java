@@ -31,7 +31,7 @@ public class OmPoSearchStrategy implements PoSearchStrategy {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<PurchaseOrder> searchInPos(String text, int page, int size, String sortBy, String sortDirection) {
+    public Page<PurchaseOrder> searchInPo(String text, int page, int size, String sortBy, String sortDirection) {
         try {
             Sort sort = sortDirection.equalsIgnoreCase("desc")
                     ? Sort.by(sortBy).descending()
