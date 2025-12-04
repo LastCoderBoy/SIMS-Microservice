@@ -1,4 +1,5 @@
-package com.sims.simscoreservice.purchaseOrder.dto;
+package com.sims.simscoreservice.confirmationToken.dto;
+
 
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 
 /**
  * Confirm Purchase Order Request DTO
- * Used by supplier to confirm order via email
+ * Used by supplier to confirm order and provide expected arrival date
  *
  * @author LastCoderBoy
  * @since 2025-01-23
@@ -18,7 +19,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConfirmPoRequestDto {
+public class ConfirmationPoRequest {
 
     @NotNull(message = "Expected arrival date is required")
     @FutureOrPresent(message = "Arrival date must be today or in the future")

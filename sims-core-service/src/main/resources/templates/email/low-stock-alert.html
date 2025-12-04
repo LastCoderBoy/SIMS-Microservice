@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Low Stock Alert - {{PRODUCT_NAME}}</title>
+</head>
+<body>
+<div class="email-container">
+    <!-- Header -->
+    <div class="email-header" style="background-color: #dc3545;">
+        <h1>⚠️ Low Stock Alert</h1>
+        <p>SIMS Inventory Management System</p>
+    </div>
+
+    <!-- Content -->
+    <div class="email-content">
+        <!-- Greeting -->
+        <p class="greeting">
+            Dear <strong>Inventory Manager</strong>,
+        </p>
+
+        <p>
+            This is an automated alert to notify you that the following product has reached
+            or fallen below its minimum stock level:
+        </p>
+
+        <!-- Product Details Table -->
+        <table class="detail-table">
+            <tbody>
+            <tr>
+                <th>Product ID:</th>
+                <td>{{PRODUCT_ID}}</td>
+            </tr>
+            <tr>
+                <th>Product Name:</th>
+                <td>{{PRODUCT_NAME}}</td>
+            </tr>
+            <tr>
+                <th>SKU:</th>
+                <td>{{SKU}}</td>
+            </tr>
+            <tr>
+                <th>Category:</th>
+                <td>{{CATEGORY}}</td>
+            </tr>
+            <tr>
+                <th>Current Stock:</th>
+                <td><strong style="color: #dc3545;">{{CURRENT_STOCK}}</strong></td>
+            </tr>
+            <tr>
+                <th>Minimum Level:</th>
+                <td>{{MIN_LEVEL}}</td>
+            </tr>
+            <tr>
+                <th>Location:</th>
+                <td>{{LOCATION}}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Warning Box -->
+        <div class="warning-box">
+            <strong>⚠️ Action Required:</strong> Please reorder this product immediately to
+            avoid stockouts and potential business disruption.
+        </div>
+
+        <!-- Action Button -->
+        <div class="button-container">
+            <a href="{{DASHBOARD_URL}}" class="email-button confirm">
+                View in Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="email-footer">
+        <p><strong>SIMS Inventory System - Automated Alert</strong></p>
+        <p>
+            <a href="mailto:{{SENDER_EMAIL}}">{{SENDER_EMAIL}}</a>
+        </p>
+        <p class="disclaimer">
+            This is an automated alert.  Alerts are sent when stock levels reach minimum thresholds.
+        </p>
+    </div>
+</div>
+</body>
+</html>

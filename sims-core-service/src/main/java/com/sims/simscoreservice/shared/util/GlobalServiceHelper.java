@@ -153,13 +153,6 @@ public class GlobalServiceHelper {
     }
 
     /**
-     * Generate random UUID token
-     */
-    public static String generateToken() {
-        return UUID.randomUUID().toString();
-    }
-
-    /**
      * Create header style for Excel Reports
      */
     public static CellStyle createHeaderStyle(Workbook workbook) {

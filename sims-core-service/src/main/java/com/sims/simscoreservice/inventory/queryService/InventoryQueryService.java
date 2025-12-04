@@ -10,13 +10,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain. Pageable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util. List;
-import java.util. Optional;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Inventory Query Service
@@ -74,9 +74,9 @@ public class InventoryQueryService {
     @Transactional(readOnly = true)
     public List<Inventory> getAllLowStockProducts(String sortBy, String sortDirection) {
         try {
-            Sort. Direction direction = sortDirection.equalsIgnoreCase("desc")
+            Sort.Direction direction = sortDirection.equalsIgnoreCase("desc")
                     ? Sort.Direction.DESC
-                    : Sort.Direction. ASC;
+                    : Sort.Direction.ASC;
             Sort sort = Sort.by(direction, sortBy);
 
             return inventoryRepository.getLowStockItems(sort);
@@ -84,7 +84,7 @@ public class InventoryQueryService {
             log.error("[INVENTORY-QUERY] Database error retrieving low stock list: {}", da.getMessage());
             throw new DatabaseException("Failed to retrieve low stock products", da);
         } catch (Exception e) {
-            log. error("[INVENTORY-QUERY] Error retrieving low stock list: {}", e.getMessage());
+            log.error("[INVENTORY-QUERY] Error retrieving low stock list: {}", e.getMessage());
             throw new ServiceException("Failed to retrieve low stock products", e);
         }
     }
@@ -95,7 +95,7 @@ public class InventoryQueryService {
     @Transactional(readOnly = true)
     public List<Inventory> getAllInventoryProducts(String sortBy, String sortDirection) {
         try {
-            Sort. Direction direction = sortDirection.equalsIgnoreCase("desc")
+            Sort.Direction direction = sortDirection.equalsIgnoreCase("desc")
                     ? Sort.Direction.DESC
                     : Sort.Direction.ASC;
             Sort sort = Sort.by(direction, sortBy);
@@ -105,7 +105,7 @@ public class InventoryQueryService {
             log.error("[INVENTORY-QUERY] Database error retrieving inventory list: {}", da.getMessage());
             throw new DatabaseException("Failed to retrieve inventory products", da);
         } catch (Exception e) {
-            log. error("[INVENTORY-QUERY] Error retrieving inventory list: {}", e.getMessage());
+            log.error("[INVENTORY-QUERY] Error retrieving inventory list: {}", e.getMessage());
             throw new ServiceException("Failed to retrieve inventory products", e);
         }
     }
@@ -117,7 +117,7 @@ public class InventoryQueryService {
     public Page<Inventory> getAllInventoryProducts(String sortBy, String sortDirection, int page, int size) {
         try {
             Pageable pageable = globalServiceHelper.preparePageable(page, size, sortBy, sortDirection);
-            return inventoryRepository. findAll(pageable);
+            return inventoryRepository.findAll(pageable);
         } catch (DataAccessException da) {
             log.error("[INVENTORY-QUERY] Database error retrieving inventory page: {}", da.getMessage());
             throw new DatabaseException("Failed to retrieve inventory products", da);

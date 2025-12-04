@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Purchase Order Request - {{PO_NUMBER}}</title>
+    <!-- External CSS will be inlined by Java service -->
+</head>
+<body>
+<div class="email-container">
+    <!-- Header -->
+    <div class="email-header">
+        <h1>Purchase Order Request</h1>
+        <p>SIMS Inventory Management System</p>
+    </div>
+
+    <!-- Content -->
+    <div class="email-content">
+        <!-- Greeting -->
+        <p class="greeting">
+            Dear <strong>{{SUPPLIER_NAME}}</strong> Team,
+        </p>
+
+        <p>
+            This email serves as a formal purchase order request for the following item.
+            Please review the details carefully.
+        </p>
+
+        <!-- Order Details Table -->
+        <table class="detail-table">
+            <tbody>
+            <tr>
+                <th>PO Number:</th>
+                <td>{{PO_NUMBER}}</td>
+            </tr>
+            <tr>
+                <th>Order Date:</th>
+                <td>{{ORDER_DATE}}</td>
+            </tr>
+            <tr>
+                <th>Product Name:</th>
+                <td>{{PRODUCT_NAME}}</td>
+            </tr>
+            <tr>
+                <th>Product Category:</th>
+                <td>{{PRODUCT_CATEGORY}}</td>
+            </tr>
+            <tr>
+                <th>Ordered Quantity:</th>
+                <td>{{ORDERED_QUANTITY}}</td>
+            </tr>
+            <tr>
+                <th>Notes:</th>
+                <td>{{NOTES}}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Instructions -->
+        <p>
+            Please review the details above and confirm your ability to fulfill this order
+            using the buttons below:
+        </p>
+
+        <!-- Warning Box -->
+        <div class="warning-box">
+            <strong>⚠️ Important:</strong> This confirmation link will expire in 24 hours.
+            Please respond promptly to avoid order cancellation.
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="button-container">
+            <a href="{{CONFIRM_URL}}" class="email-button confirm">
+                ✓ Confirm Order
+            </a>
+            <a href="{{CANCEL_URL}}" class="email-button cancel">
+                ✗ Decline Order
+            </a>
+        </div>
+
+        <!-- Contact Info -->
+        <p>
+            If you have any questions or require further information, please contact us at
+            <a href="mailto:{{SENDER_EMAIL}}">{{SENDER_EMAIL}}</a>
+        </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="email-footer">
+        <p><strong>Thank you for your prompt attention to this matter.</strong></p>
+        <p>
+            Sincerely,<br>
+            <strong>SIMS Inventory System Team</strong>
+        </p>
+        <p>
+            <a href="mailto:{{SENDER_EMAIL}}">{{SENDER_EMAIL}}</a>
+        </p>
+        <p class="disclaimer">
+            This is an automated email.  Please do not reply directly to this message.
+        </p>
+    </div>
+</div>
+</body>
+</html>
