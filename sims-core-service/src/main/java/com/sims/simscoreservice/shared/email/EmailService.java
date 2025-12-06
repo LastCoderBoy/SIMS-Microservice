@@ -2,6 +2,7 @@ package com.sims.simscoreservice.shared.email;
 
 import com.sims.simscoreservice.confirmationToken.entity.ConfirmationToken;
 import com.sims.simscoreservice.purchaseOrder.entity.PurchaseOrder;
+import com.sims.simscoreservice.shared.email.dto.LowStockAlertDto;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
+
+import static com.sims.common.constants.AppConstants.BASE_INVENTORY_PATH;
+import static com.sims.common.constants.AppConstants.BASE_URL;
 
 /**
  * Email Service
@@ -40,9 +46,6 @@ public class EmailService {
 
     @Value("${spring.mail.username}")
     private String senderEmail;
-
-    @Value("${app.backend.base-url}")
-    private String backendBaseUrl;
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -93,25 +96,29 @@ public class EmailService {
     }
 
     /**
-     * Send low stock alert email
+     * Send low stock alert email with multiple products
      */
     @Async
-    public void sendLowStockAlert(String productId, String productName, String sku, String category,
-                                  int currentStock, int minLevel, String location) {
+    public void sendLowStockAlert(List<LowStockAlertDto> lowStockProducts) {
         try {
+            if (lowStockProducts == null || lowStockProducts.isEmpty()) {
+                log.info("[EMAIL-SERVICE] No low stock products to alert");
+                return;
+            }
+
             String htmlTemplate = loadHtmlTemplate("templates/email/low-stock-alert.html");
             String cssStyles = loadCssStyles("static/email/css/email-styles.css");
 
-            Map<String, String> placeholders = Map.ofEntries(
-                    Map.entry("{{PRODUCT_ID}}", productId),
-                    Map.entry("{{PRODUCT_NAME}}", productName),
-                    Map.entry("{{SKU}}", sku),
-                    Map.entry("{{CATEGORY}}", category),
-                    Map.entry("{{CURRENT_STOCK}}", String.valueOf(currentStock)),
-                    Map.entry("{{MIN_LEVEL}}", String.valueOf(minLevel)),
-                    Map.entry("{{LOCATION}}", location),
-                    Map.entry("{{DASHBOARD_URL}}", backendBaseUrl + "/inventory"),
-                    Map.entry("{{SENDER_EMAIL}}", senderEmail)
+            // Build table rows
+            String tableRows = buildLowStockTableRows(lowStockProducts);
+
+            // Prepare placeholders
+            Map<String, String> placeholders = Map.of(
+                    "{{TOTAL_COUNT}}", String.valueOf(lowStockProducts.size()),
+                    "{{REPORT_DATE}}", LocalDate.now().format(DATE_FORMATTER),
+                    "{{LOW_STOCK_ROWS}}", tableRows,
+                    "{{DASHBOARD_URL}}", BASE_URL + BASE_INVENTORY_PATH + "/low-stock",
+                    "{{SENDER_EMAIL}}", senderEmail
             );
 
             String htmlContent = replacePlaceholders(htmlTemplate, placeholders);
@@ -119,16 +126,70 @@ public class EmailService {
 
             sendEmail(
                     lowStockReceiver,
-                    "⚠️ Low Stock Alert: " + productName + " (" + sku + ")",
+                    "⚠️ Daily Low Stock Alert - " + lowStockProducts.size() + " Products",
                     htmlContent
             );
 
-            log.info("[EMAIL-SERVICE] Low stock alert sent for: {}", sku);
+            log.info("[EMAIL-SERVICE] Low stock alert sent for {} products", lowStockProducts. size());
 
         } catch (Exception e) {
             log.error("[EMAIL-SERVICE] Failed to send low stock alert: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to send low stock alert", e);
         }
+    }
+
+    /**
+     * Build HTML table rows for low stock products
+     */
+    private String buildLowStockTableRows(List<LowStockAlertDto> products) {
+        StringBuilder rows = new StringBuilder();
+
+        for (LowStockAlertDto product : products) {
+            String stockColor = getStockLevelColor(product.getSeverity());
+            String statusBadge = getStatusBadge(product.getSeverity());
+
+            rows.append("<tr>")
+                    .append("<td><strong>").append(product.getSku()).append("</strong></td>")
+                    .append("<td>").append(product.getProductName()).append("</td>")
+                    .append("<td>").append(product.getCategory()).append("</td>")
+                    .append("<td>").append(product.getLocation()).append("</td>")
+                    .append("<td style='text-align: center; color: ").append(stockColor).append("; font-weight: bold;'>")
+                    .append(product.getCurrentStock()).append("</td>")
+                    .append("<td style='text-align: center;'>").append(product.getMinLevel()).append("</td>")
+                    .append("<td style='text-align: center;'>").append(statusBadge).append("</td>")
+                    .append("</tr>");
+        }
+
+        return rows.toString();
+    }
+
+    /**
+     * Get color based on severity
+     */
+    private String getStockLevelColor(String severity) {
+        return switch (severity) {
+            case "CRITICAL" -> "#dc3545"; // Red
+            case "HIGH" -> "#fd7e14";     // Orange
+            case "MEDIUM" -> "#ffc107";   // Yellow
+            default -> "#6c757d";          // Gray
+        };
+    }
+
+    /**
+     * Get status badge HTML
+     */
+    private String getStatusBadge(String severity) {
+        String color = switch (severity) {
+            case "CRITICAL" -> "#dc3545";
+            case "HIGH" -> "#fd7e14";
+            case "MEDIUM" -> "#ffc107";
+            default -> "#6c757d";
+        };
+
+        return String.format(
+                "<span style='background-color: %s; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;'>%s</span>",
+                color, severity
+        );
     }
 
     /**
@@ -189,13 +250,13 @@ public class EmailService {
      * Build confirmation URL for the Supplier
      */
     private String buildConfirmUrl(String token) {
-        return String.format("%s/api/v1/confirmation/purchase-order/confirm? token=%s", backendBaseUrl, token);
+        return String.format("%s/api/v1/email/purchase-order/confirm?token=%s", BASE_URL, token);
     }
 
     /**
      * Build cancel URL for the Supplier
      */
     private String buildCancelUrl(String token) {
-        return String.format("%s/api/v1/confirmation/purchase-order/cancel?token=%s", backendBaseUrl, token);
+        return String.format("%s/api/v1/email/purchase-order/cancel?token=%s", BASE_URL, token);
     }
 }

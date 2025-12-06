@@ -1,10 +1,11 @@
-package com.sims.simscoreservice.orderManagement.service;
+package com.sims.simscoreservice.orderManagement.service.impl;
 
 import com.sims.common.exceptions.*;
 import com.sims.common.models.ApiResponse;
 import com.sims.common.models.PaginatedResponse;
 import com.sims.simscoreservice.confirmationToken.entity.ConfirmationToken;
 import com.sims.simscoreservice.confirmationToken.service.ConfirmationTokenService;
+import com.sims.simscoreservice.orderManagement.service.PurchaseOrderService;
 import com.sims.simscoreservice.product.entity.Product;
 import com.sims.simscoreservice.product.enums.ProductCategories;
 import com.sims.simscoreservice.product.services.queryService.ProductQueryService;
@@ -50,6 +51,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     private final ProductQueryService productQueryService;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailService;
+
+    // ============= Repository =============
     private final PurchaseOrderRepository purchaseOrderRepository;
 
     @Override

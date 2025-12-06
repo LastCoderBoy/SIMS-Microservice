@@ -81,7 +81,7 @@ public class PurchaseOrderController {
     public ResponseEntity<ApiResponse<PurchaseOrderRequest>> createPurchaseOrder(
             @Valid @RequestBody PurchaseOrderRequest stockRequest,
             @RequestHeader(USER_ID_HEADER) String userId,
-            @RequestHeader(USER_ROLES_HEADER) String roles) throws BadRequestException, AccessDeniedException {
+            @RequestHeader(USER_ROLES_HEADER) String roles) throws BadRequestException {
 
         log.info("[PO-OM-CONTROLLER] Create PO by user: {}", userId);
 

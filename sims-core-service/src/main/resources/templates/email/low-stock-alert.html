@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Low Stock Alert - {{PRODUCT_NAME}}</title>
+    <title>Low Stock Alert - Daily Report</title>
 </head>
 <body>
 <div class="email-container">
     <!-- Header -->
     <div class="email-header" style="background-color: #dc3545;">
-        <h1>⚠️ Low Stock Alert</h1>
+        <h1>⚠️ Low Stock Alert - Daily Report</h1>
         <p>SIMS Inventory Management System</p>
     </div>
 
@@ -22,66 +22,64 @@
         </p>
 
         <p>
-            This is an automated alert to notify you that the following product has reached
-            or fallen below its minimum stock level:
+            This is your daily automated alert. The following <strong>{{TOTAL_COUNT}}</strong> product(s)
+            have reached or fallen below their minimum stock levels:
         </p>
 
-        <!-- Product Details Table -->
+        <div class="warning-box">
+            <strong>⚠️ Action Required:</strong> Please review and reorder these products immediately
+            to avoid stockouts and potential business disruption.
+        </div>
+
+        <!-- Low Stock Products Table -->
         <table class="detail-table">
+            <thead>
+            <tr>
+                <th>SKU</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Location</th>
+                <th style="text-align: center;">Current Stock</th>
+                <th style="text-align: center;">Min Level</th>
+                <th style="text-align: center;">Status</th>
+            </tr>
+            </thead>
             <tbody>
-            <tr>
-                <th>Product ID:</th>
-                <td>{{PRODUCT_ID}}</td>
-            </tr>
-            <tr>
-                <th>Product Name:</th>
-                <td>{{PRODUCT_NAME}}</td>
-            </tr>
-            <tr>
-                <th>SKU:</th>
-                <td>{{SKU}}</td>
-            </tr>
-            <tr>
-                <th>Category:</th>
-                <td>{{CATEGORY}}</td>
-            </tr>
-            <tr>
-                <th>Current Stock:</th>
-                <td><strong style="color: #dc3545;">{{CURRENT_STOCK}}</strong></td>
-            </tr>
-            <tr>
-                <th>Minimum Level:</th>
-                <td>{{MIN_LEVEL}}</td>
-            </tr>
-            <tr>
-                <th>Location:</th>
-                <td>{{LOCATION}}</td>
-            </tr>
+            {{LOW_STOCK_ROWS}}
             </tbody>
         </table>
 
-        <!-- Warning Box -->
-        <div class="warning-box">
-            <strong>⚠️ Action Required:</strong> Please reorder this product immediately to
-            avoid stockouts and potential business disruption.
+        <!-- Summary Info -->
+        <div class="info-box" style="margin-top: 20px;">
+            <strong>📊 Summary:</strong>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li><strong>{{TOTAL_COUNT}}</strong> products below minimum stock level</li>
+                <li>Report generated on: <strong>{{REPORT_DATE}}</strong></li>
+                <li>Next alert: Tomorrow at 8:00 AM</li>
+            </ul>
         </div>
 
         <!-- Action Button -->
         <div class="button-container">
             <a href="{{DASHBOARD_URL}}" class="email-button confirm">
-                View in Dashboard
+                📦 View Inventory Dashboard
             </a>
         </div>
+
+        <p style="margin-top: 20px;">
+            Please take immediate action to reorder these products and maintain optimal stock levels.
+        </p>
     </div>
 
     <!-- Footer -->
     <div class="email-footer">
-        <p><strong>SIMS Inventory System - Automated Alert</strong></p>
+        <p><strong>SIMS Inventory System - Automated Daily Alert</strong></p>
         <p>
             <a href="mailto:{{SENDER_EMAIL}}">{{SENDER_EMAIL}}</a>
         </p>
         <p class="disclaimer">
-            This is an automated alert.  Alerts are sent when stock levels reach minimum thresholds.
+            This is an automated daily alert sent every morning at 8:00 AM.
+            Alerts are sent when products reach minimum stock thresholds.
         </p>
     </div>
 </div>
