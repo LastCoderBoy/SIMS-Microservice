@@ -82,7 +82,7 @@ public class InventorySearchService {
 
             if (inputText.isPresent() && !inputText.get().trim().isEmpty()) {
                 Pageable pageable = globalServiceHelper.preparePageable(page, size, sortBy, sortDirection);
-                return inventoryRepository.searchInLowStockProducts(inputText.get(). trim(). toLowerCase(), pageable);
+                return inventoryRepository.searchInLowStockProducts(inputText.get().trim().toLowerCase(), pageable);
             }
 
             log.info("[INVENTORY-SEARCH] No search text, returning all low stock items");
@@ -104,7 +104,7 @@ public class InventorySearchService {
     public Page<Inventory> filterLowStockProducts(ProductCategories category, String sortBy,
                                                   String sortDirection, int page, int size) {
         try {
-            Pageable pageable = globalServiceHelper. preparePageable(page, size, sortBy, sortDirection);
+            Pageable pageable = globalServiceHelper.preparePageable(page, size, sortBy, sortDirection);
 
             Specification<Inventory> spec = Specification
                     .where(InventorySpecification.hasLowStock())
@@ -132,9 +132,9 @@ public class InventorySearchService {
         try {
             Optional<String> inputText = Optional.ofNullable(text);
 
-            if (inputText.isPresent() && !inputText.get(). trim().isEmpty()) {
+            if (inputText.isPresent() && !inputText.get().trim().isEmpty()) {
                 Pageable pageable = globalServiceHelper.preparePageable(page, size, sortBy, sortDirection);
-                return inventoryRepository.searchProducts(inputText.get().trim(). toLowerCase(), pageable);
+                return inventoryRepository.searchProducts(inputText.get().trim().toLowerCase(), pageable);
             }
 
             log.info("[INVENTORY-SEARCH] No search text, returning all products");
@@ -169,9 +169,9 @@ public class InventorySearchService {
             String[] filterParts = filterBy.trim().split(":");
             Page<Inventory> resultPage;
 
-            if (filterParts. length == 2) {
+            if (filterParts.length == 2) {
                 // Field-specific filter (field:value)
-                String field = filterParts[0]. toLowerCase();
+                String field = filterParts[0].toLowerCase();
                 String value = filterParts[1];
 
                 resultPage = switch (field) {
@@ -184,7 +184,7 @@ public class InventorySearchService {
                 };
             } else {
                 // General filter (status or category name)
-                boolean isStatusType = GlobalServiceHelper.isInEnum(filterBy.trim(). toUpperCase(), InventoryStatus.class);
+                boolean isStatusType = GlobalServiceHelper.isInEnum(filterBy.trim().toUpperCase(), InventoryStatus.class);
 
                 Specification<Inventory> specification;
                 if (isStatusType) {
@@ -262,7 +262,7 @@ public class InventorySearchService {
 
                 PaginatedResponse<SummaryPurchaseOrderView> purchaseOrders =
                         purchaseOrderQueryService.getAllPendingPurchaseOrders(page, size, sortBy, sortDirection);
-                inventoryHelper.fillWithPurchaseOrderView(combinedResults, purchaseOrders. getContent());
+                inventoryHelper.fillWithPurchaseOrderView(combinedResults, purchaseOrders.getContent());
             } else {
                 // Handle Sales Orders
                 if ("SALES_ORDER".equalsIgnoreCase(type) || soStatus != null || (dateOption != null && poStatus == null)) {
@@ -275,7 +275,7 @@ public class InventorySearchService {
                 if ("PURCHASE_ORDER".equalsIgnoreCase(type) || poStatus != null || category != null) {
                     PaginatedResponse<SummaryPurchaseOrderView> purchaseOrders =
                             purchaseOrderSearchService.filterPending(poStatus, category, sortBy, sortDirection, page, size);
-                    inventoryHelper. fillWithPurchaseOrderView(combinedResults, purchaseOrders.getContent());
+                    inventoryHelper.fillWithPurchaseOrderView(combinedResults, purchaseOrders.getContent());
                 }
             }
 

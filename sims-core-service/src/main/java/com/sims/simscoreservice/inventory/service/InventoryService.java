@@ -18,7 +18,7 @@ import java.util.Optional;
  */
 public interface InventoryService {
 
-    InventoryPageResponse getInventoryPageData(int page, int size);
+    InventoryPageResponse getInventoryDashboard(int page, int size);
 
     PaginatedResponse<PendingOrderResponse> getAllPendingOrders(int page, int size);
 

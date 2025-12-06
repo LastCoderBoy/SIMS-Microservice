@@ -1,6 +1,6 @@
 package com.sims.simscoreservice.admin.controller;
 
-import com.sims.simscoreservice.inventory.service.lowStockAlert.LowStockScheduler;
+import com.sims.simscoreservice.email.lowStockAlert.LowStockScheduler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

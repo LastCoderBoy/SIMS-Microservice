@@ -1,5 +1,6 @@
 package com.sims.simscoreservice.inventory.service;
 
+import com.sims.simscoreservice.email.lowStockAlert.LowStockScheduler;
 import com.sims.simscoreservice.inventory.entity.Inventory;
 import com.sims.simscoreservice.inventory.enums.InventoryStatus;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class InventoryStatusService {
 
-    // TODO: Inject when implementing alerts
-    // private final LowStockAlertService lowStockAlertService;
+    private final LowStockScheduler lowStockScheduler;
 
     /**
      * Update inventory status based on current stock levels
@@ -33,8 +33,7 @@ public class InventoryStatusService {
             if (inventory.getCurrentStock() <= inventory.getMinLevel()) {
                 inventory.setStatus(InventoryStatus.LOW_STOCK);
 
-                // TODO: Trigger low stock alert
-                // lowStockAlertService.sendLowStockAlert(inventory);
+                lowStockScheduler.sendDailyLowStockAlert();
 
                 log.warn("[INVENTORY-STATUS] Product {} is now LOW_STOCK.  Current: {}, Min: {}",
                         inventory.getProduct().getProductId(),

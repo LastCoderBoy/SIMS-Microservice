@@ -45,7 +45,7 @@ public class PurchaseOrderController {
     public ResponseEntity<PaginatedResponse<SummaryPurchaseOrderView>> getAllPurchaseOrders(
             @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size,
-            @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestParam(defaultValue = DEFAULT_SORT_DIRECTION) String sortDirection,
             @RequestParam(defaultValue = DEFAULT_SORT_BY_FOR_PO) String sortBy,
             @RequestHeader(USER_ID_HEADER) String userId) {
 
@@ -103,7 +103,7 @@ public class PurchaseOrderController {
             @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size,
             @RequestParam(defaultValue = DEFAULT_SORT_BY_FOR_PO) String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestParam(defaultValue = DEFAULT_SORT_DIRECTION) String sortDirection,
             @RequestHeader(USER_ID_HEADER) String userId) {
 
         log.info("[PO-OM-CONTROLLER] Search POs with text: '{}' by user: {}", text, userId);
@@ -122,8 +122,8 @@ public class PurchaseOrderController {
     public ResponseEntity<PaginatedResponse<SummaryPurchaseOrderView>> filterPurchaseOrders(
             @RequestParam(required = false) ProductCategories category,
             @RequestParam(required = false) PurchaseOrderStatus status,
-            @RequestParam(defaultValue = "product.name") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestParam(defaultValue = DEFAULT_SORT_BY_FOR_PO) String sortBy,
+            @RequestParam(defaultValue = DEFAULT_SORT_DIRECTION) String sortDirection,
             @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size,
             @RequestHeader(USER_ID_HEADER) String userId) {

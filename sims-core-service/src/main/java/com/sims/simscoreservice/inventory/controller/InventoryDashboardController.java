@@ -40,13 +40,13 @@ public class InventoryDashboardController {
      * @return InventoryPageResponse with dashboard metrics and pending orders
      */
     @GetMapping
-    public ResponseEntity<InventoryPageResponse> getInventoryControlPageData(
+    public ResponseEntity<InventoryPageResponse> getInventoryDashboard(
             @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
 
-        log.info("[INVENTORY-CONTROLLER] getInventoryControlPageData() with page {} and size {}", page, size);
+        log.info("[INVENTORY-CONTROLLER] getInventoryDashboard() with page {} and size {}", page, size);
 
-        InventoryPageResponse inventoryPageResponse = inventoryService.getInventoryPageData(page, size);
+        InventoryPageResponse inventoryPageResponse = inventoryService.getInventoryDashboard(page, size);
 
         return ResponseEntity.ok(inventoryPageResponse);
     }

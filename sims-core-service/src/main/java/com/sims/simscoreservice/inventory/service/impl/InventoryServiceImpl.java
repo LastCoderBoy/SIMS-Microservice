@@ -66,7 +66,7 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public InventoryPageResponse getInventoryPageData(int page, int size) {
+    public InventoryPageResponse getInventoryDashboard(int page, int size) {
         try {
             // Get inventory metrics
             InventoryMetrics metrics = inventoryRepository.getInventoryMetrics();
@@ -95,10 +95,10 @@ public class InventoryServiceImpl implements InventoryService {
 
         } catch (DataAccessException e) {
             log.error("[INVENTORY-SERVICE] Database error loading page data: {}", e.getMessage());
-            throw new DatabaseException("Failed to load inventory page data", e);
+            throw new DatabaseException("Failed to load inventory page data");
         } catch (Exception e) {
             log.error("[INVENTORY-SERVICE] Error loading page data: {}", e.getMessage());
-            throw new ServiceException("Failed to load inventory page data", e);
+            throw new ServiceException("Failed to load inventory page data");
         }
     }
 
@@ -128,7 +128,7 @@ public class InventoryServiceImpl implements InventoryService {
 
         } catch (Exception e) {
             log.error("[INVENTORY-SERVICE] Error fetching pending orders: {}", e. getMessage());
-            throw new ServiceException("Failed to fetch pending orders", e);
+            throw new ServiceException("Failed to fetch pending orders");
         }
     }
 
@@ -161,10 +161,10 @@ public class InventoryServiceImpl implements InventoryService {
 
         } catch (DataAccessException da) {
             log.error("[INVENTORY-SERVICE] Database error adding product: {}", da.getMessage());
-            throw new DatabaseException("Failed to add product to inventory", da);
+            throw new DatabaseException("Failed to add product to inventory");
         } catch (Exception e) {
             log.error("[INVENTORY-SERVICE] Error adding product: {}", e.getMessage());
-            throw new ServiceException("Failed to add product to inventory", e);
+            throw new ServiceException("Failed to add product to inventory");
         }
     }
 
@@ -176,10 +176,10 @@ public class InventoryServiceImpl implements InventoryService {
             log.info("[INVENTORY-SERVICE] Saved inventory: {}", inventory.getSku());
         } catch (DataAccessException da) {
             log.error("[INVENTORY-SERVICE] Database error saving inventory: {}", da.getMessage());
-            throw new DatabaseException("Failed to save inventory", da);
+            throw new DatabaseException("Failed to save inventory");
         } catch (Exception e) {
             log.error("[INVENTORY-SERVICE] Error saving inventory: {}", e.getMessage());
-            throw new ServiceException("Failed to save inventory", e);
+            throw new ServiceException("Failed to save inventory");
         }
     }
 
@@ -194,7 +194,7 @@ public class InventoryServiceImpl implements InventoryService {
             throw new DatabaseException("Failed to delete inventory", da);
         } catch (Exception e) {
             log.error("[INVENTORY-SERVICE] Error deleting inventory: {}", e.getMessage());
-            throw new ServiceException("Failed to delete inventory", e);
+            throw new ServiceException("Failed to delete inventory");
         }
     }
 
@@ -211,7 +211,7 @@ public class InventoryServiceImpl implements InventoryService {
                         inventory.getSku(), status);
             } catch (Exception e) {
                 log.error("[INVENTORY-SERVICE] Error updating status: {}", e.getMessage());
-                throw new ServiceException("Failed to update inventory status", e);
+                throw new ServiceException("Failed to update inventory status");
             }
         }
     }
@@ -237,7 +237,7 @@ public class InventoryServiceImpl implements InventoryService {
             throw new ValidationException("Invalid pagination parameters");
         } catch (Exception e) {
             log.error("[INVENTORY-SERVICE] Error searching pending orders: {}", e.getMessage());
-            throw new ServiceException("Failed to search pending orders", e);
+            throw new ServiceException("Failed to search pending orders");
         }
     }
 
@@ -257,10 +257,10 @@ public class InventoryServiceImpl implements InventoryService {
 
         } catch (IllegalArgumentException e) {
             log.error("[INVENTORY-SERVICE] Invalid filter parameters: {}", e.getMessage());
-            throw new ValidationException("Invalid filter parameters: " + e.getMessage());
+            throw new ValidationException("Invalid filter parameters, please check your request!");
         } catch (Exception e) {
             log.error("[INVENTORY-SERVICE] Error filtering pending orders: {}", e.getMessage());
-            throw new ServiceException("Failed to filter pending orders", e);
+            throw new ServiceException("Failed to filter pending orders");
         }
     }
 }
