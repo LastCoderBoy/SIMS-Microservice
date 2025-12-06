@@ -1,7 +1,6 @@
-package com.sims.authservice.config;
+package com.sims.authservice.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sims.authservice.security.JWTFilter;
 import com.sims.authservice.service.impl.UserDetailsServiceImpl;
 import com.sims.common.models.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
@@ -47,6 +46,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         // Public endpoints (no authentication required)
                         .requestMatchers("/api/v1/auth/login", "/api/v1/auth/refresh").permitAll()
+
+                        // Internal endpoints (no authentication required)
+                        .requestMatchers("/internal/**").permitAll()
 
                         // Actuator endpoints
                         .requestMatchers("/actuator/**").permitAll()

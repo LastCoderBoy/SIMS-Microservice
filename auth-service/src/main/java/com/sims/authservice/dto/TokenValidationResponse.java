@@ -1,4 +1,3 @@
 package com.sims.authservice.dto;
 
-public class Token {
-}
+public record TokenValidationResponse(boolean valid, String message) {}

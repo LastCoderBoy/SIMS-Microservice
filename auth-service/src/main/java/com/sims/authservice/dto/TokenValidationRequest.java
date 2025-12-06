@@ -1,4 +1,3 @@
 package com.sims.authservice.dto;
 
-public class ss {
-}
+public record TokenValidationRequest(String token) {}

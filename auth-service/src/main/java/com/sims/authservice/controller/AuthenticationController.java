@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static com.sims.common.constants.AppConstants.AUTHORIZATION_HEADER;
+import static com.sims.common.constants.AppConstants.BASE_AUTH_PATH;
 
 /**
  * Authentication Controller
@@ -24,7 +25,7 @@ import static com.sims.common.constants.AppConstants.AUTHORIZATION_HEADER;
  * @since 2025-01-22
  */
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping(BASE_AUTH_PATH)
 @RequiredArgsConstructor
 @Slf4j
 public class AuthenticationController {

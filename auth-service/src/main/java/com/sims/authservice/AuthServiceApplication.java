@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * - Refresh token management
  * - Token blacklisting
  * - User profile updates
+ * - Internal Token Validation
  *
  * Endpoints:
  * - POST /api/v1/auth/login
@@ -21,6 +22,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * - POST /api/v1/auth/logout
  * - POST /api/v1/auth/logout-all
  * - PUT  /api/v1/auth/update
+ * -
  *
  * @author LastCoderBoy
  * @since 2025-01-20

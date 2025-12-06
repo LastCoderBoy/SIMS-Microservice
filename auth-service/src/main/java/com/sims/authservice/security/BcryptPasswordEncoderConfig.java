@@ -1,4 +1,4 @@
-package com.sims.authservice.config;
+package com.sims.authservice.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

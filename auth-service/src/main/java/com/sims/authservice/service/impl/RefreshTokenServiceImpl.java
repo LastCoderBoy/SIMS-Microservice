@@ -7,6 +7,7 @@ import com.sims.authservice.repository.RefreshTokenRepository;
 import com.sims.authservice.repository.UserRepository;
 import com.sims.authservice.service.RefreshTokenService;
 import com.sims.common.exceptions.ResourceNotFoundException;
+import com.sims.common.utils.TokenUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,7 +48,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         limitActiveTokens(user);
 
         RefreshToken refreshToken = new RefreshToken();
-        refreshToken.setToken(generateSecureToken());
+        refreshToken.setToken(TokenUtils.generateSecureToken());
         refreshToken.setUser(user);
         refreshToken.setIpAddress(ipAddress);
         refreshToken.setUserAgent(userAgent);
@@ -73,16 +74,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         }
 
         return refreshToken;
-    }
-
-    /**
-     * Generate cryptographically secure random token
-     */
-    private String generateSecureToken() {
-        SecureRandom secureRandom = new SecureRandom();
-        byte[] tokenBytes = new byte[32]; // 256 bits
-        secureRandom.nextBytes(tokenBytes);
-        return Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);
     }
 
     /**

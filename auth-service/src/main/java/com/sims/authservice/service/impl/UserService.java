@@ -33,7 +33,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.Date;
 
 /**
@@ -52,6 +55,8 @@ public class UserService {
 
     @Value("${jwt.refresh.cookie.max-age}")
     private int refreshTokenCookieMaxAge;
+
+    private final WebClient.Builder webClientBuilder;
 
     // Dependencies
     private final AuthenticationManager authManager;
@@ -189,6 +194,9 @@ public class UserService {
 
             // Blacklist access token
             blackListTokenRepository.save(new BlacklistedToken(jwtToken, new Date()));
+
+            // Notify API Gateway to evict from cache (async, fire-and-forget)
+            notifyGatewayToEvictToken(jwtToken);
 
             // Revoke refresh token
             String refreshToken = extractRefreshTokenFromCookie(request);
@@ -346,4 +354,41 @@ public class UserService {
         String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_])(?=\\S+$).{8,}$";
         return password.matches(passwordRegex);
     }
+
+    /**
+     * Notify API Gateway to evict token from cache
+     * Async (fire-and-forget) - logout succeeds even if Gateway is down
+     */
+    private void notifyGatewayToEvictToken(String token) {
+        webClientBuilder.build()
+                .post()
+                .uri("lb://api-gateway/internal/cache/evict-token") // Load-balanced via Eureka
+                .bodyValue(new TokenEvictionRequest(token))
+                .retrieve()
+                . bodyToMono(EvictionResponse.class)
+                .timeout(Duration.ofSeconds(2)) // 2-second timeout
+                .doOnSuccess(response -> {
+                    if (response != null && response.success()) {
+                        log.debug("[CACHE-EVICTION] Gateway cache evicted successfully");
+                    } else {
+                        log.warn("[CACHE-EVICTION] Gateway returned failure: {}",
+                                response != null ? response.message() : "null");
+                    }
+                })
+                .doOnError(error -> log.warn("[CACHE-EVICTION] Failed to notify gateway: {} - {}",
+                        error.getClass().getSimpleName(), error.getMessage()))
+                .onErrorResume(e -> Mono.empty()) // Don't fail logout if gateway is down
+                .subscribe(); // Fire and forget (async)
+    }
+
+    /**
+     * Request DTO for cache eviction
+     */
+    private record TokenEvictionRequest(String token) {}
+
+    /**
+     * Response DTO from Gateway
+     */
+    private record EvictionResponse(boolean success, String message) {}
+
 }
