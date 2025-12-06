@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
  * Cache Management Controller
  * Internal endpoint for Auth Service to evict tokens from cache
  *
- * ⚠️ Internal use only - not exposed publicly
- *
  * @author LastCoderBoy
  * @since 2025-01-23
  */

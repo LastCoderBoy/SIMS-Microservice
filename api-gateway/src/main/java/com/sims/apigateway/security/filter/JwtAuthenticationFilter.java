@@ -1,6 +1,7 @@
 package com.sims.apigateway.security.filter;
 
 import com.sims.apigateway.security.JwtTokenProvider;
+import com.sims.apigateway.security.service.TokenValidationService;
 import com.sims.common.utils.TokenUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,16 +44,19 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
     private static final List<String> PUBLIC_PATHS = List.of(
             "/api/v1/auth/login",
             "/api/v1/auth/refresh",
-            "/api/v1/email",
+            "/api/v1/internal/**", // Internal endpoints are public
+            "/api/v1/email/**",
             "/actuator/health",
             "/actuator/info"
     );
 
     private final PathMatcher pathMatcher;
     private final JwtTokenProvider jwtTokenProvider;
+    private final TokenValidationService tokenValidationService;
     @Autowired
-    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
+    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, TokenValidationService tokenValidationService) {
         super(Config.class);
+        this.tokenValidationService = tokenValidationService;
         this.pathMatcher = new AntPathMatcher();
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -82,25 +86,35 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
             try {
                 String token = TokenUtils.extractToken(authHeader);
 
+                // Validate token structure and expiration (local)
                 if (!jwtTokenProvider.validateToken(token)) {
                     log.warn("[JWT-FILTER] Invalid token for path: {}", path);
                     return onError(exchange, "Invalid or expired token", HttpStatus.UNAUTHORIZED);
                 }
 
-                // Extract user information from token
-                String username = jwtTokenProvider.getUsernameFromToken(token);
-                List<String> roles = jwtTokenProvider.getRolesFromToken(token);
+                // Check if token is blacklisted (call Auth Service)
+                return tokenValidationService.isTokenValid(token)
+                        .flatMap(isValid -> {
+                            if (!isValid) {
+                                log.warn("[JWT-FILTER] Token is blacklisted for path: {}", path);
+                                return onError(exchange, "Token has been revoked", HttpStatus.UNAUTHORIZED);
+                            }
 
-                log.debug("[JWT-FILTER] Token validated for user: {} with roles: {}", username, roles);
+                            // Extract user information from token
+                            String username = jwtTokenProvider.getUsernameFromToken(token);
+                            List<String> roles = jwtTokenProvider.getRolesFromToken(token);
 
-                // Add user info to request headers for downstream services
-                ServerHttpRequest modifiedRequest = request.mutate()
-                        .header(USER_ID_HEADER, username)
-                        .header(USER_ROLES_HEADER, String.join(",", roles))
-                        .build();
+                            log.debug("[JWT-FILTER] Token validated for user: {} with roles: {}", username, roles);
 
-                // Forward to backend service
-                return chain.filter(exchange.mutate().request(modifiedRequest).build());
+                            // Add user info to request headers for downstream services
+                            ServerHttpRequest modifiedRequest = request.mutate()
+                                    .header(USER_ID_HEADER, username)
+                                    .header(USER_ROLES_HEADER, String.join(",", roles))
+                                    .build();
+
+                            // Forward to backend service
+                            return chain.filter(exchange.mutate().request(modifiedRequest).build());
+                        });
 
             } catch (Exception e) {
                 log.error("[JWT-FILTER] Token validation failed: {}", e.getMessage());

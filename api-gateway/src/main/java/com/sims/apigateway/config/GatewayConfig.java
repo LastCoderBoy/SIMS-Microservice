@@ -31,7 +31,7 @@ public class GatewayConfig {
                 // AUTH SERVICE - PUBLIC (No JWT required)
                 // ==========================================
                 .route("auth-public", r -> r
-                        .path(AppConstants.PUBLIC_PATHS.toArray(new String[0]))
+                        .path(AppConstants.PUBLIC_AUTH_PATHS.toArray(new String[0]))
                         .uri("lb://" + AUTH_SERVICE))
 
                 // ==========================================
@@ -46,23 +46,39 @@ public class GatewayConfig {
                 // ==========================================
                 // SIMS CORE - ALL PROTECTED (JWT required)
                 // ==========================================
+
+                // Product Management Route
                 .route("products-service", r -> r
                         .path(BASE_PRODUCTS_PATH + "/**")
                         .filters(f -> f
                                 .filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
                         .uri("lb://" + SIMS_CORE_SERVICE))
 
+                // Inventory Management Route
                 .route("inventory-service", r -> r
                         .path(BASE_INVENTORY_PATH + "/**")
                         .filters(f -> f
                                 .filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
                         .uri("lb://" + SIMS_CORE_SERVICE))
 
+                // Order Management Route
                 .route("orders-service", r -> r
-                        .path( BASE_ORDERS_PATH +"/**",
-                                BASE_PURCHASE_ORDERS_PATH + "/**",
-                                BASE_SALES_ORDERS_PATH + "/**")
+                        .path( BASE_ORDER_MANAGEMENT_PATH +"/**")
                         .filters(f -> f
+                                .filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
+                        .uri("lb://" + SIMS_CORE_SERVICE))
+
+                // Admin Management Route
+                .route("admin-service", r -> r
+                        .path(BASE_ADMIN_PATH + "/**")
+                        .filters( f -> f
+                                .filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
+                        .uri("lb://" + SIMS_CORE_SERVICE))
+
+                // Report & Analytics Management Route
+                .route("report-analytics-service", r -> r
+                        .path(BASE_ANALYTICS_PATH + "/**")
+                        .filters( f -> f
                                 .filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
                         .uri("lb://" + SIMS_CORE_SERVICE))
 
