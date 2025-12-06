@@ -17,22 +17,23 @@ public final class AppConstants {
     }
 
     // ========== API Versioning & Paths ==========
+    public static final String BASE_URL = "http://localhost:8080";
     public static final String API_VERSION_V1 = "/api/v1";
-    public static final List<String> PUBLIC_PATHS = List.of(
+    public static final List<String> PUBLIC_AUTH_PATHS = List.of(
             "/api/v1/auth/login",
             "/api/v1/auth/refresh",
-            "/api/v1/email",
+            "/internal/**",
             "/actuator/health",
             "/actuator/info"
     );
+    public static final String BASE_ADMIN_PATH = API_VERSION_V1 + "/admin";
     public static final String BASE_AUTH_PATH = API_VERSION_V1 + "/auth";
     public static final String BASE_PRODUCTS_PATH = API_VERSION_V1 + "/products";
     public static final String BASE_INVENTORY_PATH = API_VERSION_V1 + "/inventory";
-    public static final String BASE_ORDERS_PATH = API_VERSION_V1 + "/orders";
-    public static final String BASE_PURCHASE_ORDERS_PATH = API_VERSION_V1 + "/purchase-orders";
-    public static final String BASE_SALES_ORDERS_PATH = API_VERSION_V1 + "/sales-orders";
+    public static final String BASE_ORDER_MANAGEMENT_PATH = API_VERSION_V1 + "/order-management";
     public static final String BASE_NOTIFICATIONS_PATH = API_VERSION_V1 + "/notifications";
     public static final String BASE_EMAIL_PATH = API_VERSION_V1 + "/email";
+    public static final String BASE_ANALYTICS_PATH = API_VERSION_V1 + "/analytics";
 
     // ========== Pagination ==========
     public static final String DEFAULT_PAGE_NUMBER = "0";
@@ -41,7 +42,7 @@ public final class AppConstants {
     public static final String DEFAULT_SORT_BY_FOR_PO = "product.name";
     public static final String DEFAULT_SORT_BY_FOR_SO = "orderReference";
     public static final String DEFAULT_SORT_DIRECTION = "desc";
-    public static final String DEFAULT_SORT_BY = "pmProduct.name";
+    public static final String DEFAULT_SORT_BY = "product.name";
 
     // ========== JWT ==========
     public static final String AUTHORIZATION_HEADER = "Authorization";

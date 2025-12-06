@@ -48,20 +48,17 @@ public class PaginatedResponse<T> implements Serializable {
     }
 
     /**
-     * Factory method to create PaginatedResponse from Spring Data Page
+     * Constructor to create PaginatedResponse from Spring Data Page
      *
      * @param page Spring Data Page object
-     * @param <T> Type of content
      * @return PaginatedResponse with all metadata
      */
-    public static <T> PaginatedResponse<T> from(Page<T> page) {
-        return new PaginatedResponse<>(
-                page.getContent(),
-                page.getTotalPages(),
-                page.getTotalElements(),
-                page.getNumber(),
-                page.getSize()
-        );
+    public PaginatedResponse(Page<T> page) {
+        this.content = page.getContent();
+        this.totalPages = page.getTotalPages();
+        this.totalElements = page.getTotalElements();
+        this.currentPage = page.getNumber();
+        this.pageSize = page.getSize();
     }
 
     /**

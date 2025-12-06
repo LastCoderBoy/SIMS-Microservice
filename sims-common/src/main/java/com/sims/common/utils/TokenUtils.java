@@ -3,6 +3,9 @@ package com.sims.common.utils;
 import com.sims.common.exceptions.InvalidTokenException;
 import lombok.extern.slf4j.Slf4j;
 
+import java.security.SecureRandom;
+import java.util.Base64;
+
 import static com.sims.common.constants.AppConstants.BEARER_PREFIX;
 import static com.sims.common.constants.AppConstants.BEARER_PREFIX_LENGTH;
 
@@ -62,5 +65,15 @@ public final class TokenUtils {
      */
     public static String validateAndExtractToken(String authorizationHeader) {
         return extractToken(authorizationHeader);
+    }
+
+    /**
+     * Generate cryptographically secure random token
+     */
+    public static String generateSecureToken() {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] tokenBytes = new byte[32]; // 256 bits
+        secureRandom.nextBytes(tokenBytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);
     }
 }
