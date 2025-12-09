@@ -23,7 +23,6 @@ public class CacheManagementController {
 
     /**
      * Evict token from cache (called by auth-service after logout)
-     *
      * Endpoint: POST /internal/cache/evict-token
      */
     @PostMapping("/evict-token")

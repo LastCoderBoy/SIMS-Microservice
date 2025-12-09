@@ -5,6 +5,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 
+/**
+ * WebClient Configuration for Api-Gateway
+ * For service-to-service communication
+ */
 @Configuration
 public class WebClientConfig {
 

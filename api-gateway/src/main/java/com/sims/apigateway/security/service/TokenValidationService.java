@@ -32,8 +32,8 @@ public class TokenValidationService {
     @PostConstruct
     public void init() {
         // Cache valid tokens for 30 seconds
-        this.tokenCache = Caffeine. newBuilder()
-                .expireAfterWrite(5, TimeUnit.SECONDS)
+        this.tokenCache = Caffeine.newBuilder()
+                .expireAfterWrite(30, TimeUnit.SECONDS)
                 .maximumSize(10000)
                 .build();
     }
@@ -48,7 +48,7 @@ public class TokenValidationService {
         Boolean cachedResult = tokenCache.getIfPresent(token);
         if (cachedResult != null && cachedResult) { // Only use cache if token was VALID
             log.debug("[TOKEN-VALIDATION] Cache hit: token is valid");
-            return Mono. just(true);
+            return Mono.just(true);
         }
 
         // Not in cache or was invalid → Check Auth Service
@@ -56,13 +56,13 @@ public class TokenValidationService {
 
         return webClientBuilder.build()
                 .post()
-                . uri("lb://auth-service/internal/token/validate")
+                .uri("lb://auth-service/internal/token/validate")
                 .bodyValue(new TokenValidationRequest(token))
                 .retrieve()
                 .bodyToMono(TokenValidationResponse.class)
                 .map(TokenValidationResponse::valid)
                 .timeout(Duration.ofSeconds(2))
-                .retryWhen(Retry.fixedDelay(1, Duration. ofMillis(500)))
+                .retryWhen(Retry.fixedDelay(1, Duration.ofMillis(500)))
                 .doOnNext(isValid -> {
                     if (isValid) {
                         tokenCache.put(token, true);
