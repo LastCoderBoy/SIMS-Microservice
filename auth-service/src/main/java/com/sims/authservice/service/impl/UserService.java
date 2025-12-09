@@ -1,8 +1,6 @@
 package com.sims.authservice.service.impl;
 
-import com.sims.authservice.dto.LoginRequest;
-import com.sims.authservice.dto.TokenResponse;
-import com.sims.authservice.dto.UpdateUserRequest;
+import com.sims.authservice.dto.*;
 import com.sims.authservice.entity.BlacklistedToken;
 import com.sims.authservice.entity.RefreshToken;
 import com.sims.authservice.entity.Users;
@@ -380,15 +378,5 @@ public class UserService {
                 .onErrorResume(e -> Mono.empty()) // Don't fail logout if gateway is down
                 .subscribe(); // Fire and forget (async)
     }
-
-    /**
-     * Request DTO for cache eviction
-     */
-    private record TokenEvictionRequest(String token) {}
-
-    /**
-     * Response DTO from Gateway
-     */
-    private record EvictionResponse(boolean success, String message) {}
 
 }

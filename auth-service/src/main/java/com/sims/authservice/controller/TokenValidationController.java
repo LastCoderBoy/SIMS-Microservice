@@ -42,8 +42,6 @@ public class TokenValidationController {
                 return ResponseEntity.ok(new TokenValidationResponse(false, "Token is blacklisted"));
             }
 
-            log.debug("[TOKEN-VALIDATION] Token is valid: {}", token);
-
             return ResponseEntity.ok(new TokenValidationResponse(true, "Token is valid"));
 
         } catch (Exception e) {
