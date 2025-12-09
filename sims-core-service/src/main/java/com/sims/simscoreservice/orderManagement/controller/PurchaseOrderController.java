@@ -4,7 +4,7 @@ import com.sims.common.models.ApiResponse;
 import com.sims.common.models.PaginatedResponse;
 import com.sims.simscoreservice.orderManagement.service.PurchaseOrderService;
 import com.sims.simscoreservice.product.enums.ProductCategories;
-import com.sims.simscoreservice.purchaseOrder.dto.DetailsPurchaseOrderView;
+import com.sims.simscoreservice.purchaseOrder.dto.PurchaseOrderDetailsView;
 import com.sims.simscoreservice.purchaseOrder.dto.PurchaseOrderRequest;
 import com.sims.simscoreservice.purchaseOrder.dto.SummaryPurchaseOrderView;
 import com.sims.simscoreservice.purchaseOrder.enums.PurchaseOrderStatus;
@@ -16,8 +16,6 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.nio.file.AccessDeniedException;
 
 import static com.sims.common.constants.AppConstants.*;
 
@@ -61,13 +59,13 @@ public class PurchaseOrderController {
      * Get purchase order details
      */
     @GetMapping("/{orderId}")
-    public ResponseEntity<DetailsPurchaseOrderView> getPurchaseOrderDetails(
+    public ResponseEntity<PurchaseOrderDetailsView> getPurchaseOrderDetails(
             @PathVariable Long orderId,
             @RequestHeader(USER_ID_HEADER) String userId) {
 
         log.info("[PO-OM-CONTROLLER] Get PO details for ID: {} by user: {}", orderId, userId);
 
-        DetailsPurchaseOrderView detailsForPurchaseOrder =
+        PurchaseOrderDetailsView detailsForPurchaseOrder =
                 purchaseOrderService.getDetailsForPurchaseOrder(orderId);
 
         return ResponseEntity.ok(detailsForPurchaseOrder);

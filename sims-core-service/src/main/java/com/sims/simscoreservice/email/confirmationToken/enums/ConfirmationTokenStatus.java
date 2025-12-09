@@ -1,4 +1,4 @@
-package com.sims.simscoreservice.confirmationToken.enums;
+package com.sims.simscoreservice.email.confirmationToken.enums;
 
 import lombok.Getter;
 

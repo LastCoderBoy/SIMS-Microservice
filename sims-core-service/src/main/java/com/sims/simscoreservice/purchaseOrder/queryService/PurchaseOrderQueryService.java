@@ -5,7 +5,7 @@ import com.sims.common.exceptions.ResourceNotFoundException;
 import com.sims.common.exceptions.ServiceException;
 import com.sims.common.exceptions.ValidationException;
 import com.sims.common.models.PaginatedResponse;
-import com.sims.simscoreservice.purchaseOrder.dto.DetailsPurchaseOrderView;
+import com.sims.simscoreservice.purchaseOrder.dto.PurchaseOrderDetailsView;
 import com.sims.simscoreservice.purchaseOrder.dto.SummaryPurchaseOrderView;
 import com.sims.simscoreservice.purchaseOrder.entity.PurchaseOrder;
 import com.sims.simscoreservice.purchaseOrder.helper.PurchaseOrderHelper;
@@ -20,8 +20,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * Purchase Order Query Service
@@ -116,7 +114,7 @@ public class PurchaseOrderQueryService {
     }
 
     @Transactional(readOnly = true)
-    public DetailsPurchaseOrderView getDetailsForPurchaseOrder(Long orderId) {
+    public PurchaseOrderDetailsView getDetailsForPurchaseOrder(Long orderId) {
         try {
             if (orderId == null || orderId < 1) {
                 throw new ValidationException("Invalid order ID: " + orderId);
@@ -126,7 +124,7 @@ public class PurchaseOrderQueryService {
 
             log.info("[PO-QUERY] Returning details for PO ID: {}", orderId);
 
-            return new DetailsPurchaseOrderView(purchaseOrder);
+            return new PurchaseOrderDetailsView(purchaseOrder);
 
         } catch (DataAccessException da) {
             log.error("[PO-QUERY] Database error while getting Details for PO: {}, {}", orderId, da.getMessage());

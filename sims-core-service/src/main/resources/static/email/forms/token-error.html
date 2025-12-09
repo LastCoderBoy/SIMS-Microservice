@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invalid Link - SIMS</title>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="/email/css/form-styles.css">
+    <link rel="stylesheet" href="/email/css/token-error.css">
+</head>
+<body>
+<div class="container">
+    <div class="error-header">
+        <div class="error-icon">⚠️</div>
+        <h1>Invalid or Expired Link</h1>
+        <p>SIMS Inventory Management System</p>
+    </div>
+
+    <div class="error-content">
+        <div class="error-box">
+            <h2>This confirmation link is no longer valid</h2>
+            <p>This could be because:</p>
+            <ul>
+                <li>The link has already been used to confirm or cancel the order</li>
+                <li>The link has expired (links are valid for 24 hours)</li>
+                <li>The purchase order has already been processed</li>
+            </ul>
+        </div>
+
+        <div class="help-section">
+            <h3>What should I do?</h3>
+            <p>
+                If you need to take action on this purchase order, please contact
+                the organization directly or reach out to your account manager.
+            </p>
+            <p class="contact-info">
+                <strong>Need help?</strong> Contact us at
+                <a href="mailto:support@sims.com">support@sims.com</a>
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button type="button" class="btn btn-primary" onclick="window.close()">
+                Close Window
+            </button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>If you believe this is an error, please contact support.</p>
+    </div>
+</div>
+</body>
+</html>

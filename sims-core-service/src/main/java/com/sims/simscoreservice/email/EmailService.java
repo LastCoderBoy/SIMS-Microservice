@@ -1,6 +1,6 @@
 package com.sims.simscoreservice.email;
 
-import com.sims.simscoreservice.confirmationToken.entity.ConfirmationToken;
+import com.sims.simscoreservice.email.confirmationToken.entity.ConfirmationToken;
 import com.sims.simscoreservice.purchaseOrder.entity.PurchaseOrder;
 import com.sims.simscoreservice.email.dto.LowStockAlertDto;
 import jakarta.mail.MessagingException;

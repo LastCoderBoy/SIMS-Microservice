@@ -1,6 +1,6 @@
-package com.sims.simscoreservice.confirmationToken.entity;
+package com.sims.simscoreservice.email.confirmationToken.entity;
 
-import com.sims.simscoreservice.confirmationToken.enums.ConfirmationTokenStatus;
+import com.sims.simscoreservice.email.confirmationToken.enums.ConfirmationTokenStatus;
 import com.sims.simscoreservice.purchaseOrder.entity.PurchaseOrder;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

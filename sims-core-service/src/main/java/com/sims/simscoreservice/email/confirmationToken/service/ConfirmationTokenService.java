@@ -1,9 +1,9 @@
-package com.sims.simscoreservice.confirmationToken.service;
+package com.sims.simscoreservice.email.confirmationToken.service;
 
 import com.sims.common.utils.TokenUtils;
-import com.sims.simscoreservice.confirmationToken.entity.ConfirmationToken;
-import com.sims.simscoreservice.confirmationToken.enums.ConfirmationTokenStatus;
-import com.sims.simscoreservice.confirmationToken.repository.ConfirmationTokenRepository;
+import com.sims.simscoreservice.email.confirmationToken.entity.ConfirmationToken;
+import com.sims.simscoreservice.email.confirmationToken.enums.ConfirmationTokenStatus;
+import com.sims.simscoreservice.email.confirmationToken.repository.ConfirmationTokenRepository;
 import com.sims.simscoreservice.purchaseOrder.entity.PurchaseOrder;
 import com.sims.simscoreservice.purchaseOrder.enums.PurchaseOrderStatus;
 import com.sims.simscoreservice.purchaseOrder.repository.PurchaseOrderRepository;

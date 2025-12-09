@@ -92,7 +92,7 @@ public class SupplierController extends BaseAdminController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<SupplierResponse>> updateSupplier(
             @PathVariable Long id,
-            @Valid @RequestBody SupplierRequest request,
+            @RequestBody SupplierRequest request,
             @RequestHeader(USER_ID_HEADER) String userId,
             @RequestHeader(USER_ROLES_HEADER) String roles) {
 

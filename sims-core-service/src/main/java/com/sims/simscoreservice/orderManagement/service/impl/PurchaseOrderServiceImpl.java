@@ -3,13 +3,13 @@ package com.sims.simscoreservice.orderManagement.service.impl;
 import com.sims.common.exceptions.*;
 import com.sims.common.models.ApiResponse;
 import com.sims.common.models.PaginatedResponse;
-import com.sims.simscoreservice.confirmationToken.entity.ConfirmationToken;
-import com.sims.simscoreservice.confirmationToken.service.ConfirmationTokenService;
+import com.sims.simscoreservice.email.confirmationToken.entity.ConfirmationToken;
+import com.sims.simscoreservice.email.confirmationToken.service.ConfirmationTokenService;
 import com.sims.simscoreservice.orderManagement.service.PurchaseOrderService;
 import com.sims.simscoreservice.product.entity.Product;
 import com.sims.simscoreservice.product.enums.ProductCategories;
 import com.sims.simscoreservice.product.services.queryService.ProductQueryService;
-import com.sims.simscoreservice.purchaseOrder.dto.DetailsPurchaseOrderView;
+import com.sims.simscoreservice.purchaseOrder.dto.PurchaseOrderDetailsView;
 import com.sims.simscoreservice.purchaseOrder.dto.PurchaseOrderRequest;
 import com.sims.simscoreservice.purchaseOrder.dto.SummaryPurchaseOrderView;
 import com.sims.simscoreservice.purchaseOrder.entity.PurchaseOrder;
@@ -63,7 +63,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
     @Override
     @Transactional(readOnly = true)
-    public DetailsPurchaseOrderView getDetailsForPurchaseOrder(Long orderId) {
+    public PurchaseOrderDetailsView getDetailsForPurchaseOrder(Long orderId) {
         return purchaseOrderQueryService.getDetailsForPurchaseOrder(orderId);
     }
 
@@ -135,7 +135,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
      */
     private void saveAndRequestPurchaseOrder(PurchaseOrder order) {
         purchaseOrderRepository.save(order);
-        purchaseOrderRepository.flush();
+        purchaseOrderRepository.flush(); // Populate timestamps
 
         // Create confirmation token
         ConfirmationToken confirmationToken = confirmationTokenService.createConfirmationToken(order);

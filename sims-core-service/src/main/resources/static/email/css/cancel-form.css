@@ -1,0 +1,26 @@
+/**
+ * Cancel Form Specific Styles
+ */
+
+body {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.info-box {
+    border-left: 4px solid #dc3545;
+}
+
+.btn-cancel {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+. spinner {
+    border-top: 3px solid #dc3545;
+}

@@ -1,0 +1,31 @@
+/**
+ * Confirm Form Specific Styles
+ */
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.info-box {
+    border-left: 4px solid #28a745;
+}
+
+.form-group input:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+}
+
+. btn-confirm {
+    background: #28a745;
+    color: white;
+}
+
+.btn-confirm:hover {
+    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.spinner {
+    border-top: 3px solid #28a745;
+}

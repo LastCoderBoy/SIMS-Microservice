@@ -1,4 +1,4 @@
-package com.sims.simscoreservice.confirmationToken.dto;
+package com.sims.simscoreservice.email.confirmationToken.dto;
 
 
 import jakarta.validation.constraints.FutureOrPresent;

@@ -23,7 +23,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DetailsPurchaseOrderView{
+public class PurchaseOrderDetailsView {
     // Existing fields
     private Long id;
     private String poNumber;
@@ -42,7 +42,7 @@ public class DetailsPurchaseOrderView{
     private String orderedBy;
     private String updatedBy;
 
-    public DetailsPurchaseOrderView (PurchaseOrder order){
+    public PurchaseOrderDetailsView(PurchaseOrder order){
         this.id = order.getId();
         this.poNumber = order.getPoNumber();
         this.status = order.getStatus();

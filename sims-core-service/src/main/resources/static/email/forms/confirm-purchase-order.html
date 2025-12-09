@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Purchase Order - SIMS</title>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="/email/css/form-styles.css">
+    <link rel="stylesheet" href="/email/css/confirm-form.css">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>✓ Confirm Purchase Order</h1>
+        <p>SIMS Inventory Management System</p>
+    </div>
+
+    <div class="info-box">
+        <p><strong>PO Number:</strong> <span id="poNumber">Loading...</span></p>
+        <p><strong>Product:</strong> <span id="productName">Loading...</span></p>
+        <p><strong>Quantity:</strong> <span id="quantity">Loading...</span></p>
+    </div>
+
+    <form id="confirmForm">
+        <div class="form-group">
+            <label for="expectedArrivalDate">
+                Expected Arrival Date <span class="required">*</span>
+            </label>
+            <input
+                    type="date"
+                    id="expectedArrivalDate"
+                    name="expectedArrivalDate"
+                    required
+            />
+            <div class="hint">When do you expect to deliver this order?</div>
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="btn btn-confirm">
+                ✓ Confirm Order
+            </button>
+            <button type="button" class="btn btn-back" onclick="window.close()">
+                ← Back
+            </button>
+        </div>
+    </form>
+
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <p>Processing... </p>
+    </div>
+
+    <div class="result" id="result" style="display: none;">
+        <div class="alert" id="alert">
+            <p id="message"></p>
+        </div>
+        <button class="btn btn-back" onclick="window.close()">Close Window</button>
+    </div>
+</div>
+
+<!-- External JavaScript -->
+<script src="/email/js/confirm-form.js"></script>
+</body>
+</html>

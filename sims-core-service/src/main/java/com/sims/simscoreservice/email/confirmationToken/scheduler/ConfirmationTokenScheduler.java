@@ -1,6 +1,6 @@
-package com.sims.simscoreservice.confirmationToken.scheduler;
+package com.sims.simscoreservice.email.confirmationToken.scheduler;
 
-import com.sims.simscoreservice.confirmationToken.service.ConfirmationTokenService;
+import com.sims.simscoreservice.email.confirmationToken.service.ConfirmationTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

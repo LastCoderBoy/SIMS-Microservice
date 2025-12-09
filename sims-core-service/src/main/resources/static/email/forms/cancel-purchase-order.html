@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancel Purchase Order - SIMS</title>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="/email/css/form-styles.css">
+    <link rel="stylesheet" href="/email/css/cancel-form.css">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>✗ Cancel Purchase Order</h1>
+        <p>SIMS Inventory Management System</p>
+    </div>
+
+    <div class="warning-box">
+        <p><strong>⚠️ Warning:</strong> This action cannot be undone!</p>
+        <p>Please confirm if you want to decline this purchase order.</p>
+    </div>
+
+    <div class="info-box">
+        <p><strong>PO Number:</strong> <span id="poNumber">Loading...</span></p>
+        <p><strong>Product:</strong> <span id="productName">Loading...</span></p>
+        <p><strong>Quantity:</strong> <span id="quantity">Loading...</span></p>
+    </div>
+
+    <div class="button-group">
+        <button type="button" class="btn btn-cancel" id="cancelBtn">
+            ✗ Yes, Cancel Order
+        </button>
+        <button type="button" class="btn btn-back" onclick="window.close()">
+            ← Go Back
+        </button>
+    </div>
+
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <p>Processing cancellation...</p>
+    </div>
+
+    <div class="result" id="result" style="display: none;">
+        <div class="alert" id="alert">
+            <p id="message"></p>
+        </div>
+        <button class="btn btn-back" onclick="window.close()">Close Window</button>
+    </div>
+</div>
+
+<!-- External JavaScript -->
+<script src="/email/js/cancel-form.js"></script>
+</body>
+</html>

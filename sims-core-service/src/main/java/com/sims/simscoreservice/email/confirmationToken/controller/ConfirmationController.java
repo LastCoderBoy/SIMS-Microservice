@@ -1,7 +1,8 @@
-package com.sims.simscoreservice.email.controller;
+package com.sims.simscoreservice.email.confirmationToken.controller;
 
 import com.sims.common.models.ApiResponse;
 import com.sims.simscoreservice.email.confirmationToken.dto.ConfirmationPoRequest;
+import com.sims.simscoreservice.email.confirmationToken.service.ConfirmationTokenService;
 import com.sims.simscoreservice.email.confirmationToken.service.PurchaseOrderConfirmationService;
 import com.sims.simscoreservice.purchaseOrder.dto.PurchaseOrderDetailsView;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,7 +30,8 @@ import static com.sims.common.constants.AppConstants.BASE_EMAIL_PATH;
 @Slf4j
 public class ConfirmationController {
 
-    private final PurchaseOrderConfirmationService confirmationService;
+    private final PurchaseOrderConfirmationService purchaseOrderConfirmationService;
+    private final ConfirmationTokenService confirmationTokenService;
 
     /**
      * Redirect to confirmation form (GET - from email link)
@@ -38,6 +40,13 @@ public class ConfirmationController {
     public void showConfirmationForm(
             @RequestParam String token,
             HttpServletResponse response) throws IOException {
+
+        if(confirmationTokenService.validateConfirmationToken(token) == null){
+            log.error("[CONFIRMATION-CONTROLLER] Invalid token for confirmation");
+
+            response.sendRedirect("/email/forms/token-error.html");
+            return;
+        }
 
         log.info("[CONFIRMATION-CONTROLLER] Redirecting to confirm form for token: {}...",
                 token.substring(0, Math.min(10, token.length())));
@@ -58,7 +67,7 @@ public class ConfirmationController {
                 token.substring(0, Math.min(10, token.length())));
 
         ApiResponse<String> response =
-                confirmationService.confirmPurchaseOrder(token, request.getExpectedArrivalDate());
+                purchaseOrderConfirmationService.confirmPurchaseOrder(token, request.getExpectedArrivalDate());
 
         return ResponseEntity
                 .status(response.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST)
@@ -72,6 +81,13 @@ public class ConfirmationController {
     public void showCancellationForm(
             @RequestParam String token,
             HttpServletResponse response) throws IOException {
+
+        if(confirmationTokenService.validateConfirmationToken(token) == null){
+            log.error("[CONFIRMATION-CONTROLLER] Invalid token for cancellation");
+
+            response.sendRedirect("/email/forms/token-error.html");
+            return;
+        }
 
         log.info("[CONFIRMATION-CONTROLLER] Redirecting to cancel form for token: {}.. .",
                 token.substring(0, Math.min(10, token.length())));
@@ -89,7 +105,7 @@ public class ConfirmationController {
         log.info("[CONFIRMATION-CONTROLLER] Cancel PO with token: {}...",
                 token.substring(0, Math.min(10, token.length())));
 
-        ApiResponse<String> response = confirmationService.cancelPurchaseOrder(token);
+        ApiResponse<String> response = purchaseOrderConfirmationService.cancelPurchaseOrder(token);
 
         return ResponseEntity
                 .status(response.isSuccess() ? HttpStatus. OK : HttpStatus.BAD_REQUEST)
@@ -106,7 +122,7 @@ public class ConfirmationController {
                 token.substring(0, Math.min(10, token.length())));
 
         try {
-            PurchaseOrderDetailsView details = confirmationService.getPurchaseOrderDetailsByToken(token);
+            PurchaseOrderDetailsView details = purchaseOrderConfirmationService.getPurchaseOrderDetailsByToken(token);
             return ResponseEntity.ok(details);
         } catch (Exception e) {
             log.error("[CONFIRMATION-CONTROLLER] Error getting PO details: {}", e.getMessage());

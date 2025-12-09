@@ -1,8 +1,9 @@
-package com.sims.simscoreservice.confirmationToken.service;
+package com.sims.simscoreservice.email.confirmationToken.service;
 
+import com.sims.common.exceptions.ResourceNotFoundException;
 import com.sims.common.models.ApiResponse;
-import com.sims.simscoreservice.confirmationToken.entity.ConfirmationToken;
-import com.sims.simscoreservice.confirmationToken.enums.ConfirmationTokenStatus;
+import com.sims.simscoreservice.email.confirmationToken.entity.ConfirmationToken;
+import com.sims.simscoreservice.email.confirmationToken.enums.ConfirmationTokenStatus;
 import com.sims.simscoreservice.inventory.entity.Inventory;
 import com.sims.simscoreservice.inventory.enums.InventoryStatus;
 import com.sims.simscoreservice.inventory.queryService.InventoryQueryService;
@@ -10,6 +11,7 @@ import com.sims.simscoreservice.inventory.service.InventoryService;
 import com.sims.simscoreservice.product.entity.Product;
 import com.sims.simscoreservice.product.enums.ProductStatus;
 import com.sims.simscoreservice.product.services.ProductService;
+import com.sims.simscoreservice.purchaseOrder.dto.PurchaseOrderDetailsView;
 import com.sims.simscoreservice.purchaseOrder.entity.PurchaseOrder;
 import com.sims.simscoreservice.purchaseOrder.enums.PurchaseOrderStatus;
 import com.sims.simscoreservice.purchaseOrder.repository.PurchaseOrderRepository;
@@ -173,5 +175,19 @@ public class PurchaseOrderConfirmationService {
                 inventoryService.updateInventoryStatus(inventoryOpt, InventoryStatus.INCOMING);
             }
         }
+    }
+
+    @Transactional(readOnly = true)
+    public PurchaseOrderDetailsView getPurchaseOrderDetailsByToken(String token) {
+        // Validate token
+        ConfirmationToken confirmationToken = confirmationTokenService.validateConfirmationToken(token);
+
+        if (confirmationToken == null) {
+            throw new ResourceNotFoundException("Invalid or expired token");
+        }
+
+        PurchaseOrder order = confirmationToken.getOrder();
+
+        return new PurchaseOrderDetailsView(order);
     }
 }
