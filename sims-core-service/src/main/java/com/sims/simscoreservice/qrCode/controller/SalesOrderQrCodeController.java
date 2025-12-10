@@ -14,8 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.sims.common.constants.AppConstants.USER_ID_HEADER;
-import static com.sims.common.constants.AppConstants.USER_ROLES_HEADER;
+import static com.sims.common.constants.AppConstants.*;
 
 /**
  * Sales Order QR Code Controller
@@ -25,7 +24,7 @@ import static com.sims.common.constants.AppConstants.USER_ROLES_HEADER;
  * @since 2025-01-23
  */
 @RestController
-@RequestMapping("/api/v1/sales-orders/qrcode")
+@RequestMapping(API_VERSION_V1 + "/sales-orders/qrcode")
 @RequiredArgsConstructor
 @Slf4j
 public class SalesOrderQrCodeController {

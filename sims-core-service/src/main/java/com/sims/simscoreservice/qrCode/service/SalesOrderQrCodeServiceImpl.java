@@ -57,7 +57,7 @@ public class SalesOrderQrCodeServiceImpl implements SalesOrderQrCodeService {
             String qrToken = TokenUtils.generateSecureToken();
 
             // Build QR code data (URL that will be scanned) & Generate QR code image
-            String qrCodeData = BASE_URL + API_VERSION_V1 + "/sales-orders/qrcode" + qrToken + "/verify";
+            String qrCodeData = BASE_URL + API_VERSION_V1 + "/sales-orders/qrcode/" + qrToken + "/verify";
             byte[] qrCodeImage = qrCodeUtil.generateQrCodeImage(qrCodeData, QR_CODE_WIDTH, QR_CODE_HEIGHT);
 
             // Upload to S3
