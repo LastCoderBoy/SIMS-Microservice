@@ -68,6 +68,13 @@ public class GatewayConfig {
                                 .filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
                         .uri("lb://" + SIMS_CORE_SERVICE))
 
+                // QR Code Module Route
+                .route("qr-code-service", r -> r
+                        .path( API_VERSION_V1 + "/sales-orders/qrcode" +"/**")
+                        .filters(f -> f
+                                .filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
+                        .uri("lb://" + SIMS_CORE_SERVICE))
+
                 // Admin Management Route
                 .route("admin-service", r -> r
                         .path(BASE_ADMIN_PATH + "/**")
