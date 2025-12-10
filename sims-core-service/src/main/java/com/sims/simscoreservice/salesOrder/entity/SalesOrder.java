@@ -1,5 +1,7 @@
 package com.sims.simscoreservice.salesOrder.entity;
 
+import com.sims.simscoreservice.qrCode.entity.SalesOrderQRCode;
+import com.sims.simscoreservice.salesOrder.dto.SalesOrderRequest;
 import com.sims.simscoreservice.salesOrder.enums.SalesOrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -89,6 +91,20 @@ public class SalesOrder {
                 this.addOrderItem(item);
             }
         }
+    }
+
+    /**
+     * Constructor for creating sales order from request
+     */
+    public SalesOrder(SalesOrderRequest request, String orderReference, String createdBy, SalesOrderQRCode qrCode) {
+        this.orderReference = orderReference;
+        this.destination = request.getDestination().trim();
+        this.customerName = request.getCustomerName().trim();
+        this.status = SalesOrderStatus.PENDING;
+        this.createdBy = createdBy;
+        this.estimatedDeliveryDate = LocalDateTime.now().plusDays(7);
+        this.setQrCode(qrCode);
+        this.items = new ArrayList<>();
     }
 
     /**

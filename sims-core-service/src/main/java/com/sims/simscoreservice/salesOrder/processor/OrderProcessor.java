@@ -4,7 +4,7 @@ import com.sims.common.exceptions.ResourceNotFoundException;
 import com.sims.common.exceptions.ServiceException;
 import com.sims.simscoreservice.exceptions.InsufficientStockException;
 import com.sims.simscoreservice.exceptions.InventoryException;
-import com.sims.simscoreservice.inventory.stockManagement.StockManagementService;
+import com.sims.simscoreservice.stockManagement.StockManagementService;
 import com.sims.simscoreservice.salesOrder.entity.OrderItem;
 import com.sims.simscoreservice.salesOrder.entity.SalesOrder;
 import com.sims.simscoreservice.salesOrder.enums.OrderItemStatus;

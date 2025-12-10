@@ -10,10 +10,10 @@ import com.sims.authservice.exception.PasswordValidationException;
 import com.sims.authservice.exception.TokenRefreshException;
 import com.sims.authservice.repository.BlackListTokenRepository;
 import com.sims.authservice.repository.UserRepository;
-import com.sims.authservice.security.SecurityUtils;
 import com.sims.authservice.security.UserPrincipal;
 import com.sims.authservice.service.RefreshTokenService;
-import com.sims.common.exceptions.*;
+import com.sims.common.exceptions.InvalidTokenException;
+import com.sims.common.exceptions.ResourceNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
@@ -59,7 +59,6 @@ public class UserService {
     // Dependencies
     private final AuthenticationManager authManager;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final SecurityUtils securityUtils;
 
     // Services
     private final JWTService jwtService;
@@ -93,7 +92,7 @@ public class UserService {
 
                 // Generate Refresh Token
                 String userAgent = request.getHeader("User-Agent");
-                String ipAddress = securityUtils.extractClientIp(request);
+                String ipAddress = extractClientIp(request);
                 RefreshToken refreshToken = refreshTokenService.createRefreshToken(
                         username,
                         ipAddress,
@@ -134,7 +133,7 @@ public class UserService {
             RefreshToken refreshToken = refreshTokenService.verifyExpiration(requestRefreshToken);
 
             // Verify IP hasn't changed (detect token theft)
-            String currentIp = securityUtils.extractClientIp(request);
+            String currentIp = extractClientIp(request);
             String storedIp = refreshToken.getIpAddress();
 
             if (!currentIp.equals(storedIp)) {
@@ -217,6 +216,7 @@ public class UserService {
     /**
      * Logout from all devices - Revoke all refresh tokens
      */
+    @Transactional
     public void logoutAllDevices(HttpServletResponse response, HttpServletRequest request) {
         try {
             String requestRefreshToken = extractRefreshTokenFromCookie(request);
@@ -379,4 +379,16 @@ public class UserService {
                 .subscribe(); // Fire and forget (async)
     }
 
+    /**
+     * Extract client IP address from request
+     * Handles X-Forwarded-For header (proxy/load balancer)
+     */
+    private String extractClientIp(HttpServletRequest request) {
+        String forwarded = request.getHeader("X-Forwarded-For");
+        if (forwarded != null && !forwarded.isEmpty()) {
+            // The first IP (client's real IP)
+            return forwarded.split(",")[0].trim();
+        }
+        return request.getRemoteAddr();
+    }
 }

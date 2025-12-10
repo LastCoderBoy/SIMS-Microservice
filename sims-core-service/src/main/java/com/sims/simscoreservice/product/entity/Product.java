@@ -66,9 +66,10 @@ public class Product {
     }
 
     /**
-     * Check if product is active (can be ordered)
+     * Check if product is valid for Sale
+     * return true if product is ACTIVE or ON_ORDER
      */
-    public boolean isActive() {
-        return this.status.isActive();
+    public boolean isValidForSale() {
+        return this.status == ProductStatus.ACTIVE || this.status == ProductStatus.ON_ORDER;
     }
 }

@@ -15,7 +15,7 @@ import com.sims.simscoreservice.inventory.repository.InventoryRepository;
 import com.sims.simscoreservice.inventory.service.TotalItemsService;
 import com.sims.simscoreservice.inventory.queryService.InventoryQueryService;
 import com.sims.simscoreservice.inventory.searchService.InventorySearchService;
-import com.sims.simscoreservice.inventory.stockManagement.StockManagementService;
+import com.sims.simscoreservice.stockManagement.StockManagementService;
 import com.sims.simscoreservice.product.entity.Product;
 import com.sims.simscoreservice.product.enums.ProductStatus;
 import com.sims.simscoreservice.product.services.ProductService;

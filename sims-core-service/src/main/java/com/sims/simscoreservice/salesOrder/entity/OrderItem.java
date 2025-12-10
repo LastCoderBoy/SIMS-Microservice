@@ -51,11 +51,10 @@ public class OrderItem {
     /**
      * Constructor for creating new order item
      */
-    public OrderItem(Integer quantity, Product product, BigDecimal orderPrice) {
+    public OrderItem(Product product, Integer quantity) {
         this.quantity = quantity;
         this.product = product;
-        this.orderPrice = orderPrice;
-        this.status = OrderItemStatus.PENDING;
+        this.orderPrice = product.getPrice().multiply(BigDecimal.valueOf(quantity));
         this.approvedQuantity = 0;
     }
 

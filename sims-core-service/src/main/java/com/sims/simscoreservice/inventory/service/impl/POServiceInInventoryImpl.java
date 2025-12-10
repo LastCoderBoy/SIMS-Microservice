@@ -10,7 +10,7 @@ import com.sims.simscoreservice.inventory.entity.Inventory;
 import com.sims.simscoreservice.inventory.queryService.InventoryQueryService;
 import com.sims.simscoreservice.inventory.service.InventoryStatusService;
 import com.sims.simscoreservice.inventory.service.POServiceInInventory;
-import com.sims.simscoreservice.inventory.stockManagement.StockManagementService;
+import com.sims.simscoreservice.stockManagement.StockManagementService;
 import com.sims.simscoreservice.product.enums.ProductCategories;
 import com.sims.simscoreservice.product.helper.ProductStatusModifier;
 import com.sims.simscoreservice.purchaseOrder.dto.ReceiveStockRequest;

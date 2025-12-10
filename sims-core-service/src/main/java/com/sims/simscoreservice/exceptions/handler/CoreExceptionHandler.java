@@ -19,6 +19,8 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -156,25 +158,24 @@ public class CoreExceptionHandler {
     }
 
     // AWS S3 Exceptions
+    @ExceptionHandler(NoSuchKeyException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNoSuchKeyException(NoSuchKeyException ex) {
 
-//    @ExceptionHandler(NoSuchKeyException.class)
-//    public ResponseEntity<ErrorObject> handleNoSuchKeyException(NoSuchKeyException ex) {
-//
-//        log.warn("[CORE-EX-HANDLER] Key not found in AWS: {}", ex.getMessage());
-//
-//        return ResponseEntity
-//                .status(HttpStatus.NOT_FOUND)
-//                .body(ApiResponse.error(ex.getMessage()));
-//    }
-//
-//    @ExceptionHandler(NoSuchBucketException.class)
-//    public ResponseEntity<ErrorObject> handleNoSuchBucketException(NoSuchBucketException ex) {
-//        log.warn("[CORE-EX-HANDLER] Bucket not found in AWS: {}", ex.getMessage());
-//
-//        return ResponseEntity
-//                .status(HttpStatus.NOT_FOUND)
-//                .body(ApiResponse.error(ex.getMessage()));
-//    }
+        log.warn("[CORE-EX-HANDLER] Key not found in AWS: {}", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.error(ex.getMessage()));
+    }
+
+    @ExceptionHandler(NoSuchBucketException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNoSuchBucketException(NoSuchBucketException ex) {
+        log.warn("[CORE-EX-HANDLER] Bucket not found in AWS: {}", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.error(ex.getMessage()));
+    }
 
     /**
      * Handle all other exceptions

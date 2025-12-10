@@ -1,5 +1,8 @@
 package com.sims.common.constants;
 
+import org.springframework.beans.factory.annotation.Value;
+
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -71,11 +74,9 @@ public final class AppConstants {
     public static final String NOTIFICATION_SERVICE = "notification-service";
     public static final String API_GATEWAY = "api-gateway";
 
-    // ========== Response Messages ==========
-    public static final String SUCCESS_MESSAGE = "Operation completed successfully";
-    public static final String ERROR_MESSAGE = "Operation failed";
-    public static final String VALIDATION_ERROR_MESSAGE = "Validation failed";
-    public static final String UNAUTHORIZED_MESSAGE = "Unauthorized access";
-    public static final String FORBIDDEN_MESSAGE = "Access forbidden";
-    public static final String NOT_FOUND_MESSAGE = "Resource not found";
+    // ========== QR CODE CONFIG ==========
+    public static final int QR_CODE_WIDTH = 300;
+    public static final int QR_CODE_HEIGHT = 300;
+    public static final String QR_CODE_S3_PREFIX = "qr-codes/";
+    public static final Duration PRESIGNED_URL_DURATION = Duration.ofHours(1);
 }

@@ -15,8 +15,9 @@ public enum SalesOrderStatus {
     PARTIALLY_DELIVERED("Order partially shipped"),
     APPROVED("Order confirmed, ready for delivery"),
     DELIVERY_IN_PROCESS("Order is being delivered"),
-    DELIVERED("Order delivered to customer"),
-    CANCELLED("Order cancelled");
+    DELIVERED("Order is delivered to customer"),
+    CANCELLED("Order is cancelled"),
+    COMPLETED("Order is completed");
 
     private final String description;
 

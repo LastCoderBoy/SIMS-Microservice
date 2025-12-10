@@ -1,5 +1,6 @@
 package com.sims.simscoreservice.salesOrder.helper;
 
+import com.sims.common.exceptions.ServiceException;
 import com.sims.common.exceptions.ValidationException;
 import com.sims.common.models.PaginatedResponse;
 import com.sims.simscoreservice.salesOrder.dto.SalesOrderRequest;
@@ -12,11 +13,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 /**
  * Sales Order Helper
@@ -57,8 +59,11 @@ public class SalesOrderHelper {
         // Check for duplicate products in the same order
         Set<String> productIds = new HashSet<>();
         for (OrderItemRequest item : requestedOrderItems) {
-            if (! productIds.add(item.getProductId())) {
+            if (!productIds.add(item.getProductId())) {
                 throw new ValidationException("Duplicate product found in order: " + item.getProductId());
+            }
+            if(item.getQuantity() <= 0) {
+                throw new ValidationException("Quantity must be greater than zero");
             }
         }
 

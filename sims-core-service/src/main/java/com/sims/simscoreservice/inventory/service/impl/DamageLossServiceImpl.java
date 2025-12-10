@@ -20,7 +20,7 @@ import com.sims.simscoreservice.inventory.repository.DamageLossRepository;
 import com.sims.simscoreservice.inventory.service.DamageLossService;
 import com.sims.simscoreservice.inventory.queryService.DamageLossQueryService;
 import com.sims.simscoreservice.inventory.queryService.InventoryQueryService;
-import com.sims.simscoreservice.inventory.stockManagement.StockManagementService;
+import com.sims.simscoreservice.stockManagement.StockManagementService;
 import com.sims.simscoreservice.shared.util.GlobalServiceHelper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,7 @@
-package com.sims.simscoreservice.salesOrder.entity;
+package com.sims.simscoreservice.qrCode.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sims.simscoreservice.salesOrder.entity.SalesOrder;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -2,7 +2,7 @@ package com.sims.simscoreservice.salesOrder.processor;
 
 import com.sims.common.exceptions.ServiceException;
 import com.sims.simscoreservice.exceptions.InventoryException;
-import com.sims.simscoreservice.inventory.stockManagement.StockManagementService;
+import com.sims.simscoreservice.stockManagement.StockManagementService;
 import com.sims.simscoreservice.salesOrder.entity.SalesOrder;
 import com.sims.simscoreservice.salesOrder.helper.SalesOrderHelper;
 import com.sims.simscoreservice.stockMovement.service.StockMovementService;
