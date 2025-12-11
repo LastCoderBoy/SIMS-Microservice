@@ -238,23 +238,13 @@ public class SalesOrderQrCodeServiceImpl implements SalesOrderQrCodeService {
     private void validateStatusTransition(SalesOrderStatus currentStatus, SalesOrderStatus newStatus) {
         // Define valid transitions
         boolean isValid = switch (currentStatus) {
-            case PENDING -> newStatus == SalesOrderStatus.APPROVED ||
-                    newStatus == SalesOrderStatus.PARTIALLY_APPROVED ||
-                    newStatus == SalesOrderStatus.CANCELLED;
 
-            case PARTIALLY_APPROVED -> newStatus == SalesOrderStatus.APPROVED ||
-                    newStatus == SalesOrderStatus.CANCELLED;
-
-            case APPROVED -> newStatus == SalesOrderStatus.DELIVERED ||
-                    newStatus == SalesOrderStatus.PARTIALLY_DELIVERED ||
-                    newStatus == SalesOrderStatus.CANCELLED;
-
-            case PARTIALLY_DELIVERED, DELIVERY_IN_PROCESS -> newStatus == SalesOrderStatus.DELIVERED ||
+            case APPROVED, DELIVERY_IN_PROCESS ->
+                    newStatus == SalesOrderStatus.DELIVERY_IN_PROCESS ||
+                    newStatus == SalesOrderStatus.DELIVERED ||
                     newStatus == SalesOrderStatus.COMPLETED;
 
-            case DELIVERED -> newStatus == SalesOrderStatus.COMPLETED;
-
-            case COMPLETED, CANCELLED -> false; // Final states
+            default -> false;
         };
 
         if (!isValid) {

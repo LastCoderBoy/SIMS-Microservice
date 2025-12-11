@@ -75,24 +75,24 @@ public class SalesOrderQrCodeController {
      * Update order status via QR code
      * Used by couriers/managers to update delivery status
      */
-    @PatchMapping("/{qrToken}/status")
+    @PatchMapping("/{qrToken}")
     public ResponseEntity<ApiResponse<String>> updateOrderStatus(
             @PathVariable String qrToken,
-            @Valid @RequestBody SalesOrderStatus salesOrderStatus,
+            @Valid @RequestParam SalesOrderStatus status,
             @RequestHeader(USER_ID_HEADER) String userId,
             @RequestHeader(USER_ROLES_HEADER) String roles,
             HttpServletRequest request) {
 
         log.info("[SO-QR-CONTROLLER] Updating order status via QR:  {} to {} by user: {}",
                 qrToken.substring(0, Math.min(10, qrToken.length())),
-                salesOrderStatus,
+                status,
                 userId);
 
         // Check authorization
         roleValidator.requireAnyRole(roles, "ROLE_ADMIN", "ROLE_MANAGER", "ROLE_COURIER"); // might throw Forbidden Exception
 
         ApiResponse<String> response = salesOrderQrCodeService.updateOrderStatus(
-                qrToken, userId, salesOrderStatus, request);
+                qrToken, userId, status, request);
 
         return ResponseEntity.ok(response);
     }

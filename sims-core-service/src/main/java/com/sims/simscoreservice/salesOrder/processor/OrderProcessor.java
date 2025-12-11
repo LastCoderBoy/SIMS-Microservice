@@ -2,6 +2,7 @@ package com.sims.simscoreservice.salesOrder.processor;
 
 import com.sims.common.exceptions.ResourceNotFoundException;
 import com.sims.common.exceptions.ServiceException;
+import com.sims.common.exceptions.ValidationException;
 import com.sims.simscoreservice.exceptions.InsufficientStockException;
 import com.sims.simscoreservice.exceptions.InventoryException;
 import com.sims.simscoreservice.stockManagement.StockManagementService;
@@ -51,7 +52,7 @@ public abstract class OrderProcessor {
         try {
             // Check if order is finalized
             if (salesOrder.isFinalized()) {
-                throw new ResourceNotFoundException("Order is finalized, cannot process: " + salesOrder.getOrderReference());
+                throw new ValidationException("Order is finalized, cannot process: " + salesOrder.getOrderReference());
             }
 
             // Set approval metadata
@@ -101,6 +102,9 @@ public abstract class OrderProcessor {
             throw e;
         } catch (InventoryException e) {
             log.error("[ORDER-PROCESSOR] Inventory error: {}", e.getMessage());
+            throw e;
+        } catch (ValidationException e) {
+            log.error("[ORDER-PROCESSOR] Validation error: {}", e.getMessage());
             throw e;
         } catch (Exception e) {
             log.error("[ORDER-PROCESSOR] Error processing order: {}", e.getMessage());

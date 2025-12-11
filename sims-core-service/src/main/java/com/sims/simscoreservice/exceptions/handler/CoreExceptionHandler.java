@@ -142,7 +142,7 @@ public class CoreExceptionHandler {
         log.error("[CORE-EX-HANDLER] Inventory exception: {}", ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.error("Internal error with Inventory. Please contact support."));
+                .body(ApiResponse.error("Inventory error occurred: " + ex.getMessage()));
     }
 
     /**
