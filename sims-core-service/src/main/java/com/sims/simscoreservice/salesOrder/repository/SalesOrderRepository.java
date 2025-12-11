@@ -1,5 +1,6 @@
 package com.sims.simscoreservice.salesOrder.repository;
 
+import com.sims.simscoreservice.analytics.dto.SalesOrderSummary;
 import com.sims.simscoreservice.salesOrder.entity.SalesOrder;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
@@ -121,4 +122,18 @@ public interface SalesOrderRepository extends JpaRepository<SalesOrder, Long>,
     """)
     Long countCompletedSalesOrdersBetween(@Param("startDate") LocalDateTime startDate,
                                           @Param("endDate") LocalDateTime endDate);
+
+    @Query("""
+    SELECT new com.sims.simscoreservice.analytics.dto.SalesOrderSummary(
+        COUNT(CASE WHEN so.status = 'COMPLETED' THEN 1 END),
+        COUNT(CASE WHEN so.status = 'PENDING' THEN 1 END),
+        COUNT(CASE WHEN so.status = 'DELIVERY_IN_PROCESS' THEN 1 END),
+        COUNT(CASE WHEN so.status = 'DELIVERED' THEN 1 END),
+        COUNT(CASE WHEN so.status = 'APPROVED' THEN 1 END),
+        COUNT(CASE WHEN so.status = 'PARTIALLY_APPROVED' THEN 1 END),
+        COUNT(CASE WHEN so.status = 'PARTIALLY_DELIVERED' THEN 1 END),
+        COUNT(CASE WHEN so.status = 'CANCELLED' THEN 1 END))
+    FROM SalesOrder so
+""")
+    SalesOrderSummary getSalesOrderSummaryMetrics();
 }

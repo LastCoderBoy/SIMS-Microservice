@@ -60,5 +60,8 @@ public class WebConfig implements WebMvcConfigurer {
         // Sales Order & Purchase Order Enums
         registry.addConverter(new SalesOrderStatusConverter());
         registry.addConverter(new PurchaseOrderStatusConverter());
+
+        // Date Range Enums
+        registry.addConverter(new TimeRangeConverter());
     }
 }

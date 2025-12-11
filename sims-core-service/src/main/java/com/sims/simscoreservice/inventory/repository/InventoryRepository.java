@@ -1,5 +1,6 @@
 package com.sims.simscoreservice.inventory.repository;
 
+import com.sims.simscoreservice.analytics.dto.InventoryReportMetrics;
 import com.sims.simscoreservice.inventory.dto.InventoryMetrics;
 import com.sims.simscoreservice.inventory.entity.Inventory;
 import com.sims.simscoreservice.inventory.enums.InventoryStatus;
@@ -12,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -99,30 +101,29 @@ public interface InventoryRepository extends JpaRepository<Inventory, String>,
 
 
     // ******* Report & Analytics related methods *******
-//
-//    @Query("""
-//    SELECT new com.JK.SIMS.models.reportAnalyticsMetrics.inventoryHealth.InventoryReportMetrics(
-//        CAST(COALESCE(SUM(ic.currentStock * pm.price), 0.0) AS BigDecimal),
-//        CAST(COALESCE(SUM(ic.currentStock), 0) AS long),
-//        CAST(COALESCE(SUM(ic.reservedStock), 0) AS long),
-//        CAST(COALESCE(SUM(CASE WHEN ic.currentStock > ic.reservedStock
-//            THEN ic.currentStock - ic.reservedStock
-//            ELSE 0 END), 0) AS long),
-//        COUNT(CASE WHEN ic.currentStock > ic.minLevel THEN 1 END),
-//        COUNT(CASE WHEN ic.currentStock <= ic.minLevel AND ic.currentStock > 0 AND ic.status!='INVALID' THEN 1 END),
-//        COUNT(CASE WHEN ic.currentStock = 0 THEN 1 END)
-//        )
-//    FROM InventoryControlData ic
-//    JOIN ic.pmProduct pm
-//    WHERE ic.status != 'INVALID'
-//""")
-//    InventoryReportMetrics getInventoryReportMetrics();
-//
-//    @Query(value = """
-//    SELECT COALESCE(SUM(ic.current_stock * pm.price), 0) AS per_stock_value
-//    FROM inventory_control_data ic
-//    JOIN products_for_management pm USING(productid)
-//    WHERE ic.status != 'INVALID'
-//    """, nativeQuery = true)
-//    BigDecimal getInventoryStockValueAtRetail();
+
+    @Query("""
+    SELECT new com.sims.simscoreservice.analytics.dto.InventoryReportMetrics(
+        CAST(COALESCE(SUM(ic.currentStock * pm.price), 0.0) AS BigDecimal),
+        CAST(COALESCE(SUM(ic.currentStock), 0) AS long),
+        CAST(COALESCE(SUM(ic.reservedStock), 0) AS long),
+        CAST(COALESCE(SUM(CASE WHEN ic.currentStock > ic.reservedStock
+            THEN ic.currentStock - ic.reservedStock
+            ELSE 0 END), 0) AS long),
+        COUNT(CASE WHEN ic.currentStock > ic.minLevel THEN 1 END),
+        COUNT(CASE WHEN ic.currentStock <= ic.minLevel AND ic.currentStock > 0 AND ic.status!='INVALID' THEN 1 END),
+        COUNT(CASE WHEN ic.currentStock = 0 THEN 1 END)
+        )
+    FROM Inventory ic
+    JOIN ic.product pm
+""")
+    InventoryReportMetrics getInventoryReportMetrics();
+
+    @Query(value = """
+    SELECT COALESCE(SUM(ic.current_stock * pm.price), 0) AS per_stock_value
+    FROM inventory ic
+    JOIN products pm USING(product_id)
+    WHERE ic.status != 'INVALID'
+    """, nativeQuery = true)
+    BigDecimal getInventoryStockValueAtRetail();
 }

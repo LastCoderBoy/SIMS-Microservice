@@ -1,6 +1,7 @@
 package com.sims.simscoreservice.purchaseOrder.repository;
 
 
+import com.sims.simscoreservice.analytics.dto.PurchaseOrderSummary;
 import com.sims.simscoreservice.purchaseOrder.entity.PurchaseOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -90,4 +91,17 @@ public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Lo
         ) THEN true ELSE false END
     """)
     boolean existsActivePurchaseOrdersForSupplier(@Param("supplierId") Long supplierId);
+
+    // ******* Report & Analytics related methods *******
+    @Query("""
+    SELECT new com.sims.simscoreservice.analytics.dto.PurchaseOrderSummary(
+        COUNT(CASE WHEN po.status = 'AWAITING_APPROVAL' THEN 1 END),
+        COUNT(CASE WHEN po.status = 'DELIVERY_IN_PROCESS' THEN 1 END),
+        COUNT(CASE WHEN po.status = 'PARTIALLY_RECEIVED' THEN 1 END),
+        COUNT(CASE WHEN po.status = 'RECEIVED' THEN 1 END),
+        COUNT(CASE WHEN po.status = 'CANCELLED' THEN 1 END),
+        COUNT(CASE WHEN po.status = 'FAILED' THEN 1 END))
+    FROM PurchaseOrder po
+""")
+    PurchaseOrderSummary getPurchaseOrderSummaryMetrics();
 }
