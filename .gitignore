@@ -1,10 +1,24 @@
+# ========================================
+# MAVEN BUILD FILES
+# ========================================
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### STS ###
+# ========================================
+# IDE FILES
+# ========================================
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+### Eclipse / STS ###
 .apt_generated
 .classpath
 .factorypath
@@ -12,12 +26,7 @@ target/
 .settings
 .springBeans
 .sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+bin/
 
 ### NetBeans ###
 /nbproject/private/
@@ -25,24 +34,141 @@ target/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
 ### VS Code ###
 .vscode/
+*.code-workspace
 
-# Sensitive configuration files
-**/application-local.properties
+# ========================================
+# SENSITIVE CONFIGURATION FILES
+# ========================================
 .env
 *.env
 .env.local
+.env.production
+.env.development
+.env.test
 
+# Local application properties with credentials
+**/application-local.properties
+**/application-secret.properties
 
-### Logs ###
+# AWS credentials
+**/.aws/
+**/aws-credentials.json
+
+# ========================================
+# DOCKER FILES
+# ========================================
+
+# DO NOT ignore .dockerignore (it's needed!)
+# .dockerignore
+
+# Docker volumes data (generated at runtime)
+docker/mysql-data/
+**/mysql-data/
+
+# DO NOT ignore docker/init-db.sql (it's needed for setup!)
+# docker/init-db.sql
+
+# ========================================
+# LOGS
+# ========================================
 **.log
+*.log
+*.log.*
 logs/
 /logs/
-*.log.*
 /log/
 log/
+spring.log
+application.log
+
+# ========================================
+# BUILD ARTIFACTS
+# ========================================
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+dist/
+*.jar
+*.war
+*.ear
+*.class
+
+# ========================================
+# OPERATING SYSTEM FILES
+# ========================================
+
+### macOS ###
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+### Windows ###
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+### Linux ###
+*~
+.directory
+.Trash-*
+
+# ========================================
+# TEMPORARY FILES
+# ========================================
+*.tmp
+*.temp
+*.swp
+*.swo
+.cache/
+tmp/
+temp/
+
+# ========================================
+# NODE / FRONTEND (if you add later)
+# ========================================
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# ========================================
+# DATABASE FILES
+# ========================================
+*.db
+*.sqlite
+*.sqlite3
+*.h2.db
+
+# ========================================
+# TEST COVERAGE
+# ========================================
+coverage/
+.nyc_output/
+*.lcov
+htmlcov/
+.coverage
+
+# ========================================
+# SECURITY / KEYS
+# ========================================
+*.pem
+*.key
+*.p12
+*.jks
+*.keystore
+secrets/
+private-key.json
+
+# ========================================
+# BACKUP FILES
+# ========================================
+*.bak
+*.backup
+*.old
+*-backup

@@ -37,7 +37,6 @@
         <module>api-gateway</module>
         <module>auth-service</module>
         <module>sims-core-service</module>
-        <!-- <module>notification-service</module> --> <!-- Add later -->
     </modules>
 
 	<properties>
