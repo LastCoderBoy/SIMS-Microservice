@@ -2,6 +2,7 @@ package com.sims.simscoreservice.product.dto;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ProductReportMetrics {
     private Long totalActiveProducts;
     private Long totalInactiveProducts;
