@@ -81,7 +81,7 @@ public class DamageLossController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> updateDamageLossReport(
             @PathVariable Integer id,
-            @Valid @RequestBody DamageLossRequest request,
+            @RequestBody DamageLossRequest request,
             @RequestHeader(USER_ID_HEADER) String userId,
             @RequestHeader(USER_ROLES_HEADER) String roles) {
 

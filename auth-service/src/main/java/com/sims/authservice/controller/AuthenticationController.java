@@ -103,7 +103,6 @@ public class AuthenticationController {
         log.info("[AUTH-CONTROLLER] User logged out successfully");
 
         return ResponseEntity.ok()
-                .header("Clear-Site-Data", "\"cache\", \"cookies\", \"storage\"")
                 .body(ApiResponse.success("User logged out successfully"));
     }
 

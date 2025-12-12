@@ -289,11 +289,6 @@ public class DamageLossServiceImpl implements DamageLossService {
      * Restore stock when deleting or updating damage/loss report
      */
     private void restoreStock(Inventory inventory, int quantityToRestore) {
-        if (quantityToRestore <= 0) {
-            log.warn("[DAMAGE-LOSS-SERVICE] Quantity to restore is zero or negative, skipping");
-            return;
-        }
-
         int updatedStock = inventory.getCurrentStock() + quantityToRestore;
         stockManagementService.updateStockLevels(inventory, updatedStock, null);
 
