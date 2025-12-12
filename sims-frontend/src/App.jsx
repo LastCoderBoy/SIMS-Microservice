@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/Login';
 import MainLayout from './components/layout/MainLayout';
 import InventoryDashboard from './pages/InventoryDashboard';
+import DamageLoss from './pages/DamageLoss';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import './App.css';
 
@@ -28,7 +29,7 @@ function App() {
                     {/* Inventory Control Sub-routes */}
                     <Route path="inventory/total-items" element={<div className="coming-soon">Total Items Page (Coming Soon)</div>} />
                     <Route path="inventory/low-stock" element={<div className="coming-soon">Low Stock Page (Coming Soon)</div>} />
-                    <Route path="inventory/damage-loss" element={<div className="coming-soon">Damage & Loss Page (Coming Soon)</div>} />
+                    <Route path="inventory/damage-loss" element={<DamageLoss />} />
                     <Route path="inventory/incoming-stock" element={<div className="coming-soon">Incoming Stock Page (Coming Soon)</div>} />
                     <Route path="inventory/outgoing-stock" element={<div className="coming-soon">Outgoing Stock Page (Coming Soon)</div>} />
 
