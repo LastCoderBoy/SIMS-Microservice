@@ -1,0 +1,40 @@
+@import '../../styles/variables.css';
+
+.main-layout {
+    display: flex;
+    min-height: 100vh;
+    background:  var(--background-color);
+}
+
+.main-content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    transition: margin-left 0.3s ease;
+}
+
+.main-content-wrapper.sidebar-open {
+    margin-left: 260px;
+}
+
+.main-content-wrapper.sidebar-closed {
+    margin-left: 70px;
+}
+
+.main-content {
+    flex: 1;
+    padding: var(--spacing-xl);
+    overflow-y: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-content-wrapper.sidebar-open,
+    .main-content-wrapper.sidebar-closed {
+        margin-left: 0;
+    }
+
+    .main-content {
+        padding: var(--spacing-md);
+    }
+}
