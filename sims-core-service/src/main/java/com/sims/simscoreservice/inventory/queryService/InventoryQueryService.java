@@ -3,6 +3,7 @@ package com.sims.simscoreservice.inventory.queryService;
 import com.sims.common.exceptions.DatabaseException;
 import com.sims.common.exceptions.ResourceNotFoundException;
 import com.sims.common.exceptions.ServiceException;
+import com.sims.simscoreservice.inventory.dto.lowStock.LowStockMetrics;
 import com.sims.simscoreservice.inventory.entity.Inventory;
 import com.sims.simscoreservice.inventory.repository.InventoryRepository;
 import com.sims.simscoreservice.shared.util.GlobalServiceHelper;
@@ -86,6 +87,19 @@ public class InventoryQueryService {
         } catch (Exception e) {
             log.error("[INVENTORY-QUERY] Error retrieving low stock list: {}", e.getMessage());
             throw new ServiceException("Failed to retrieve low stock products", e);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public LowStockMetrics getLowStockMetrics() {
+        try{
+            return inventoryRepository.getLowStockMetrics();
+        } catch (DataAccessException da) {
+            log.error("[INVENTORY-QUERY] Database error retrieving low stock metrics: {}", da.getMessage());
+            throw new DatabaseException("Failed to retrieve low stock metrics", da);
+        } catch (Exception e) {
+            log.error("[INVENTORY-QUERY] Error retrieving low stock metrics: {}", e.getMessage());
+            throw new ServiceException("Failed to retrieve low stock metrics", e);
         }
     }
 

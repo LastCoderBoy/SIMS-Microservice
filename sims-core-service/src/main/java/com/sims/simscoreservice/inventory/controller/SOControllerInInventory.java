@@ -5,7 +5,11 @@ import com.sims.common.exceptions.ServiceException;
 import com.sims.common.exceptions.ValidationException;
 import com.sims.common.models.ApiResponse;
 import com.sims.common.models.PaginatedResponse;
+import com.sims.simscoreservice.analytics.dto.OrderSummaryMetrics;
+import com.sims.simscoreservice.analytics.dto.SalesOrderSummary;
+import com.sims.simscoreservice.analytics.service.OrderSummaryService;
 import com.sims.simscoreservice.inventory.service.SOServiceInInventory;
+import com.sims.simscoreservice.salesOrder.dto.DetailedSalesOrderView;
 import com.sims.simscoreservice.salesOrder.dto.ProcessSalesOrderRequestDto;
 import com.sims.simscoreservice.salesOrder.dto.SummarySalesOrderView;
 import com.sims.simscoreservice.salesOrder.enums.SalesOrderStatus;
@@ -37,14 +41,24 @@ import static com.sims.common.constants.AppConstants.*;
 @Slf4j
 public class SOControllerInInventory {
 
+    private final OrderSummaryService orderSummaryService;
     private final SOServiceInInventory soServiceInInventory;
     private final RoleValidator roleValidator;
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<SalesOrderSummary>> getSalesOrderSummaryMetrics(){
+        SalesOrderSummary salesOrderSummary = orderSummaryService.getSalesOrderSummary();
+        return ResponseEntity
+                .ok(ApiResponse.success(
+                        "Sales Order Summary",
+                        salesOrderSummary));
+    }
 
     /**
      * Get all waiting/pending sales orders
      * Returns orders with status: PENDING, PARTIALLY_APPROVED, PARTIALLY_DELIVERED
      */
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<PaginatedResponse<SummarySalesOrderView>> getAllWaitingSalesOrders(
             @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) @Min(0) int page,
             @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) @Min(1) @Max(100) int size,
@@ -78,6 +92,15 @@ public class SOControllerInInventory {
                 soServiceInInventory.getAllUrgentSalesOrders(page, size, sortBy, sortDir);
 
         return ResponseEntity.ok(urgentOrders);
+    }
+
+    @GetMapping("/{orderId}/items")
+    public ResponseEntity<ApiResponse<DetailedSalesOrderView>> getSalesOrderDetails(@PathVariable Long orderId) {
+        log.info("[SO-INVENTORY-CONTROLLER] Getting details for sales order: {}", orderId);
+
+        DetailedSalesOrderView detailedView = soServiceInInventory.getDetailsForSalesOrderId(orderId);
+
+        return ResponseEntity.ok(ApiResponse.success("Sales order retrieved successfully", detailedView));
     }
 
     /**

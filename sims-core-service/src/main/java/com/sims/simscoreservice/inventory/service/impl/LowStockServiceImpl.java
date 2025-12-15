@@ -1,8 +1,10 @@
 package com.sims.simscoreservice.inventory.service.impl;
 
 import com.sims.common.exceptions.ServiceException;
+import com.sims.common.models.ApiResponse;
 import com.sims.common.models.PaginatedResponse;
 import com.sims.simscoreservice.inventory.dto.InventoryResponse;
+import com.sims.simscoreservice.inventory.dto.lowStock.LowStockMetrics;
 import com.sims.simscoreservice.inventory.entity.Inventory;
 import com.sims.simscoreservice.inventory.helper.InventoryHelper;
 import com.sims.simscoreservice.inventory.service.LowStockService;
@@ -33,6 +35,17 @@ public class LowStockServiceImpl implements LowStockService {
     private final InventoryQueryService inventoryQueryService;
     private final InventorySearchService inventorySearchService;
     private final InventoryHelper inventoryHelper;
+
+    @Override
+    @Transactional(readOnly = true)
+    public LowStockMetrics getLowStockDashboardMetrics(){
+        try{
+            return inventoryQueryService.getLowStockMetrics();
+        } catch (Exception e) {
+            log.error("[LOW-STOCK-SERVICE] Error retrieving low stock metrics: {}", e.getMessage());
+            throw new ServiceException("Failed to retrieve low stock metrics", e);
+        }
+    }
 
     @Override
     @Transactional(readOnly = true)

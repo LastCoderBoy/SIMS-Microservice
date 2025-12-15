@@ -6,6 +6,7 @@ import com.sims.common.exceptions.ServiceException;
 import com.sims.common.exceptions.ValidationException;
 import com.sims.common.models.ApiResponse;
 import com.sims.common.models.PaginatedResponse;
+import com.sims.simscoreservice.analytics.dto.PurchaseOrderSummary;
 import com.sims.simscoreservice.inventory.entity.Inventory;
 import com.sims.simscoreservice.inventory.queryService.InventoryQueryService;
 import com.sims.simscoreservice.inventory.service.InventoryStatusService;

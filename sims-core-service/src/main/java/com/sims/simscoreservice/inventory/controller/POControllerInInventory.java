@@ -2,6 +2,8 @@ package com.sims.simscoreservice.inventory.controller;
 
 import com.sims.common.models.ApiResponse;
 import com.sims.common.models.PaginatedResponse;
+import com.sims.simscoreservice.analytics.dto.PurchaseOrderSummary;
+import com.sims.simscoreservice.analytics.service.OrderSummaryService;
 import com.sims.simscoreservice.inventory.service.POServiceInInventory;
 import com.sims.simscoreservice.product.enums.ProductCategories;
 import com.sims.simscoreservice.purchaseOrder.dto.ReceiveStockRequest;
@@ -34,14 +36,25 @@ import static com.sims.common.constants.AppConstants.*;
 @Slf4j
 public class POControllerInInventory {
 
+    private final OrderSummaryService orderSummaryService;
     private final POServiceInInventory poServiceInInventory;
     private final RoleValidator roleValidator;
+
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<PurchaseOrderSummary>> getPurchaseOrderSummaryMetrics(){
+        PurchaseOrderSummary purchaseOrderSummary = orderSummaryService.getPurchaseOrderSummary();
+        return ResponseEntity
+                .ok(ApiResponse.success(
+                        "Purchase Order Summary",
+                        purchaseOrderSummary));
+    }
 
     /**
      * Get all pending purchase orders
      * Returns orders with status: AWAITING_APPROVAL, DELIVERY_IN_PROCESS, PARTIALLY_RECEIVED
      */
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<PaginatedResponse<SummaryPurchaseOrderView>> getAllPendingPurchaseOrders(
             @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size,

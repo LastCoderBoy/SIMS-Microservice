@@ -1,8 +1,10 @@
 package com.sims.simscoreservice.inventory.service;
 
 
+import com.sims.common.models.ApiResponse;
 import com.sims.common.models.PaginatedResponse;
 import com.sims.simscoreservice.inventory.dto.InventoryResponse;
+import com.sims.simscoreservice.inventory.dto.lowStock.LowStockMetrics;
 import com.sims.simscoreservice.product.enums.ProductCategories;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -14,6 +16,8 @@ import jakarta.servlet.http.HttpServletResponse;
  * @since 2025-01-23
  */
 public interface LowStockService {
+
+    LowStockMetrics getLowStockDashboardMetrics();
 
     PaginatedResponse<InventoryResponse> getAllLowStockProducts(String sortBy, String sortDirection, int page, int size);
 

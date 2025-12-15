@@ -7,6 +7,7 @@ import com.sims.common.models.ApiResponse;
 import com.sims.common.models.PaginatedResponse;
 import com.sims.simscoreservice.exceptions.InventoryException;
 import com.sims.simscoreservice.inventory.service.SOServiceInInventory;
+import com.sims.simscoreservice.salesOrder.dto.DetailedSalesOrderView;
 import com.sims.simscoreservice.salesOrder.dto.ProcessSalesOrderRequestDto;
 import com.sims.simscoreservice.salesOrder.dto.SummarySalesOrderView;
 import com.sims.simscoreservice.salesOrder.entity.OrderItem;
@@ -56,6 +57,13 @@ public class SOServiceInInventoryImpl implements SOServiceInInventory {
     public PaginatedResponse<SummarySalesOrderView> getAllOutgoingSalesOrders(@Min(0) int page, @Min(1) @Max(100) int size,
                                                                               String sortBy, String sortDir) {
         return salesOrderQueryService.getAllOutgoingSalesOrders(page, size, sortBy, sortDir);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DetailedSalesOrderView getDetailsForSalesOrderId(Long orderId) {
+        log.debug("[SO-INVENTORY] Getting details for sales order ID: {}", orderId);
+        return salesOrderQueryService.getDetailsForSalesOrder(orderId);
     }
 
     @Override

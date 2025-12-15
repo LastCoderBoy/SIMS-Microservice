@@ -3,6 +3,7 @@ package com.sims.simscoreservice.inventory.service;
 
 import com.sims.common.models.ApiResponse;
 import com.sims.common.models.PaginatedResponse;
+import com.sims.simscoreservice.salesOrder.dto.DetailedSalesOrderView;
 import com.sims.simscoreservice.salesOrder.dto.ProcessSalesOrderRequestDto;
 import com.sims.simscoreservice.salesOrder.dto.SummarySalesOrderView;
 import com.sims.simscoreservice.salesOrder.enums.SalesOrderStatus;
@@ -42,4 +43,6 @@ public interface SOServiceInInventory {
     PaginatedResponse<SummarySalesOrderView> filterWaitingSoProducts(SalesOrderStatus statusValue, String optionDateValue,
                                                                      LocalDate startDate, LocalDate endDate,
                                                                      int page, int size, String sortBy, String sortDirection);
+
+    DetailedSalesOrderView getDetailsForSalesOrderId(Long orderId);
 }

@@ -1,8 +1,10 @@
 package com.sims.simscoreservice.inventory.controller;
 
 
+import com.sims.common.models.ApiResponse;
 import com.sims.common.models.PaginatedResponse;
 import com.sims.simscoreservice.inventory.dto.InventoryResponse;
+import com.sims.simscoreservice.inventory.dto.lowStock.LowStockMetrics;
 import com.sims.simscoreservice.inventory.service.LowStockService;
 import com.sims.simscoreservice.product.enums.ProductCategories;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,6 +30,16 @@ public class LowStockController {
 
     private final LowStockService lowStockService;
 
+    @GetMapping
+    public ResponseEntity<ApiResponse<LowStockMetrics>> getLowStockDashboardMetrics(){
+        log.info("[LOW-STOCK-CONTROLLER] Get low stock dashboard metrics");
+        return ResponseEntity
+                .ok(ApiResponse.success(
+                        "Low stock dashboard metrics retrieved successfully",
+                        lowStockService.getLowStockDashboardMetrics())
+        );
+    }
+
     /**
      * Get all low stock products with pagination
      * Returns products where sku <= minLevel
@@ -38,7 +50,7 @@ public class LowStockController {
      * @param size page size
      * @return PaginatedResponse with low stock products
      */
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<PaginatedResponse<InventoryResponse>> getAllLowStockProducts(
             @RequestParam(defaultValue = "sku") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection,
@@ -51,7 +63,7 @@ public class LowStockController {
         PaginatedResponse<InventoryResponse> response =
                 lowStockService.getAllLowStockProducts(sortBy, sortDirection, page, size);
 
-        return ResponseEntity. ok(response);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -121,8 +133,8 @@ public class LowStockController {
         log.info("[LOW-STOCK-CONTROLLER] Generate low stock report by user: {}", userId);
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response. setHeader("Content-Disposition", "attachment; filename=LowStockReport.xlsx");
+        response.setHeader("Content-Disposition", "attachment; filename=LowStockReport.xlsx");
 
-        lowStockService. generateLowStockReport(response, sortBy, sortDirection);
+        lowStockService.generateLowStockReport(response, sortBy, sortDirection);
     }
 }
