@@ -3,6 +3,10 @@ import Login from './pages/Login';
 import MainLayout from './components/layout/MainLayout';
 import InventoryDashboard from './pages/InventoryDashboard';
 import DamageLoss from './pages/DamageLoss';
+import LowStock from './pages/LowStock';
+import TotalItems from './pages/TotalItems';
+import IncomingStock from './pages/IncomingStock';
+import OutgoingStock from './pages/OutgoingStock';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import './App.css';
 
@@ -27,11 +31,11 @@ function App() {
                     <Route path="dashboard" element={<InventoryDashboard />} />
 
                     {/* Inventory Control Sub-routes */}
-                    <Route path="inventory/total-items" element={<div className="coming-soon">Total Items Page (Coming Soon)</div>} />
-                    <Route path="inventory/low-stock" element={<div className="coming-soon">Low Stock Page (Coming Soon)</div>} />
+                    <Route path="inventory/total-items" element={<TotalItems />} />
+                    <Route path="inventory/low-stock" element={<LowStock />} />
                     <Route path="inventory/damage-loss" element={<DamageLoss />} />
-                    <Route path="inventory/incoming-stock" element={<div className="coming-soon">Incoming Stock Page (Coming Soon)</div>} />
-                    <Route path="inventory/outgoing-stock" element={<div className="coming-soon">Outgoing Stock Page (Coming Soon)</div>} />
+                    <Route path="inventory/incoming-stock" element={<IncomingStock />} />
+                    <Route path="inventory/outgoing-stock" element={<OutgoingStock />} />
 
                     {/* Order Management Sub-routes */}
                     <Route path="orders/purchase-orders" element={<div className="coming-soon">Purchase Orders Page (Coming Soon)</div>} />
