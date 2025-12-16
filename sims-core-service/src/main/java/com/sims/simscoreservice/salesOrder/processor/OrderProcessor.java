@@ -133,10 +133,10 @@ public abstract class OrderProcessor {
     private void updateOrderItemFulfillStatus(OrderItem orderItem, int approvedQuantity) {
         if (approvedQuantity < orderItem.getQuantity()) {
             orderItem.setStatus(OrderItemStatus.PARTIALLY_APPROVED);
-            log.info("[ORDER-PROCESSOR] Item {} set to PARTIALLY_APPROVED", orderItem.getId());
+            log.info("[ORDER-PROCESSOR] Order Item ID: {} set to PARTIALLY_APPROVED for productID: {}", orderItem.getId(), orderItem.getProduct().getProductId());
         } else {
             orderItem.setStatus(OrderItemStatus.APPROVED);
-            log.info("[ORDER-PROCESSOR] Item {} set to APPROVED", orderItem.getId());
+            log.info("[ORDER-PROCESSOR] Order Item ID: {} set to APPROVED for productID: {}", orderItem.getId(), orderItem.getProduct().getProductId());
         }
     }
 }

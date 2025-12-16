@@ -6,6 +6,7 @@ import com.sims.common.models.PaginatedResponse;
 import com.sims.simscoreservice.salesOrder.dto.SalesOrderRequest;
 import com.sims.simscoreservice.salesOrder.dto.SummarySalesOrderView;
 import com.sims.simscoreservice.salesOrder.dto.orderItem.OrderItemRequest;
+import com.sims.simscoreservice.salesOrder.entity.OrderItem;
 import com.sims.simscoreservice.salesOrder.entity.SalesOrder;
 import com.sims.simscoreservice.salesOrder.enums.OrderItemStatus;
 import com.sims.simscoreservice.salesOrder.enums.SalesOrderStatus;
@@ -105,7 +106,11 @@ public class SalesOrderHelper {
     public void updateSoStatusBasedOnItemQuantity(SalesOrder salesOrder) {
         boolean allApproved = allItemsFulfilled(salesOrder);
         boolean anyApproved = salesOrder.getItems().stream()
-                .anyMatch(item -> item.getStatus() == OrderItemStatus.APPROVED);
+                .anyMatch(item ->
+                        item.getStatus() == OrderItemStatus.APPROVED ||
+                                (salesOrder.getItems().size() == 1 && item.getStatus() == OrderItemStatus.PARTIALLY_APPROVED)
+                );
+
 
         if (allApproved) {
             salesOrder.setStatus(SalesOrderStatus.APPROVED);
