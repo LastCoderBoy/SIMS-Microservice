@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import outgoingStockService from '../services/outgoingStockService';
 import authService from '../services/authService';
+import qrCodeService from '../services/qrCodeService.js';
 import './OutgoingStock.css';
 
 const OutgoingStock = () => {
@@ -31,9 +32,15 @@ const OutgoingStock = () => {
     // Modals
     const [showStockOutModal, setShowStockOutModal] = useState(false);
     const [showCancelModal, setShowCancelModal] = useState(false);
+    const [showQrModal, setShowQrModal] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [orderDetails, setOrderDetails] = useState(null);
     const [isLoadingDetails, setIsLoadingDetails] = useState(false);
+
+    // QR Code data
+    const [qrCodeData, setQrCodeData] = useState(null);
+    const [isLoadingQr, setIsLoadingQr] = useState(false);
+    const [qrError, setQrError] = useState(null);
 
     // Form data for stock out
     const [itemQuantities, setItemQuantities] = useState({});
@@ -156,6 +163,121 @@ const OutgoingStock = () => {
             setError(err.message || 'Failed to filter orders');
         } finally {
             setIsLoadingOrders(false);
+        }
+    };
+
+    // Open QR Code Modal
+    const handleOpenQrModal = async (order) => {
+        setSelectedOrder(order);
+        setShowQrModal(true);
+        setIsLoadingQr(true);
+        setQrError(null);
+
+        try {
+            const response = await qrCodeService.getQrCodeUrl(order.id);
+            setQrCodeData(response.data);
+        } catch (err) {
+            console.error('Error fetching QR code:', err);
+            setQrError(err.message || 'Failed to load QR code');
+        } finally {
+            setIsLoadingQr(false);
+        }
+    };
+
+    // Close QR Code Modal
+    const handleCloseQrModal = () => {
+        setShowQrModal(false);
+        setQrCodeData(null);
+        setQrError(null);
+        setSelectedOrder(null);
+    };
+
+    // Download QR Code
+    const handleDownloadQr = () => {
+        if (qrCodeData?.qrCodeUrl) {
+            // Create a temporary link and trigger download
+            const link = document.createElement('a');
+            link.href = qrCodeData.qrCodeUrl;
+            link.download = `${qrCodeData.orderReference}-QR.png`;
+            link.target = '_blank';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    };
+
+    // Print QR Code
+    const handlePrintQr = () => {
+        if (qrCodeData?.qrCodeUrl) {
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Print QR Code - ${qrCodeData.orderReference}</title>
+                        <style>
+                            body {
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                justify-content: center;
+                                min-height: 100vh;
+                                margin: 0;
+                                font-family: Arial, sans-serif;
+                            }
+                            .qr-print-container {
+                                text-align: center;
+                                padding: 20px;
+                            }
+                            h2 {
+                                margin-bottom: 10px;
+                                color: #333;
+                            }
+                            p {
+                                margin: 5px 0;
+                                color: #666;
+                            }
+                            img {
+                                max-width:  400px;
+                                margin: 20px 0;
+                                border: 2px solid #ddd;
+                                border-radius: 8px;
+                            }
+                            @media print {
+                                body {
+                                    padding: 0;
+                                }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="qr-print-container">
+                            <h2>Sales Order QR Code</h2>
+                            <p><strong>Order Reference:</strong> ${qrCodeData.orderReference}</p>
+                            <p><strong>Customer:</strong> ${selectedOrder?.customerName}</p>
+                            <img src="${qrCodeData.qrCodeUrl}" alt="QR Code" />
+                            <p><small>Scan to verify order details</small></p>
+                        </div>
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => {
+                printWindow.print();
+            }, 250);
+        }
+    };
+
+    // Copy QR Token
+    const handleCopyToken = () => {
+        if (qrCodeData?.qrToken) {
+            navigator.clipboard.writeText(qrCodeData.qrToken)
+                .then(() => {
+                    alert('QR Token copied to clipboard!');
+                })
+                .catch((err) => {
+                    console.error('Failed to copy:', err);
+                });
         }
     };
 
@@ -637,14 +759,30 @@ const OutgoingStock = () => {
                                             <td className="customer-name-os">{order.customerName}</td>
                                             <td>{order.destination}</td>
                                             <td className="items-cell">{order.totalOrderedQuantity}</td>
-                                            <td className="shipped-cell">
-                                                {order.totalApprovedQuantity}
-                                                {order.totalApprovedQuantity < order.totalOrderedQuantity && (
-                                                    <span className="pending-hint">
-                                                        ({order.totalOrderedQuantity - order.totalApprovedQuantity} pending)
-                                                    </span>
-                                                )}
+                                            <td>
+                                                <div className="progress-wrapper">
+                                                    <div className="progress-bar-is">
+                                                        <div
+                                                            className="progress-fill-is"
+                                                            style={{
+                                                                width: `${Math.min(100, ((order.totalApprovedQuantity || 0) / order.totalOrderedQuantity) * 100)}%`,
+                                                                backgroundColor: ((order.totalApprovedQuantity || 0) / order.totalOrderedQuantity) * 100 === 100 ? '#4CAF50' : '#2196F3'
+                                                            }}
+                                                        ></div>
+                                                    </div>
+                                                    <div className="progress-details">
+                                                        <span className="progress-text">
+                                                            {order.totalApprovedQuantity}
+                                                            {order.totalApprovedQuantity < order.totalOrderedQuantity && (
+                                                                <span className="pending-hint">
+                                                                    &nbsp;({order.totalOrderedQuantity - order.totalApprovedQuantity} pending)
+                                                                </span>
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                </div>
                                             </td>
+
                                             <td className="amount-cell">${order.totalAmount?.toFixed(2)}</td>
                                             <td>{formatDate(order.orderDate)}</td>
                                             <td>
@@ -667,7 +805,7 @@ const OutgoingStock = () => {
                                             <td className="qr-cell">
                                                 <button
                                                     className="qr-btn"
-                                                    onClick={() => alert('QR Code feature coming soon!')}
+                                                    onClick={() => handleOpenQrModal(order)}
                                                     title="View/Print QR Code"
                                                 >
                                                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -981,6 +1119,116 @@ const OutgoingStock = () => {
                             </button>
                             <button type="button" className="btn-danger" onClick={handleCancelOrder}>
                                 Cancel Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* QR Code Modal */}
+            {showQrModal && (
+                <div className="modal-overlay" onClick={handleCloseQrModal}>
+                    <div className="modal-content modal-qr" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h2>📱 Order QR Code</h2>
+                            <button className="modal-close-btn" onClick={handleCloseQrModal}>
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div className="modal-body">
+                            {isLoadingQr ? (
+                                <div className="loading-qr">
+                                    <div className="spinner-small"></div>
+                                    <p>Generating QR code...</p>
+                                </div>
+                            ) : qrError ? (
+                                <div className="error-alert">
+                                    {qrError}
+                                </div>
+                            ) : qrCodeData ? (
+                                <>
+                                    {/* Order Info */}
+                                    <div className="qr-order-info">
+                                        <h3>Order Details</h3>
+                                        <div className="qr-info-row">
+                                            <span className="qr-label">Order Reference:</span>
+                                            <span className="qr-value">{qrCodeData.orderReference}</span>
+                                        </div>
+                                        <div className="qr-info-row">
+                                            <span className="qr-label">Customer:</span>
+                                            <span className="qr-value">{selectedOrder?.customerName}</span>
+                                        </div>
+                                        <div className="qr-info-row">
+                                            <span className="qr-label">Destination:</span>
+                                            <span className="qr-value">{selectedOrder?.destination}</span>
+                                        </div>
+                                    </div>
+
+                                    {/* QR Code Image */}
+                                    <div className="qr-image-container">
+                                        <img
+                                            src={qrCodeData.qrCodeUrl}
+                                            alt="Order QR Code"
+                                            className="qr-image"
+                                        />
+                                        <p className="qr-scan-hint">Scan this QR code to verify order details</p>
+                                    </div>
+
+                                    {/* QR Token */}
+                                    <div className="qr-token-section">
+                                        <label className="qr-token-label">QR Token:</label>
+                                        <div className="qr-token-container">
+                                            <input
+                                                type="text"
+                                                className="qr-token-input"
+                                                value={qrCodeData.qrToken}
+                                                readOnly
+                                            />
+                                            <button
+                                                className="copy-token-btn"
+                                                onClick={handleCopyToken}
+                                                title="Copy Token"
+                                            >
+                                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" strokeWidth="2"/>
+                                                    <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5" stroke="currentColor" strokeWidth="2"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <small className="qr-expires-hint">
+                                            QR code URL expires in {qrCodeData.expiresIn} minutes
+                                        </small>
+                                    </div>
+
+                                    {/* Action Buttons */}
+                                    <div className="qr-actions">
+                                        <button className="qr-action-btn download-btn" onClick={handleDownloadQr}>
+                                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                <path d="M7 10L12 15L17 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                <path d="M12 15V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                            </svg>
+                                            Download QR
+                                        </button>
+                                        <button className="qr-action-btn print-btn" onClick={handlePrintQr}>
+                                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6 9V2H18V9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                <path d="M6 18H4C3.46957 18 2.96086 17.7893 2.58579 17.4142C2.21071 17.0391 2 16.5304 2 16V11C2 10.4696 2.21071 9.96086 2.58579 9.58579C2.96086 9.21071 3.46957 9 4 9H20C20.5304 9 21.0391 9.21071 21.4142 9.58579C21.7893 9.96086 22 10.4696 22 11V16C22 16.5304 21.7893 17.0391 21.4142 17.4142C21.0391 17.7893 20.5304 18 20 18H18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                <rect x="6" y="14" width="12" height="8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                            </svg>
+                                            Print QR
+                                        </button>
+                                    </div>
+                                </>
+                            ) : null}
+                        </div>
+
+                        <div className="modal-footer">
+                            <button type="button" className="btn-secondary" onClick={handleCloseQrModal}>
+                                Close
                             </button>
                         </div>
                     </div>
