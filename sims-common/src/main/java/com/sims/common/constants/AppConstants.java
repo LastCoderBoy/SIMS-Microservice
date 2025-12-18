@@ -34,7 +34,7 @@ public final class AppConstants {
     public static final String BASE_PRODUCTS_PATH = API_VERSION_V1 + "/products";
     public static final String BASE_INVENTORY_PATH = API_VERSION_V1 + "/inventory";
     public static final String BASE_ORDER_MANAGEMENT_PATH = API_VERSION_V1 + "/order-management";
-    public static final String BASE_NOTIFICATIONS_PATH = API_VERSION_V1 + "/notifications";
+    public static final String BASE_SUPPLIERS_PATH = API_VERSION_V1 + "/suppliers";
     public static final String BASE_EMAIL_PATH = API_VERSION_V1 + "/email";
     public static final String BASE_ANALYTICS_PATH = API_VERSION_V1 + "/analytics";
 

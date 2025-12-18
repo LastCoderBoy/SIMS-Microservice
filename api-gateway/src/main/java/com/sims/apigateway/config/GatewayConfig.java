@@ -82,6 +82,12 @@ public class GatewayConfig {
                                 .filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
                         .uri("lb://" + SIMS_CORE_SERVICE))
 
+                .route("supplier-service", r -> r
+                        .path(BASE_SUPPLIERS_PATH + "/**")
+                        .filters( f -> f
+                                .filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
+                        .uri("lb://" + SIMS_CORE_SERVICE))
+
                 // Report & Analytics Management Route
                 .route("report-analytics-service", r -> r
                         .path(BASE_ANALYTICS_PATH + "/**")
