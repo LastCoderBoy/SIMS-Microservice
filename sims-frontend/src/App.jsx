@@ -7,6 +7,11 @@ import LowStock from './pages/LowStock';
 import TotalItems from './pages/TotalItems';
 import IncomingStock from './pages/IncomingStock';
 import OutgoingStock from './pages/OutgoingStock';
+
+// Orders Management imports
+import PurchaseOrders from './pages/PurchaseOrders';
+import SalesOrders from './pages/SalesOrders';
+
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import './App.css';
 
@@ -38,8 +43,8 @@ function App() {
                     <Route path="inventory/outgoing-stock" element={<OutgoingStock />} />
 
                     {/* Order Management Sub-routes */}
-                    <Route path="orders/purchase-orders" element={<div className="coming-soon">Purchase Orders Page (Coming Soon)</div>} />
-                    <Route path="orders/sales-orders" element={<div className="coming-soon">Sales Orders Page (Coming Soon)</div>} />
+                    <Route path="orders/purchase-orders" element={<PurchaseOrders />} />
+                    <Route path="orders/sales-orders" element={<SalesOrders />} />
 
                     {/* Reports & Analytics Sub-routes */}
                     <Route path="analytics/inventory-health" element={<div className="coming-soon">Inventory Health Page (Coming Soon)</div>} />
