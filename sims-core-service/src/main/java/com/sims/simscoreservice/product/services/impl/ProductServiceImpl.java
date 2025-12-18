@@ -75,6 +75,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<ProductResponse> getAllProducts(){
+        // Delegate to query service
+        List<Product> productList = productQueryService.getAllProducts();
+
+        log.info("[PRODUCT-SERVICE] getAllProducts() - Retrieved {} products from database", productList.size());
+        return productMapper.toResponseList(productList);
+    }
+
+    @Override
     @Transactional
     public ProductResponse addProduct(ProductRequest request, String userId) {
         try {

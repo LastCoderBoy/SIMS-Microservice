@@ -1,4 +1,4 @@
-package com.sims.simscoreservice.admin.supplier.entity;
+package com.sims.simscoreservice.supplier.entity;
 
 
 import jakarta.persistence.*;

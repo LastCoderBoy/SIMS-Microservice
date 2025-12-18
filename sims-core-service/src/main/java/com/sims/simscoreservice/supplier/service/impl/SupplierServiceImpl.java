@@ -1,16 +1,16 @@
-package com.sims.simscoreservice.admin.supplier.service.impl;
+package com.sims.simscoreservice.supplier.service.impl;
 
 import com.sims.common.exceptions.DatabaseException;
 import com.sims.common.exceptions.ResourceNotFoundException;
 import com.sims.common.exceptions.ValidationException;
 import com.sims.common.models.ApiResponse;
 import com.sims.simscoreservice.purchaseOrder.repository.PurchaseOrderRepository;
-import com.sims.simscoreservice.admin.supplier.dto.SupplierRequest;
-import com.sims.simscoreservice.admin.supplier.dto.SupplierResponse;
-import com.sims.simscoreservice.admin.supplier.entity.Supplier;
-import com.sims.simscoreservice.admin.supplier.mapper.SupplierMapper;
-import com.sims.simscoreservice.admin.supplier.repository.SupplierRepository;
-import com.sims.simscoreservice.admin.supplier.service.SupplierService;
+import com.sims.simscoreservice.supplier.dto.SupplierRequest;
+import com.sims.simscoreservice.supplier.dto.SupplierResponse;
+import com.sims.simscoreservice.supplier.entity.Supplier;
+import com.sims.simscoreservice.supplier.mapper.SupplierMapper;
+import com.sims.simscoreservice.supplier.repository.SupplierRepository;
+import com.sims.simscoreservice.supplier.service.SupplierService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;

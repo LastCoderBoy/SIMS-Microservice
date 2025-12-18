@@ -76,6 +76,7 @@ public interface SalesOrderRepository extends JpaRepository<SalesOrder, Long>,
         JOIN i.product p
         WHERE LOWER(so.customerName) LIKE LOWER(CONCAT('%', :text, '%'))
         OR LOWER(so.orderReference) LIKE LOWER(CONCAT('%', :text, '%'))
+        OR LOWER(so.destination) LIKE LOWER(CONCAT('%', :text, '%'))
     """)
     Page<SalesOrder> searchInSalesOrders(@Param("text") String text, Pageable pageable);
 

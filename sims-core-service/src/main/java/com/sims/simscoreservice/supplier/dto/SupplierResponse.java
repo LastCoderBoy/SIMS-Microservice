@@ -1,6 +1,6 @@
-package com.sims.simscoreservice.admin.supplier.dto;
+package com.sims.simscoreservice.supplier.dto;
 
-import com.sims.simscoreservice.admin.supplier.entity.Supplier;
+import com.sims.simscoreservice.supplier.entity.Supplier;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,9 +1,10 @@
-package com.sims.simscoreservice.admin.controller;
+package com.sims.simscoreservice.supplier.controller;
 
 import com.sims.common.models.ApiResponse;
-import com.sims.simscoreservice.admin.supplier.dto.SupplierRequest;
-import com.sims.simscoreservice.admin.supplier.dto.SupplierResponse;
-import com.sims.simscoreservice.admin.supplier.service.SupplierService;
+import com.sims.simscoreservice.shared.util.RoleValidator;
+import com.sims.simscoreservice.supplier.dto.SupplierRequest;
+import com.sims.simscoreservice.supplier.dto.SupplierResponse;
+import com.sims.simscoreservice.supplier.service.SupplierService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,12 +25,13 @@ import static com.sims.common.constants.AppConstants.*;
  * @since 2025-01-23
  */
 @RestController
-@RequestMapping(BASE_ADMIN_PATH + "/suppliers")
+@RequestMapping(BASE_SUPPLIERS_PATH)
 @RequiredArgsConstructor
 @Slf4j
-public class SupplierController extends BaseAdminController {
+public class SupplierController {
 
     private final SupplierService supplierService;
+    private final RoleValidator roleValidator;
 
     /**
      * Create new supplier
@@ -44,7 +46,7 @@ public class SupplierController extends BaseAdminController {
         log.info("[SUPPLIER-CONTROLLER] Create supplier by user: {}", userId);
 
         // Check authorization
-        requireAdmin(roles);
+        roleValidator.requireAnyRole(roles, "ROLE_ADMIN"); // might throw Forbidden Exception
 
         ApiResponse<SupplierResponse> response = supplierService.createSupplier(request);
 
@@ -54,13 +56,9 @@ public class SupplierController extends BaseAdminController {
     @GetMapping("/{id}")
     public ResponseEntity<SupplierResponse> getSupplierById(
             @PathVariable Long id,
-            @RequestHeader(USER_ID_HEADER) String userId,
-            @RequestHeader(USER_ROLES_HEADER) String roles) {
+            @RequestHeader(USER_ID_HEADER) String userId) {
 
         log.info("[SUPPLIER-CONTROLLER] Get supplier {} by user: {}", id, userId);
-
-        // Check authorization
-        requireAdmin(roles);
 
         SupplierResponse response = supplierService.getSupplierById(id);
 
@@ -72,13 +70,9 @@ public class SupplierController extends BaseAdminController {
      */
     @GetMapping
     public ResponseEntity<List<SupplierResponse>> getAllSuppliers(
-            @RequestHeader(USER_ID_HEADER) String userId,
-            @RequestHeader(USER_ROLES_HEADER) String roles) {
+            @RequestHeader(USER_ID_HEADER) String userId) {
 
         log.info("[SUPPLIER-CONTROLLER] Get all suppliers by user: {}", userId);
-
-        // Check authorization
-        requireAdmin(roles);
 
         List<SupplierResponse> suppliers = supplierService.getAllSuppliers();
 
@@ -99,7 +93,7 @@ public class SupplierController extends BaseAdminController {
         log.info("[SUPPLIER-CONTROLLER] Update supplier {} by user: {}", id, userId);
 
         // Check authorization
-        requireAdmin(roles);
+        roleValidator.requireAnyRole(roles, "ROLE_ADMIN"); // might throw Forbidden Exception
 
         ApiResponse<SupplierResponse> response = supplierService.updateSupplier(id, request);
 
@@ -119,7 +113,7 @@ public class SupplierController extends BaseAdminController {
         log.info("[SUPPLIER-CONTROLLER] Delete supplier {} by user: {}", id, userId);
 
         // Check authorization
-        requireAdmin(roles);
+        roleValidator.requireAnyRole(roles, "ROLE_ADMIN"); // might throw Forbidden Exception
 
         supplierService.deleteSupplier(id);
 

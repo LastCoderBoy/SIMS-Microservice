@@ -1,8 +1,8 @@
-package com.sims.simscoreservice.admin.supplier.mapper;
+package com.sims.simscoreservice.supplier.mapper;
 
-import com.sims.simscoreservice.admin.supplier.dto.SupplierRequest;
-import com.sims.simscoreservice.admin.supplier.dto.SupplierResponse;
-import com.sims.simscoreservice.admin.supplier.entity.Supplier;
+import com.sims.simscoreservice.supplier.dto.SupplierRequest;
+import com.sims.simscoreservice.supplier.dto.SupplierResponse;
+import com.sims.simscoreservice.supplier.entity.Supplier;
 import org.mapstruct. Mapper;
 import org.mapstruct.MappingTarget;
 import org. mapstruct.NullValuePropertyMappingStrategy;

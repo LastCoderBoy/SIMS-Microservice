@@ -1,9 +1,9 @@
-package com.sims.simscoreservice.admin.supplier.service;
+package com.sims.simscoreservice.supplier.service;
 
 import com.sims.common.models.ApiResponse;
-import com.sims.simscoreservice.admin.supplier.dto.SupplierRequest;
-import com.sims.simscoreservice.admin.supplier.dto.SupplierResponse;
-import com.sims.simscoreservice.admin.supplier.entity.Supplier;
+import com.sims.simscoreservice.supplier.dto.SupplierRequest;
+import com.sims.simscoreservice.supplier.dto.SupplierResponse;
+import com.sims.simscoreservice.supplier.entity.Supplier;
 
 import java. util.List;
 

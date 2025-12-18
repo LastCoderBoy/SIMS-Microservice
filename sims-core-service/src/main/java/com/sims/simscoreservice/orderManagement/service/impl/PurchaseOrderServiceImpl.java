@@ -18,8 +18,8 @@ import com.sims.simscoreservice.purchaseOrder.queryService.PurchaseOrderQuerySer
 import com.sims.simscoreservice.purchaseOrder.repository.PurchaseOrderRepository;
 import com.sims.simscoreservice.purchaseOrder.strategy.PurchaseOrderSearchService;
 import com.sims.simscoreservice.email.EmailService;
-import com.sims.simscoreservice.admin.supplier.entity.Supplier;
-import com.sims.simscoreservice.admin.supplier.service.SupplierService;
+import com.sims.simscoreservice.supplier.entity.Supplier;
+import com.sims.simscoreservice.supplier.service.SupplierService;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

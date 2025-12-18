@@ -1,6 +1,6 @@
-package com.sims.simscoreservice.admin.supplier.repository;
+package com.sims.simscoreservice.supplier.repository;
 
-import com.sims.simscoreservice.admin.supplier.entity.Supplier;
+import com.sims.simscoreservice.supplier.entity.Supplier;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,4 +1,4 @@
-package com.sims.simscoreservice.admin.supplier.dto;
+package com.sims.simscoreservice.supplier.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

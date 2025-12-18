@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.sims.common.constants.AppConstants.*;
 import static com.sims.common.constants.AppConstants.DEFAULT_PAGE_NUMBER;
 
@@ -51,6 +53,16 @@ public class ProductController {
 
         PaginatedResponse<ProductResponse> products =
                 productService.getAllProducts(sortBy, sortDirection, page, size);
+
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<ProductResponse>> getAllProducts(@RequestHeader(USER_ID_HEADER) String userId) {
+
+        log.info("[PRODUCT-CONTROLLER] Get all list of products requested by user: {}", userId);
+
+        List<ProductResponse> products = productService.getAllProducts();
 
         return ResponseEntity.ok(products);
     }

@@ -6,6 +6,8 @@ import com.sims.common.models.ApiResponse;
 import com.sims.common.models.PaginatedResponse;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.util.List;
+
 /**
  * Product Service Interface
  * Handles product business logic
@@ -16,6 +18,8 @@ import jakarta.servlet.http.HttpServletResponse;
 public interface ProductService {
 
     PaginatedResponse<ProductResponse> getAllProducts(String sortBy, String sortDirection, int page, int size);
+
+    List<ProductResponse> getAllProducts();
 
     // Add single product
     ProductResponse addProduct(ProductRequest request, String userId);

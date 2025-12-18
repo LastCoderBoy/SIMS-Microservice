@@ -4,7 +4,7 @@ package com.sims.simscoreservice.purchaseOrder.entity;
 import com.sims.simscoreservice.product.entity.Product;
 import com.sims.simscoreservice.purchaseOrder.enums.PurchaseOrderStatus;
 import com.sims.simscoreservice.shared.util.GlobalServiceHelper;
-import com.sims.simscoreservice.admin.supplier.entity.Supplier;
+import com.sims.simscoreservice.supplier.entity.Supplier;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
