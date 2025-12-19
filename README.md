@@ -184,8 +184,9 @@ docker-compose down
 # Stop and remove volumes
 docker-compose down -v
 ```
+__________________________________________
+# 📸 Screenshots
 
-📸 Screenshots
 Dashboard
 ![Dashboard](docs/images/Inventory_Dashboard.jpg) Main dashboard with inventory statistics and alerts
 
@@ -214,7 +215,7 @@ User Profile
 ![User Profile](docs/images/User_Profile.jpg) Manage personal information and security settings
 
 Login Page
-![Login](docs/images/Login_Page.png) Secure authentication with JWT tokens
+![Login](docs/images/Login_Page.jpg) Secure authentication with JWT tokens
 
 
 ## 🤝 Contributing
