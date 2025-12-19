@@ -12,8 +12,10 @@ import com.sims.authservice.repository.BlackListTokenRepository;
 import com.sims.authservice.repository.UserRepository;
 import com.sims.authservice.security.UserPrincipal;
 import com.sims.authservice.service.RefreshTokenService;
+import com.sims.common.exceptions.DatabaseException;
 import com.sims.common.exceptions.InvalidTokenException;
 import com.sims.common.exceptions.ResourceNotFoundException;
+import com.sims.common.exceptions.ServiceException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
@@ -22,6 +24,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataAccessException;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -67,6 +70,37 @@ public class UserService {
     // Repositories
     private final BlackListTokenRepository blackListTokenRepository;
     private final UserRepository userRepository;
+
+
+    @Transactional(readOnly = true)
+    public UserResponse getUserDetailsByUsername(String accessToken) {
+        if (accessToken == null || accessToken.isEmpty()) {
+            throw new InvalidTokenException("Invalid token provided");
+        }
+
+        try {
+            String username = jwtService.extractUsername(accessToken);
+            if (username == null) {
+                throw new InvalidTokenException("Could not extract username from token");
+            }
+
+            Users user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+            return UserResponse.builder()
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .email(user.getEmail())
+                    .build();
+
+        } catch (DataAccessException da) {
+            log.error("[USER-SERVICE] Failed to retrieve user details: {}", da.getMessage());
+            throw new DatabaseException("Failed to retrieve user details", da);
+        } catch (Exception e) {
+            log.error("[USER-SERVICE] Unexpected error retrieving user details: {}", e.getMessage());
+            throw new ServiceException("Failed to retrieve user details", e);
+        }
+    }
 
     /**
      * Login - Authenticate user and generate tokens

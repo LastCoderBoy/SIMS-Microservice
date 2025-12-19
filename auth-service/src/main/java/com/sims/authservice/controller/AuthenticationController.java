@@ -3,6 +3,7 @@ package com.sims.authservice.controller;
 import com.sims.authservice.dto.LoginRequest;
 import com.sims.authservice.dto.TokenResponse;
 import com.sims.authservice.dto.UpdateUserRequest;
+import com.sims.authservice.dto.UserResponse;
 import com.sims.authservice.service.impl.UserService;
 import com.sims.common.models.ApiResponse;
 import com.sims.common.utils.TokenUtils;
@@ -31,6 +32,19 @@ import static com.sims.common.constants.AppConstants.BASE_AUTH_PATH;
 public class AuthenticationController {
 
     private final UserService userService;
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<UserResponse>> getCurrentUserData(
+            @RequestHeader(AUTHORIZATION_HEADER) String token) {
+        log.info("[AUTH-CONTROLLER] Current user data requested");
+
+        String accessToken = TokenUtils.extractToken(token);
+        UserResponse userDetails = userService.getUserDetailsByUsername(accessToken);
+
+        return ResponseEntity.ok(
+                ApiResponse.success("User data retrieved successfully", userDetails)
+        );
+    }
 
     /**
      * Login endpoint
