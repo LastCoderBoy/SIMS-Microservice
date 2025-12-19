@@ -368,8 +368,23 @@
     }
 }
 
+/* Loading Details */
+.loading-details {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-xl);
+    color: var(--text-secondary);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
+
+    .account-info-grid {
+        grid-template-columns: 1fr;
+    }
+
     .user-profile-page {
         padding: var(--spacing-md);
     }

@@ -9,6 +9,7 @@ const AUTH_ENDPOINTS = {
     LOGOUT_ALL: '/auth/logout-all',
     REFRESH_TOKEN: '/auth/refresh',
     UPDATE_USER: '/auth/update',
+    GET_USER_DETAILS: '/auth/me',
 };
 
 class AuthService {
@@ -58,6 +59,27 @@ class AuthService {
                 };
             } else {
                 throw new Error(response.data.message || 'Login failed');
+            }
+        } catch (error) {
+            throw this.handleError(error);
+        }
+    }
+
+    /**
+     * Get current user details (firstName, lastName, email)
+     * @returns {Promise<Object>} User details from backend
+     */
+    async getUserDetails() {
+        try {
+            const response = await api.get(AUTH_ENDPOINTS.GET_USER_DETAILS);
+
+            if (response.data.success && response.data.data) {
+                return {
+                    success:  true,
+                    data: response.data.data,
+                };
+            } else {
+                throw new Error(response.data.message || 'Failed to fetch user details');
             }
         } catch (error) {
             throw this.handleError(error);

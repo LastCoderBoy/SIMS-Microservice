@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import authService from '../../services/userManagement/authService';
 import Toast from '../../components/common/Toast';
@@ -7,6 +7,9 @@ import './UserProfile.css';
 const UserProfile = () => {
     const navigate = useNavigate();
     const currentUser = authService.getCurrentUser();
+
+    const [userDetails, setUserDetails] = useState(null);
+    const [isLoadingDetails, setIsLoadingDetails] = useState(true);
 
     const [formData, setFormData] = useState({
         firstName: '',
@@ -18,6 +21,27 @@ const UserProfile = () => {
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [toast, setToast] = useState(null);
+
+    // Fetch user details on mount
+    useEffect(() => {
+        fetchUserDetails();
+    }, []);
+
+    // Fetch user details from backend
+    const fetchUserDetails = async () => {
+        setIsLoadingDetails(true);
+        try {
+            const result = await authService.getUserDetails();
+            if (result.success) {
+                setUserDetails(result.data);
+            }
+        } catch (error) {
+            console.error('Error fetching user details:', error);
+            showToast('Failed to load user details', 'error');
+        } finally {
+            setIsLoadingDetails(false);
+        }
+    };
 
     // Handle input change
     const handleChange = (e) => {
@@ -97,6 +121,9 @@ const UserProfile = () => {
             if (result.success) {
                 showToast(result.message, 'success');
 
+                // Refresh user details after update
+                await fetchUserDetails();
+
                 // If password was changed, logout and redirect to login
                 if (result.requireRelogin) {
                     setTimeout(() => {
@@ -156,16 +183,28 @@ const UserProfile = () => {
                         <h2 className="card-title-profile">📋 Account Information</h2>
                         <p className="card-subtitle-profile">View your account details</p>
                     </div>
-                    <div className="account-info-grid">
-                        <div className="info-item">
-                            <span className="info-label">Username</span>
-                            <span className="info-value">{currentUser?.username || 'N/A'}</span>
+
+                    {isLoadingDetails ? (
+                        <div className="loading-details">
+                            <div className="spinner-small-profile"></div>
+                            <span>Loading account details...</span>
                         </div>
-                        <div className="info-item">
-                            <span className="info-label">Role</span>
-                            <span className="info-badge">{currentUser?.role?.replace('ROLE_', '') || 'N/A'}</span>
+                    ) : (
+                        <div className="account-info-grid">
+                            <div className="info-item">
+                                <span className="info-label">First Name</span>
+                                <span className="info-value">{userDetails?.firstName || 'Not set'}</span>
+                            </div>
+                            <div className="info-item">
+                                <span className="info-label">Last Name</span>
+                                <span className="info-value">{userDetails?.lastName || 'Not set'}</span>
+                            </div>
+                            <div className="info-item">
+                                <span className="info-label">Email Address</span>
+                                <span className="info-value">{userDetails?.email || 'Not set'}</span>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
 
                 {/* Update Profile Form Card */}
@@ -228,12 +267,15 @@ const UserProfile = () => {
                                     type="text"
                                     name="firstName"
                                     className={`form-input-profile ${errors.firstName ? 'error' :  ''}`}
-                                    placeholder="Enter your first name"
+                                    placeholder={userDetails?.firstName || "Enter your first name"}
                                     value={formData.firstName}
                                     onChange={handleChange}
                                     disabled={isSubmitting}
                                 />
                                 {errors.firstName && <span className="error-text">{errors.firstName}</span>}
+                                {userDetails?.firstName && ! formData.firstName && (
+                                    <small className="form-help">Current:  {userDetails.firstName}</small>
+                                )}
                             </div>
 
                             {/* Last Name */}
@@ -242,13 +284,16 @@ const UserProfile = () => {
                                 <input
                                     type="text"
                                     name="lastName"
-                                    className={`form-input-profile ${errors.lastName ? 'error' :  ''}`}
-                                    placeholder="Enter your last name"
+                                    className={`form-input-profile ${errors.lastName ? 'error' : ''}`}
+                                    placeholder={userDetails?.lastName || "Enter your last name"}
                                     value={formData.lastName}
                                     onChange={handleChange}
                                     disabled={isSubmitting}
                                 />
                                 {errors.lastName && <span className="error-text">{errors.lastName}</span>}
+                                {userDetails?.lastName && !formData.lastName && (
+                                    <small className="form-help">Current: {userDetails.lastName}</small>
+                                )}
                             </div>
                         </div>
 
@@ -313,7 +358,7 @@ const UserProfile = () => {
                                 onClick={() => {
                                     setFormData({
                                         firstName: '',
-                                        lastName:  '',
+                                        lastName: '',
                                         password: '',
                                         confirmPassword: '',
                                     });
