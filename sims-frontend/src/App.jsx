@@ -13,6 +13,13 @@ import PurchaseOrders from './pages/PurchaseOrders';
 import SalesOrders from './pages/SalesOrders';
 import QrOrderTracker from './pages/QrOrderTracker';
 
+// Reports & Analytics imports
+import AnalyticsDashboard from './pages/reportAnalytics/AnalyticsDashboard';
+import InventoryHealth from './pages/reportAnalytics/InventoryHealth';
+import FinancialOverview from './pages/reportAnalytics/FinancialOverview';
+import OrdersSummary from './pages/reportAnalytics/OrdersSummary';
+
+
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import './App.css';
 
@@ -50,9 +57,10 @@ function App() {
 
 
                     {/* Reports & Analytics Sub-routes */}
-                    <Route path="analytics/inventory-health" element={<div className="coming-soon">Inventory Health Page (Coming Soon)</div>} />
-                    <Route path="analytics/financial-overview" element={<div className="coming-soon">Financial Overview Page (Coming Soon)</div>} />
-                    <Route path="analytics/orders-summary" element={<div className="coming-soon">Orders Summary Page (Coming Soon)</div>} />
+                    <Route path="analytics/dashboard" element={<AnalyticsDashboard />} />
+                    <Route path="analytics/inventory-health" element={<InventoryHealth />} />
+                    <Route path="analytics/financial-overview" element={<FinancialOverview />} />
+                    <Route path="analytics/orders-summary" element={<OrdersSummary />} />
 
                     {/* User Profile */}
                     <Route path="profile" element={<div className="coming-soon">User Profile Page (Coming Soon)</div>} />

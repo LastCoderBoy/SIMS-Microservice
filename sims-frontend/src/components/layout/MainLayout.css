@@ -1,8 +1,8 @@
 @import '../../styles/variables.css';
 
 .main-layout {
-    display: flex;
-    min-height: 100vh;
+    display:  flex;
+    min-height:  100vh;
     background:  var(--background-color);
 }
 
@@ -14,7 +14,7 @@
 }
 
 .main-content-wrapper.sidebar-open {
-    margin-left: 260px;
+    margin-left:  280px;
 }
 
 .main-content-wrapper.sidebar-closed {
@@ -27,14 +27,34 @@
     overflow-y: auto;
 }
 
-/* Responsive Design */
+/* Responsive Design - FIXED */
 @media (max-width: 768px) {
-    .main-content-wrapper.sidebar-open,
+    /* Always keep margin for the sidebar strip on mobile */
     .main-content-wrapper.sidebar-closed {
-        margin-left: 0;
+        margin-left: 70px; /* Account for closed sidebar strip */
+    }
+
+    /* When sidebar is open, keep the margin (sidebar overlays with backdrop) */
+    .main-content-wrapper.sidebar-open {
+        margin-left: 70px; /* Keep margin, don't push content */
     }
 
     .main-content {
         padding: var(--spacing-md);
+    }
+}
+
+/* Extra small devices - iPhone SE, 12/13 mini */
+@media (max-width: 480px) {
+    .main-content-wrapper.sidebar-closed {
+        margin-left: 60px; /* Narrower sidebar on small phones */
+    }
+
+    .main-content-wrapper.sidebar-open {
+        margin-left: 60px;
+    }
+
+    .main-content {
+        padding: var(--spacing-sm);
     }
 }

@@ -345,16 +345,46 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .sidebar {
-        transform: translateX(-100%);
+    /* Closed sidebar:  70px strip visible */
+    .sidebar.closed {
+        width: 70px;
+        transform: translateX(0); /* Always visible */
+    }
+
+    /* Open sidebar:  260px full menu */
+    .sidebar.open {
+        width: 260px;
+        transform: translateX(0);
+    }
+
+    /* Show overlay only when sidebar is open */
+    .sidebar-overlay {
+        display: none;
+    }
+}
+
+/* Extra small devices */
+@media (max-width:  480px) {
+    .sidebar.closed {
+        width: 60px;
     }
 
     .sidebar.open {
-        transform: translateX(0);
-        width: 260px;
+        width: 240px; /* Slightly narrower on very small screens */
     }
 
-    .sidebar-overlay {
-        display: block;
+    .sidebar-toggle-btn {
+        width: 28px;
+        height: 28px;
+    }
+
+    .sidebar-toggle-btn svg {
+        width:  16px;
+        height: 16px;
+    }
+
+    .nav-icon {
+        width: 20px;
+        height: 20px;
     }
 }

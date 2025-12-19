@@ -6,10 +6,11 @@ import './Sidebar.css';
 const Sidebar = ({ isOpen, toggleSidebar }) => {
     const navigate = useNavigate();
     const currentUser = authService.getCurrentUser();
+    const isAdminOrManager = currentUser?.role === 'ROLE_ADMIN' || currentUser?.role === 'ROLE_MANAGER';
 
     // State for managing submenu expansion
     const [expandedMenus, setExpandedMenus] = useState({
-        inventoryControl: true, // Default expanded
+        inventoryControl:  true, // Default expanded
         orderManagement: false,
         reportsAnalytics: false,
     });
@@ -20,6 +21,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             ...prev,
             [menuKey]: !prev[menuKey]
         }));
+    };
+
+    // Handle Reports & Analytics click - Navigate AND expand submenu
+    const handleReportsAnalyticsClick = () => {
+        navigate('/analytics/dashboard');
+        setExpandedMenus(prev => ({ ...prev, reportsAnalytics: true }));
     };
 
     const handleLogout = async () => {
@@ -110,7 +117,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     {/* Dashboard */}
                     <NavLink
                         to="/dashboard"
-                        className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                        className={({ isActive }) => `nav-item ${isActive ? 'active' :  ''}`}
                         title="Dashboard"
                     >
                         <svg className="nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -193,7 +200,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     {/* Order Management (with submenu) */}
                     <div className="nav-item-group">
                         <button
-                            className={`nav-item ${expandedMenus.orderManagement ? 'expanded' : ''}`}
+                            className={`nav-item ${expandedMenus.orderManagement ?  'expanded' : ''}`}
                             onClick={() => toggleSubmenu('orderManagement')}
                             title="Order Management"
                         >
@@ -235,7 +242,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                 </NavLink>
                                 <NavLink
                                     to="/orders/qr-tracker"
-                                    className={({ isActive }) => `submenu-item ${isActive ? 'active' :  ''}`}
+                                    className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
                                 >
                                     <span className="submenu-dot"></span>
                                     <span className="submenu-text">QR Order Tracker</span>
@@ -244,12 +251,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                         )}
                     </div>
 
-                    {/* Reporting & Analytics (with submenu) */}
+                    {/* Reports & Analytics (CLICKABLE - Navigates to /analytics/dashboard) */}
                     <div className="nav-item-group">
                         <button
                             className={`nav-item ${expandedMenus.reportsAnalytics ? 'expanded' : ''}`}
-                            onClick={() => toggleSubmenu('reportsAnalytics')}
-                            title="Reporting & Analytics"
+                            onClick={handleReportsAnalyticsClick}
+                            title="Reports & Analytics"
                         >
                             <div className="nav-item-content">
                                 <svg className="nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -265,6 +272,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                     viewBox="0 0 24 24"
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleSubmenu('reportsAnalytics');
+                                    }}
                                 >
                                     <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                 </svg>
@@ -275,26 +286,37 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                         {isOpen && expandedMenus.reportsAnalytics && (
                             <div className="submenu">
                                 <NavLink
-                                    to="/analytics/inventory-health"
+                                    to="/analytics/dashboard"
                                     className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
                                 >
                                     <span className="submenu-dot"></span>
-                                    <span className="submenu-text">Inventory Health</span>
+                                    <span className="submenu-text">Dashboard</span>
                                 </NavLink>
-                                <NavLink
-                                    to="/analytics/financial-overview"
-                                    className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
-                                >
-                                    <span className="submenu-dot"></span>
-                                    <span className="submenu-text">Financial Overview</span>
-                                </NavLink>
-                                <NavLink
-                                    to="/analytics/orders-summary"
-                                    className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
-                                >
-                                    <span className="submenu-dot"></span>
-                                    <span className="submenu-text">Orders Summary</span>
-                                </NavLink>
+                                {isAdminOrManager && (
+                                    <>
+                                        <NavLink
+                                            to="/analytics/inventory-health"
+                                            className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
+                                        >
+                                            <span className="submenu-dot"></span>
+                                            <span className="submenu-text">Inventory Health</span>
+                                        </NavLink>
+                                        <NavLink
+                                            to="/analytics/financial-overview"
+                                            className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
+                                        >
+                                            <span className="submenu-dot"></span>
+                                            <span className="submenu-text">Financial Overview</span>
+                                        </NavLink>
+                                        <NavLink
+                                            to="/analytics/orders-summary"
+                                            className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
+                                        >
+                                            <span className="submenu-dot"></span>
+                                            <span className="submenu-text">Orders Summary</span>
+                                        </NavLink>
+                                    </>
+                                )}
                             </div>
                         )}
                     </div>
@@ -302,7 +324,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     {/* User Profile */}
                     <NavLink
                         to="/profile"
-                        className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                        className={({ isActive }) => `nav-item ${isActive ? 'active' :  ''}`}
                         title="User Profile"
                     >
                         <svg className="nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
