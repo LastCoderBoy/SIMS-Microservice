@@ -27,6 +27,9 @@ import './App.css';
 import Login from './pages/userManagement/Login.jsx';
 import UserProfile from './pages/userManagement/UserProfile';
 
+// Product Management imports
+import ProductManagement from "./pages/productManagement/ProductManagement.jsx";
+
 
 function App() {
     return (
@@ -60,6 +63,8 @@ function App() {
                     <Route path="orders/sales-orders" element={<SalesOrders />} />
                     <Route path="orders/qr-tracker" element={<QrOrderTracker />} />
 
+                    {/* Product Management - NEW */}
+                    <Route path="products" element={<ProductManagement />} />
 
                     {/* Reports & Analytics Sub-routes */}
                     <Route path="analytics/dashboard" element={<AnalyticsDashboard />} />

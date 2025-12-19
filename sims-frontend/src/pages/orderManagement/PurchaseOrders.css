@@ -144,7 +144,6 @@
     display: flex;
     justify-content: space-between;
     align-items:  center;
-    gap: var(--spacing-lg);
     margin-bottom: var(--spacing-lg);
     flex-wrap: wrap;
 }

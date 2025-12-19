@@ -230,6 +230,21 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                         )}
                     </div>
 
+                    {/* Product Management (with submenu) - NEW */}
+                    <NavLink
+                        to="/products"
+                        className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                        title="Product Management"
+                    >
+                        <svg className="nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="2"/>
+                            <rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="2"/>
+                            <rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="2"/>
+                            <rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="2"/>
+                        </svg>
+                        {isOpen && <span className="nav-text">Product Management</span>}
+                    </NavLink>
+
                     {/* Reports & Analytics (CLICKABLE - Navigates to /analytics/dashboard) */}
                     <div className="nav-item-group">
                         <button
