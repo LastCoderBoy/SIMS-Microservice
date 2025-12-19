@@ -36,11 +36,7 @@ public class ReportAnalyticsController {
     private final RoleValidator roleValidator;
 
     @GetMapping("/dashboard")
-    public ResponseEntity<ApiResponse<DashboardMetrics>> getMainDashboard(
-            @RequestHeader(USER_ROLES_HEADER) String roles) {
-
-        // Check authorization
-        roleValidator.requireAnyRole(roles, "ROLE_ADMIN", "ROLE_MANAGER");
+    public ResponseEntity<ApiResponse<DashboardMetrics>> getMainDashboard() {
 
         log.info("[ANALYTICS-CONTROLLER] Main dashboard requested");
 

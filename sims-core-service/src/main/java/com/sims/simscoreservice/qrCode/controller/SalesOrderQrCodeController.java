@@ -96,7 +96,4 @@ public class SalesOrderQrCodeController {
 
         return ResponseEntity.ok(response);
     }
-
-    // TODO: The Frontend will implement the Download and Print logics.
-
 }
