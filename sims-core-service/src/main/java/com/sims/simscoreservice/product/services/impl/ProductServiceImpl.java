@@ -8,8 +8,10 @@ import com.sims.common.models.ApiResponse;
 import com.sims.common.models.PaginatedResponse;
 import com.sims.simscoreservice.inventory.entity.Inventory;
 import com.sims.simscoreservice.inventory.enums.InventoryStatus;
+import com.sims.simscoreservice.inventory.helper.InventoryHelper;
 import com.sims.simscoreservice.inventory.service.InventoryService;
 import com.sims.simscoreservice.inventory.queryService.InventoryQueryService;
+import com.sims.simscoreservice.inventory.service.InventoryStatusService;
 import com.sims.simscoreservice.product.dto.BatchProductRequest;
 import com.sims.simscoreservice.product.dto.BatchProductResponse;
 import com.sims.simscoreservice.product.dto.ProductRequest;
@@ -58,6 +60,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductSearchService productSearchService;
     private final InventoryQueryService inventoryQueryService;
     private final InventoryService inventoryService;
+    private final InventoryHelper inventoryHelper;
     private final SalesOrderQueryService salesOrderQueryService;
 
     // ========== Repositories ==========
@@ -173,7 +176,7 @@ public class ProductServiceImpl implements ProductService {
             }
 
             // Update basic product fields
-            productMapper.updateEntityFromRequest(request, currentProduct);
+            updateProductBaseFields(currentProduct, request);
 
             // Handle status change (complex logic with inventory sync)
             if (request.getStatus() != null && ! request.getStatus().equals(currentProduct.getStatus())) {
@@ -195,6 +198,22 @@ public class ProductServiceImpl implements ProductService {
         } catch (Exception e) {
             log.error("[PRODUCT-SERVICE] Failed to update product {}: {}", productId, e. getMessage(), e);
             throw new ServiceException("Failed to update product", e);
+        }
+    }
+
+    private void updateProductBaseFields(Product currentProduct, ProductRequest productRequest) {
+        if (productRequest.getName() != null) {
+            currentProduct.setName(productRequest.getName());
+        }
+        if (productRequest.getCategory() != null) {
+            currentProduct.setCategory(productRequest.getCategory());
+        }
+        if (productRequest.getPrice() != null) {
+            currentProduct.setPrice(productRequest.getPrice());
+        }
+        if (productRequest.getLocation() != null) {
+            productHelper.validateLocationFormat(productRequest.getLocation());
+            currentProduct.setLocation(productRequest.getLocation());
         }
     }
 
@@ -235,15 +254,20 @@ public class ProductServiceImpl implements ProductService {
         Optional<Inventory> productInInventory = inventoryQueryService.getInventoryByProductId(productId);
 
         if (newStatus == ProductStatus.ACTIVE || newStatus == ProductStatus.ON_ORDER) {
-            if (previousStatus == ProductStatus. ARCHIVED) {
-                // Status: ARCHIVED → ACTIVE/ON_ORDER
+            if (previousStatus == ProductStatus.ARCHIVED || previousStatus == ProductStatus.DISCONTINUED) {
+                // Status: ARCHIVED/DISCONTINUED → ACTIVE/ON_ORDER
                 // Only add to inventory if not already present
 
                  if (productInInventory.isEmpty()) {
                      inventoryService.addProduct(currentProduct, false);
                      log.info("[PRODUCT-SERVICE] Product {} added to inventory (was ARCHIVED)", productId);
                  } else {
-                     log.info("[PRODUCT-SERVICE] Product {} already in inventory, skipping addition", productId);
+                     InventoryStatus inventoryStatus = inventoryHelper.determineInventoryStatus(
+                             currentProduct,
+                             productInInventory.get().getCurrentStock(),
+                             productInInventory.get().getMinLevel(),
+                             false);
+                     inventoryService.updateInventoryStatus(productInInventory, inventoryStatus);
                  }
 
                 log.info("[PRODUCT-SERVICE] Status change: ARCHIVED → {} for product {}", newStatus, productId);
@@ -251,9 +275,18 @@ public class ProductServiceImpl implements ProductService {
             } else {
                 // Status: PLANNING → ACTIVE/ON_ORDER
                 // Always add to inventory
-                inventoryService.addProduct(currentProduct, false);
-                log.info("[PRODUCT-SERVICE] Product {} added to inventory due to status change: {} → {}",
-                        productId, previousStatus, newStatus);
+                if( productInInventory.isEmpty()){
+                    inventoryService.addProduct(currentProduct, false);
+                    log.info("[PRODUCT-SERVICE] Product {} added to inventory due to status change: {} → {}",
+                            productId, previousStatus, newStatus);
+                }else {
+                    InventoryStatus inventoryStatus = inventoryHelper.determineInventoryStatus(
+                            currentProduct,
+                            productInInventory.get().getCurrentStock(),
+                            productInInventory.get().getMinLevel(),
+                            false);
+                    inventoryService.updateInventoryStatus(productInInventory, inventoryStatus);
+                }
             }
         } else {
             // Status: Any → INVALID status (RESTRICTED, ARCHIVED, DISCONTINUED)

@@ -29,7 +29,7 @@ public class InventoryStatusService {
      */
     @Transactional
     public void updateInventoryStatus(Inventory inventory) {
-        if (inventory.getStatus() != InventoryStatus. INVALID) {
+        if (inventory.getStatus() != InventoryStatus.INVALID) {
             if (inventory.getCurrentStock() <= inventory.getMinLevel()) {
                 inventory.setStatus(InventoryStatus.LOW_STOCK);
 

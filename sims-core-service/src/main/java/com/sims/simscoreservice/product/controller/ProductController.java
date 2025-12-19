@@ -43,7 +43,7 @@ public class ProductController {
      */
     @GetMapping
     public ResponseEntity<PaginatedResponse<ProductResponse>> getAllProducts(
-            @RequestParam(defaultValue = "productId") String sortBy,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = DEFAULT_SORT_DIRECTION) String sortDirection,
             @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size,
@@ -118,7 +118,7 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> updateProduct(
             @PathVariable String id,
-            @Valid @RequestBody ProductRequest request,
+            @RequestBody ProductRequest request,
             @RequestHeader(USER_ID_HEADER) String userId,
             @RequestHeader(USER_ROLES_HEADER) String roles) {
 
@@ -155,7 +155,7 @@ public class ProductController {
     @GetMapping("/search")
     public ResponseEntity<PaginatedResponse<ProductResponse>> searchProducts(
             @RequestParam(required = false) String text,
-            @RequestParam(defaultValue = "productId") String sortBy,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = DEFAULT_SORT_DIRECTION) String sortDirection,
             @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size,
@@ -175,7 +175,7 @@ public class ProductController {
     @GetMapping("/filter")
     public ResponseEntity<PaginatedResponse<ProductResponse>> filterProducts(
             @RequestParam(required = false) String filter,
-            @RequestParam(defaultValue = "productId") String sortBy,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = DEFAULT_SORT_DIRECTION) String direction,
             @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size,

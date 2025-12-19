@@ -39,6 +39,12 @@ public class ProductHelper {
 
     private final ProductMapper productMapper;
 
+    public void validateLocationFormat(String location) {
+        if (!LOCATION_PATTERN.matcher(location).matches()) {
+            throw new ValidationException("PM (updateProduct): Invalid location format. Expected format: section-shelf (e.g., A1-101). ");
+        }
+    }
+
     /**
      * Validate product request
      */
@@ -85,7 +91,8 @@ public class ProductHelper {
 
 
     public boolean validateStatusBeforeAdding(ProductStatus currentStatus, ProductStatus newStatus){
-        if(currentStatus.equals(ProductStatus.PLANNING) || currentStatus.equals(ProductStatus.ARCHIVED)){
+        if(currentStatus.equals(ProductStatus.PLANNING) || currentStatus.equals(ProductStatus.ARCHIVED)
+                || currentStatus.equals(ProductStatus.DISCONTINUED)){
             return !newStatus.equals(ProductStatus.PLANNING);
         }
         return false;
