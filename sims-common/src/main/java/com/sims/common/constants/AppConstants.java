@@ -42,7 +42,7 @@ public final class AppConstants {
     public static final String DEFAULT_PAGE_NUMBER = "0";
     public static final String DEFAULT_PAGE_SIZE = "10";
     public static final int MAX_PAGE_SIZE = 100;
-    public static final String DEFAULT_SORT_BY_FOR_PO = "product.name";
+    public static final String DEFAULT_SORT_BY_FOR_PO = "orderDate";
     public static final String DEFAULT_SORT_BY_FOR_SO = "orderReference";
     public static final String DEFAULT_SORT_DIRECTION = "desc";
     public static final String DEFAULT_SORT_BY = "product.name";
