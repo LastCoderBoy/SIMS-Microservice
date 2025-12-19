@@ -1,17 +1,17 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './pages/Login';
 import MainLayout from './components/layout/MainLayout';
-import InventoryDashboard from './pages/InventoryDashboard';
-import DamageLoss from './pages/DamageLoss';
-import LowStock from './pages/LowStock';
-import TotalItems from './pages/TotalItems';
-import IncomingStock from './pages/IncomingStock';
-import OutgoingStock from './pages/OutgoingStock';
+// Inventory Control imports
+import InventoryDashboard from './pages/inventoryControl/InventoryDashboard.jsx';
+import DamageLoss from './pages/inventoryControl/DamageLoss.jsx';
+import LowStock from './pages/inventoryControl/LowStock.jsx';
+import TotalItems from './pages/inventoryControl/TotalItems.jsx';
+import IncomingStock from './pages/inventoryControl/IncomingStock.jsx';
+import OutgoingStock from './pages/inventoryControl/OutgoingStock.jsx';
 
 // Orders Management imports
-import PurchaseOrders from './pages/PurchaseOrders';
-import SalesOrders from './pages/SalesOrders';
-import QrOrderTracker from './pages/QrOrderTracker';
+import PurchaseOrders from './pages/orderManagement/PurchaseOrders.jsx';
+import SalesOrders from './pages/orderManagement/SalesOrders.jsx';
+import QrOrderTracker from './pages/orderManagement/QrOrderTracker.jsx';
 
 // Reports & Analytics imports
 import AnalyticsDashboard from './pages/reportAnalytics/AnalyticsDashboard';
@@ -22,6 +22,11 @@ import OrdersSummary from './pages/reportAnalytics/OrdersSummary';
 
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import './App.css';
+
+// Authentication Routing
+import Login from './pages/userManagement/Login.jsx';
+import UserProfile from './pages/userManagement/UserProfile';
+
 
 function App() {
     return (
@@ -63,7 +68,7 @@ function App() {
                     <Route path="analytics/orders-summary" element={<OrdersSummary />} />
 
                     {/* User Profile */}
-                    <Route path="profile" element={<div className="coming-soon">User Profile Page (Coming Soon)</div>} />
+                    <Route path="profile" element={<UserProfile />} />
                 </Route>
 
                 {/* Catch all - Redirect to Dashboard */}

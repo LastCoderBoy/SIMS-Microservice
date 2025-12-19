@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend } from 'chart.js';
 import { Line, Bar, Pie } from 'react-chartjs-2';
 import analyticsService from '../../services/reportAnalytics/analyticsService';
-import authService from '../../services/authService';
+import authService from '../../services/userManagement/authService.js';
 import './FinancialOverview.css';
 
 // Register Chart.js components

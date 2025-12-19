@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import analyticsService from '../../services/reportAnalytics/analyticsService';
-import authService from '../../services/authService';
+import authService from '../../services/userManagement/authService.js';
 import './OrdersSummary.css';
 
 // Register Chart.js components

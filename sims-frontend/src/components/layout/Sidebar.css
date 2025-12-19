@@ -296,6 +296,58 @@
     text-overflow: ellipsis;
 }
 
+/* Clickable User Info */
+.user-info-clickable {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: var(--radius-md);
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.user-info-clickable:hover {
+    background:  rgba(255, 255, 255, 0.1);
+    transform: translateX(2px);
+}
+
+.profile-arrow {
+    width: 18px;
+    height: 18px;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    margin-left: auto;
+}
+
+.user-info-clickable:hover .profile-arrow {
+    opacity: 1;
+    transform: translateX(3px);
+}
+
+/* User Avatar Button (for closed sidebar) */
+.user-avatar-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background:  linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin:  0 auto var(--spacing-md) auto;
+}
+
+.user-avatar-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
 .logout-btn {
     display: flex;
     align-items: center;
@@ -345,13 +397,11 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    /* Closed sidebar:  70px strip visible */
     .sidebar.closed {
         width: 70px;
         transform: translateX(0); /* Always visible */
     }
 
-    /* Open sidebar:  260px full menu */
     .sidebar.open {
         width: 260px;
         transform: translateX(0);
@@ -370,7 +420,7 @@
     }
 
     .sidebar.open {
-        width: 240px; /* Slightly narrower on very small screens */
+        width: 240px;
     }
 
     .sidebar-toggle-btn {

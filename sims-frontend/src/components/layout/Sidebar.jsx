@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import authService from '../../services/authService';
+import authService from '../../services/userManagement/authService';
 import './Sidebar.css';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
@@ -10,7 +10,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
     // State for managing submenu expansion
     const [expandedMenus, setExpandedMenus] = useState({
-        inventoryControl:  true, // Default expanded
+        inventoryControl:  true,
         orderManagement: false,
         reportsAnalytics: false,
     });
@@ -23,10 +23,15 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         }));
     };
 
-    // Handle Reports & Analytics click - Navigate AND expand submenu
+    // Handle Reports & Analytics click
     const handleReportsAnalyticsClick = () => {
         navigate('/analytics/dashboard');
         setExpandedMenus(prev => ({ ...prev, reportsAnalytics: true }));
+    };
+
+    // Handle user info click - Navigate to profile
+    const handleUserInfoClick = () => {
+        navigate('/profile');
     };
 
     const handleLogout = async () => {
@@ -96,13 +101,11 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     >
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             {isOpen ? (
-                                // Close icon (double chevron left)
                                 <>
                                     <path d="M11 19L4 12L11 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                     <path d="M19 19L12 12L19 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                 </>
                             ) : (
-                                // Open icon (double chevron right)
                                 <>
                                     <path d="M13 5L20 12L13 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                     <path d="M5 5L12 12L5 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -117,7 +120,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     {/* Dashboard */}
                     <NavLink
                         to="/dashboard"
-                        className={({ isActive }) => `nav-item ${isActive ? 'active' :  ''}`}
+                        className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
                         title="Dashboard"
                     >
                         <svg className="nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -158,38 +161,23 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                         {/* Inventory Submenu */}
                         {isOpen && expandedMenus.inventoryControl && (
                             <div className="submenu">
-                                <NavLink
-                                    to="/inventory/total-items"
-                                    className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
-                                >
+                                <NavLink to="/inventory/total-items" className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}>
                                     <span className="submenu-dot"></span>
                                     <span className="submenu-text">Total Items</span>
                                 </NavLink>
-                                <NavLink
-                                    to="/inventory/low-stock"
-                                    className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
-                                >
+                                <NavLink to="/inventory/low-stock" className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}>
                                     <span className="submenu-dot"></span>
                                     <span className="submenu-text">Low Stock</span>
                                 </NavLink>
-                                <NavLink
-                                    to="/inventory/damage-loss"
-                                    className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
-                                >
+                                <NavLink to="/inventory/damage-loss" className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}>
                                     <span className="submenu-dot"></span>
                                     <span className="submenu-text">Damage & Loss</span>
                                 </NavLink>
-                                <NavLink
-                                    to="/inventory/incoming-stock"
-                                    className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
-                                >
+                                <NavLink to="/inventory/incoming-stock" className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}>
                                     <span className="submenu-dot"></span>
                                     <span className="submenu-text">Incoming Stock</span>
                                 </NavLink>
-                                <NavLink
-                                    to="/inventory/outgoing-stock"
-                                    className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
-                                >
+                                <NavLink to="/inventory/outgoing-stock" className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}>
                                     <span className="submenu-dot"></span>
                                     <span className="submenu-text">Outgoing Stock</span>
                                 </NavLink>
@@ -200,7 +188,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     {/* Order Management (with submenu) */}
                     <div className="nav-item-group">
                         <button
-                            className={`nav-item ${expandedMenus.orderManagement ?  'expanded' : ''}`}
+                            className={`nav-item ${expandedMenus.orderManagement ? 'expanded' :  ''}`}
                             onClick={() => toggleSubmenu('orderManagement')}
                             title="Order Management"
                         >
@@ -226,24 +214,15 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                         {/* Order Management Submenu */}
                         {isOpen && expandedMenus.orderManagement && (
                             <div className="submenu">
-                                <NavLink
-                                    to="/orders/purchase-orders"
-                                    className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
-                                >
+                                <NavLink to="/orders/purchase-orders" className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}>
                                     <span className="submenu-dot"></span>
                                     <span className="submenu-text">Purchase Orders</span>
                                 </NavLink>
-                                <NavLink
-                                    to="/orders/sales-orders"
-                                    className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
-                                >
+                                <NavLink to="/orders/sales-orders" className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}>
                                     <span className="submenu-dot"></span>
                                     <span className="submenu-text">Sales Orders</span>
                                 </NavLink>
-                                <NavLink
-                                    to="/orders/qr-tracker"
-                                    className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
-                                >
+                                <NavLink to="/orders/qr-tracker" className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}>
                                     <span className="submenu-dot"></span>
                                     <span className="submenu-text">QR Order Tracker</span>
                                 </NavLink>
@@ -285,33 +264,21 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                         {/* Reports & Analytics Submenu */}
                         {isOpen && expandedMenus.reportsAnalytics && (
                             <div className="submenu">
-                                <NavLink
-                                    to="/analytics/dashboard"
-                                    className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
-                                >
+                                <NavLink to="/analytics/dashboard" className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}>
                                     <span className="submenu-dot"></span>
                                     <span className="submenu-text">Dashboard</span>
                                 </NavLink>
                                 {isAdminOrManager && (
                                     <>
-                                        <NavLink
-                                            to="/analytics/inventory-health"
-                                            className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
-                                        >
+                                        <NavLink to="/analytics/inventory-health" className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}>
                                             <span className="submenu-dot"></span>
                                             <span className="submenu-text">Inventory Health</span>
                                         </NavLink>
-                                        <NavLink
-                                            to="/analytics/financial-overview"
-                                            className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
-                                        >
+                                        <NavLink to="/analytics/financial-overview" className={({ isActive }) => `submenu-item ${isActive ?  'active' : ''}`}>
                                             <span className="submenu-dot"></span>
                                             <span className="submenu-text">Financial Overview</span>
                                         </NavLink>
-                                        <NavLink
-                                            to="/analytics/orders-summary"
-                                            className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}
-                                        >
+                                        <NavLink to="/analytics/orders-summary" className={({ isActive }) => `submenu-item ${isActive ? 'active' : ''}`}>
                                             <span className="submenu-dot"></span>
                                             <span className="submenu-text">Orders Summary</span>
                                         </NavLink>
@@ -320,25 +287,16 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                             </div>
                         )}
                     </div>
-
-                    {/* User Profile */}
-                    <NavLink
-                        to="/profile"
-                        className={({ isActive }) => `nav-item ${isActive ? 'active' :  ''}`}
-                        title="User Profile"
-                    >
-                        <svg className="nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
-                        </svg>
-                        {isOpen && <span className="nav-text">User Profile</span>}
-                    </NavLink>
                 </nav>
 
                 {/* User Info & Logout */}
                 <div className="sidebar-footer">
                     {isOpen && (
-                        <div className="user-info">
+                        <div
+                            className="user-info user-info-clickable"
+                            onClick={handleUserInfoClick}
+                            title="Click to view profile"
+                        >
                             <div className="user-avatar">
                                 {currentUser?.username?.charAt(0).toUpperCase() || 'U'}
                             </div>
@@ -346,8 +304,24 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                 <p className="user-name">{currentUser?.username || 'User'}</p>
                                 <p className="user-role">{currentUser?.role || 'Role'}</p>
                             </div>
+                            <svg className="profile-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
                         </div>
                     )}
+
+                    {/* Clickable User Avatar (when sidebar is closed) */}
+                    {! isOpen && (
+                        <button
+                            className="user-avatar-btn"
+                            onClick={handleUserInfoClick}
+                            title="View Profile"
+                        >
+                            {currentUser?.username?.charAt(0).toUpperCase() || 'U'}
+                        </button>
+                    )}
+
+                    {/* Logout Button */}
                     <button
                         className="logout-btn"
                         onClick={handleLogout}
