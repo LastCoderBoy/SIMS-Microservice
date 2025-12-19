@@ -1,4 +1,3 @@
-/* App-level styles - minimal, most styling is in components */
 #root {
     width: 100%;
     min-height: 100vh;
@@ -15,19 +14,4 @@
 
 .text-left {
     text-align: left;
-}
-
-/* Coming Soon Placeholder */
-.coming-soon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 60vh;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    background: var(--surface-color);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-xl);
-    box-shadow: var(--shadow-md);
 }

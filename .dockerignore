@@ -35,7 +35,7 @@ logs/
 
 # Docker
 Dockerfile
-. dockerignore
+.dockerignore
 docker-compose. yml
 
 # Env files

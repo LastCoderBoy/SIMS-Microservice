@@ -13,7 +13,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "3307:3306"  # Map to 3307 to avoid conflict with local MySQL
+      - "3307:3306"
     volumes:
       - mysql-data:/var/lib/mysql
       - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
@@ -159,6 +159,32 @@ services:
       timeout: 10s
       retries: 5
       start_period: 90s
+
+    # ========================================
+    # Frontend (React + Vite)
+    # ========================================
+  sims-frontend:
+    build:
+      context: ./sims-frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=/api/v1
+    container_name: sims-frontend
+    hostname: sims-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+    networks:
+      - sims-network
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health" ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
 
 # ========================================
 # Volumes

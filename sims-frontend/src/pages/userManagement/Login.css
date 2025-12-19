@@ -166,13 +166,13 @@
 }
 
 /* Input Wrapper */
-.input-wrapper {
+.login-form .input-wrapper {
     position: relative;
     display: flex;
     align-items: center;
 }
 
-.input-icon {
+.login-form .input-icon {
     position: absolute;
     left:  var(--spacing-md);
     width: 20px;
@@ -182,7 +182,7 @@
     transition: color 0.3s ease;
 }
 
-.form-input {
+.login-form .form-input {
     width: 100%;
     padding:  var(--spacing-md) var(--spacing-md) var(--spacing-md) 48px;
     font-size: var(--font-size-md);
