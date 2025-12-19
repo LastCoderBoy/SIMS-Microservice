@@ -233,6 +233,13 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                                     <span className="submenu-dot"></span>
                                     <span className="submenu-text">Sales Orders</span>
                                 </NavLink>
+                                <NavLink
+                                    to="/orders/qr-tracker"
+                                    className={({ isActive }) => `submenu-item ${isActive ? 'active' :  ''}`}
+                                >
+                                    <span className="submenu-dot"></span>
+                                    <span className="submenu-text">QR Order Tracker</span>
+                                </NavLink>
                             </div>
                         )}
                     </div>

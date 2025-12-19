@@ -11,6 +11,7 @@ import OutgoingStock from './pages/OutgoingStock';
 // Orders Management imports
 import PurchaseOrders from './pages/PurchaseOrders';
 import SalesOrders from './pages/SalesOrders';
+import QrOrderTracker from './pages/QrOrderTracker';
 
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import './App.css';
@@ -45,6 +46,8 @@ function App() {
                     {/* Order Management Sub-routes */}
                     <Route path="orders/purchase-orders" element={<PurchaseOrders />} />
                     <Route path="orders/sales-orders" element={<SalesOrders />} />
+                    <Route path="orders/qr-tracker" element={<QrOrderTracker />} />
+
 
                     {/* Reports & Analytics Sub-routes */}
                     <Route path="analytics/inventory-health" element={<div className="coming-soon">Inventory Health Page (Coming Soon)</div>} />

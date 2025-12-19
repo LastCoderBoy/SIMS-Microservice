@@ -1054,7 +1054,7 @@ const SalesOrders = () => {
                             className={`tab-btn-so ${viewMode === 'urgent' ?    'active' : ''}`}
                             onClick={() => handleToggleViewMode('urgent')}
                         >
-                            <span className="tab-label">🔥 Urgent Orders</span>
+                            <span className="tab-label">⚠️ Urgent Orders</span>
                             <span className="tab-count">{viewMode === 'urgent' ?   orders?.totalElements || 0 :  0}</span>
                         </button>
                     </div>
@@ -1165,7 +1165,7 @@ const SalesOrders = () => {
                                     <th>Shipped</th>
                                     <th>Total Amount</th>
                                     <th>Order Date</th>
-                                    <th>ETA</th>
+                                    <th>EST. Delivery</th>
                                     <th>Status</th>
                                     <th>QR Code</th>
                                     <th>Actions</th>
